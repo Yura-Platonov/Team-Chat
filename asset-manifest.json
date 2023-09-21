@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/Team-Chat/static/css/main.7acaea2f.css",
+    "main.js": "/Team-Chat/static/js/main.07d3183d.js",
+    "index.html": "/Team-Chat/index.html",
+    "main.7acaea2f.css.map": "/Team-Chat/static/css/main.7acaea2f.css.map",
+    "main.07d3183d.js.map": "/Team-Chat/static/js/main.07d3183d.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7acaea2f.css",
+    "static/js/main.07d3183d.js"
+  ]
+}
