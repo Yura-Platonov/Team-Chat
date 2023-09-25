@@ -1,0 +1,185 @@
+body {
+  font-family: 'Manrope', sans-serif;
+  font-family: 'Playfair Display', serif;
+  font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+  font-weight: 700;
+}
+h2 {
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 39.68px;
+}
+
+main {
+  background-image: url('https://tygjaceleczftbswxxei.supabase.co/storage/v1/object/public/image_bucket/Content%20Home%20page/Desktop/Main%20foto_DES.png');
+  height: 356px;
+  margin-bottom: 100px;
+}
+
+a {
+  color: #0f1e28 !important;
+}
+
+.gap {
+  gap: 16px;
+}
+
+.container-fluid {
+  padding: 0;
+}
+
+.text-main {
+  padding: 126px 0 0 97px;
+  max-width: 709px;
+}
+.text-main p {
+  font-weight: 400;
+}
+.text-left-main {
+  text-align: left;
+  color: #f5fbff;
+}
+.chats h2 {
+  max-width: 361px;
+}
+.chats {
+  margin: 100px 0 40px 100px !important;
+}
+.chat-home {
+  border: 2px rgba(2, 74, 122, 1);
+  border-radius: 20px;
+  padding: 0;
+  max-height: 312px;
+  max-width: 295px;
+  box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.3);
+}
+
+.img-chat {
+  max-width: 295px;
+  max-height: 252px;
+  color: #f5fbff;
+}
+.img-chat p {
+  max-width: 190px;
+  font-size: 20px;
+  font-weight: 600;
+  position: absolute;
+  bottom: 0;
+
+  z-index: 10;
+  left: 50%;
+  margin: 0 0 0 -85px;
+}
+.chat6 p {
+  color: rgba(15, 30, 40, 1);
+  margin: 0 0 0 -50px;
+}
+
+.chathome-icon {
+  background-color: #024a7a;
+  max-width: 295px;
+  height: 60px;
+  color: #f5fbff;
+  margin: 0;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.img-chat {
+  position: relative;
+}
+
+.add {
+  z-index: 1;
+  bottom: 20%;
+  left: 40%;
+  position: absolute;
+}
+
+@media (max-width: 990px) {
+  .toogles .navbar-nav {
+    flex-direction: row;
+  }
+
+  .nav-link {
+    font-size: 14px !important;
+  }
+  .header {
+    margin: 20px 0 20px 0;
+  }
+
+  .left {
+    justify-content: left;
+  }
+}
+
+@media (max-width: 670px) {
+  main {
+    background-image: url('https://tygjaceleczftbswxxei.supabase.co/storage/v1/object/public/image_bucket/Content%20Home%20page/Desktop/Main%20foto%20700px.jpg');
+    height: 312px;
+    width: 0 auto;
+    margin-bottom: 100px;
+  }
+
+  .img-chat p {
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .chathome-icon {
+    height: 42px;
+  }
+  .chathome-icon img {
+    height: 16px;
+    width: 26px;
+  }
+
+  .text-main {
+    padding-left: 16px;
+  }
+  .footer-comment,
+  .footer-menu {
+    padding: 0 16px 0 16px;
+    font-size: 12px;
+  }
+  .chats {
+    margin: 0px 0 40px 0;
+  }
+  .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+  }
+}
+@media (max-width: 363px) {
+  main {
+    background-image: url('https://tygjaceleczftbswxxei.supabase.co/storage/v1/object/public/image_bucket/Content%20Home%20page/Desktop/Main%20foto%20393px.jpg');
+    height: 428px;
+    width: 0 auto;
+    margin-bottom: 100px;
+  }
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .text-main {
+    padding-left: 16px;
+  }
+  .text-main p {
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .img-chat p {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .chathome-icon {
+    height: 36px;
+  }
+  .chathome-icon img {
+    height: 16px;
+    width: 26px;
+  }
+}
