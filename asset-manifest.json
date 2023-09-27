@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.9ac04b70.css",
+    "main.css": "/Team-Chat/static/css/main.29b8b3c7.css",
     "main.js": "/Team-Chat/static/js/main.a4c2269b.js",
     "static/media/LogoLight.svg": "/Team-Chat/static/media/LogoLight.b8328577c3775ad708e89706d38bd8c8.svg",
     "static/media/LogoDark.svg": "/Team-Chat/static/media/LogoDark.a512f03dc4e0a68f4c63c54700d5b3b7.svg",
     "index.html": "/Team-Chat/index.html",
-    "main.9ac04b70.css.map": "/Team-Chat/static/css/main.9ac04b70.css.map",
+    "main.29b8b3c7.css.map": "/Team-Chat/static/css/main.29b8b3c7.css.map",
     "main.a4c2269b.js.map": "/Team-Chat/static/js/main.a4c2269b.js.map"
   },
   "entrypoints": [
-    "static/css/main.9ac04b70.css",
+    "static/css/main.29b8b3c7.css",
     "static/js/main.a4c2269b.js"
   ]
 }
