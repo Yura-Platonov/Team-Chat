@@ -1,10 +1,35 @@
 
-body{
+.welcome{
+    padding-top: 125px;
+    padding-left: 100px;
+    padding-bottom: 40px;
+
+    background-image: url('https://tygjaceleczftbswxxei.supabase.co/storage/v1/object/public/image_bucket/Content%20Home%20page/Desktop/Main%20foto_DES.png') ;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+
+    max-height: 356px;
+
+}
+
+.welcome_title{
     margin: 0;
-    padding: 0;
-    font-family: 'Manrope', sans-serif;
-    font-size: 16px;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    color: #fff;
+       
+}
+
+.welcome_text{
+    margin-top: 30px;
+    margin-bottom: 0;
+
+    font-size: 24px;
     line-height: 1.5;
-    color: #000;
-    background-color: #fff;
+
+    color: #fff;
+    
 }
