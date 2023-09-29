@@ -25,8 +25,10 @@ function RoomList() {
       <h2 className={css.room_title}>Choose room <br/> for communication</h2>
       <ul className={css.room_list}>
         {rooms.map((room) => (
-          <li className={css.room_item} key={room.id}>{room.name_room}
-           <img className={css.room_img} src={room.image_room} alt={room.name_room} width="300"/></li>
+          <li className={css.room_item} key={room.id}>
+            {room.name_room}
+            <img className={css.room_img} src={room.image_room} alt={room.name_room} width="300" />
+          </li>
         ))}
       </ul>
     </div>

@@ -3,6 +3,8 @@ import Header from './Header/Header';
 import Main from './Main/Main';
 import 'index.css';
 
+
+
 export const App = () => {
   return (
     <div className="app">
