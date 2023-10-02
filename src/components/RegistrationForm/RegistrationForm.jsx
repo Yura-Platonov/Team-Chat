@@ -1,17 +1,17 @@
-//login form component
 import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
-import './LoginForm.module.css';
+// import css from'./RegistrationForm.module.css';
 
-class LoginForm extends Component {
+class RegistrationForm extends Component {
   constructor(props) {
     super(props);
 
     // Инициализируем состояние (state) компонента
     this.state = {
       username: '',
+      email: '',
       password: '',
     };
   }
@@ -20,14 +20,14 @@ class LoginForm extends Component {
   handleSubmit = async (values, { setSubmitting }) => {
     try {
       // Отправляем данные на сервер с использованием Axios
-      const response = await axios.post('http://35.228.45.65:8800/login', values);
+      const response = await axios.post('http://35.228.45.65:8800/register', values);
 
       if (response.status === 200) {
-        // Обработка успешного ответа от сервера
-        alert('You have successfully logged in!');
+        // Обработка успешного ответа от сервера после регистрации
+        alert('Registration successful! You can now log in.');
       } else {
         // Обработка ошибки от сервера
-        alert('Incorrect login or password');
+        alert('Registration failed. Please check your information and try again.');
       }
     } catch (error) {
       // Обработка сетевой ошибки
@@ -41,8 +41,8 @@ class LoginForm extends Component {
   render() {
     return (
       <Formik
-        initialValues={{ username: '', password: '' }}
-        validationSchema={validationSchema}
+        initialValues={{ username: '', email: '', password: '' }}
+        validationSchema={validationSchema} // Ваша схема валидации
         onSubmit={this.handleSubmit}
       >
         <Form>
@@ -52,15 +52,20 @@ class LoginForm extends Component {
             <ErrorMessage name="username" component="div" />
           </div>
           <div>
+            <label htmlFor="email">Email:</label>
+            <Field type="email" id="email" name="email" />
+            <ErrorMessage name="email" component="div" />
+          </div>
+          <div>
             <label htmlFor="password">Password:</label>
             <Field type="password" id="password" name="password" />
             <ErrorMessage name="password" component="div" />
           </div>
-          <button type="submit">Log in</button>
+          <button type="submit">Register</button>
         </Form>
       </Formik>
     );
   }
 }
 
-export default LoginForm;
+export default RegistrationForm;

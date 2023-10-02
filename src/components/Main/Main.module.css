@@ -4,7 +4,7 @@
     padding-left: 100px;
     padding-bottom: 40px;
 
-    background-image: url('https://tygjaceleczftbswxxei.supabase.co/storage/v1/object/public/image_bucket/Content%20Home%20page/Desktop/Main%20foto_DES.png') ;
+    background-image: url(../Images/MainFotoBg.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

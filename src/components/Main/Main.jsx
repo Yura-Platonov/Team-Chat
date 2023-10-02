@@ -1,4 +1,5 @@
 import React from 'react';
+import RoomList from '../RoomList/RoomList';
 import css from './Main.module.css';
 
 function Main() {
@@ -8,8 +9,8 @@ function Main() {
         <h1 className={css.welcome_title}>Welcome every tourist to Teamchat</h1>
         <p className={css.welcome_text}>Chat about a wide variety of tourist equipment.<br/>Communicate, get good advice and choose!</p>
       </section>
-
       
+      <RoomList />
     </div>
   );
 }

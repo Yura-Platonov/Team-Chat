@@ -1,0 +1,46 @@
+/* CreateRoom.module.css */
+
+.createRoom_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .createRoom_title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .createRoom_form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .createRoom_input {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .createRoom_button {
+    background-color: #ff8b2c;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .createRoom_button:hover {
+    background-color: #e86e20;
+  }
+  
