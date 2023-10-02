@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import css from './RoomList.module.css';
+import CreateRoom from 'components/CreateRoom/CreateRoom';
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
@@ -20,6 +21,10 @@ function RoomList() {
     loadRooms();
   }, []); // Пустой массив зависимостей означает, что эффект выполняется при каждом рендере
 
+  const addRoom = (newRoom) => {
+    setRooms([...rooms, newRoom]);
+  };
+
   return (
     <div>
       <h2 className={css.room_title}>Choose room <br/> for communication</h2>
@@ -30,10 +35,12 @@ function RoomList() {
             <img className={css.room_img} src={room.image_room} alt={room.name_room} width="300" />
           </li>
         ))}
+        <li className={css.room_item}>
+          <CreateRoom onRoomCreated={addRoom} />
+        </li>
       </ul>
     </div>
   );
 }
 
 export default RoomList;
-

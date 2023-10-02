@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import RoomList from '../RoomList/RoomList';
-import CreateRoom from '../CreateRoom/CreateRoom';
 import css from './Main.module.css';
 
 function Main() {
-  const [rooms, setRooms] = useState([]);
-  
-  const addRoom = (newRoom) => {
-    setRooms([...rooms, newRoom]);
-  };
-
   return (
     <div>
       <section className={css.welcome}>
@@ -17,8 +10,7 @@ function Main() {
         <p className={css.welcome_text}>Chat about a wide variety of tourist equipment.<br/>Communicate, get good advice and choose!</p>
       </section>
       
-      <RoomList rooms={rooms} />
-      <CreateRoom onRoomCreated={addRoom} />
+      <RoomList />
     </div>
   );
 }

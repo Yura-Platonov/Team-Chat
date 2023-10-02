@@ -1,21 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from 'react-modal'; // Импортируем библиотеку модальных окон
+import Modal from 'react-modal';
+import Select from 'react-select';
+
+Modal.setAppElement('#root');
+
+const CustomOption = ({ innerProps, label }) => (
+  <div {...innerProps}>
+    {label}
+  </div>
+);
 
 function CreateRoom() {
   const [roomName, setRoomName] = useState('');
   const [roomImage, setRoomImage] = useState('');
+  const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // Состояние видимости модального окна
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    // axios.get('http://35.228.45.65:8800/images')
-    //   .then((response) => {
-    //     setImageOptions(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error('Ошибка при загрузке изображений:', error);
-    //   });
+    axios.get('http://35.228.45.65:8800/images/Home')
+      .then((response) => {
+        setImageOptions(response.data.map((image) => ({
+          value: image.images,
+          label: (
+            <div>
+              <img src={image.images} alt={image.image_room} width="50" height="50" />
+              {image.image_room}
+            </div>
+          ),
+        })));
+      })
+      .catch((error) => {
+        console.error('Ошибка при загрузке изображений:', error);
+      });
   }, []);
 
   const handleCreateRoom = () => {
@@ -28,10 +46,10 @@ function CreateRoom() {
       .post('http://35.228.45.65:8800/rooms/', { name_room: roomName, image_room: roomImage })
       .then((response) => {
         console.log('Комната создана:', response.data);
-        setRoomName(''); // Очищаем поле названия комнаты
-        setRoomImage(''); // Очищаем поле выбранного изображения
-        setIsModalOpen(false); // Закрываем модальное окно
-        // Обновите список комнат, если это необходимо
+        setRoomName('');
+        setRoomImage('');
+        setSelectedOption(null);
+        setIsModalOpen(false);
       })
       .catch((error) => {
         console.error('Ошибка при создании комнаты:', error);
@@ -45,7 +63,6 @@ function CreateRoom() {
       <Modal
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
-        // Добавьте стили для модального окна
       >
         <h2>Create a Room</h2>
         <input
@@ -54,17 +71,18 @@ function CreateRoom() {
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
         />
-        <select
-          value={roomImage}
-          onChange={(e) => setRoomImage(e.target.value)}
-        >
-          <option value="" disabled>Select an Image</option>
-          {imageOptions.map((image) => (
-            <option key={image.id} value={image.url}>
-              {image.name}
-            </option>
-          ))}
-        </select>
+        <Select
+          value={selectedOption}
+          onChange={(option) => {
+            setSelectedOption(option);
+            setRoomImage(option.value);
+          }}
+          options={imageOptions}
+          placeholder="Select an Image"
+          components={{
+            Option: CustomOption, // Используем свой компонент Option
+          }}
+        />
         <button onClick={handleCreateRoom}>
           Create Room
         </button>
