@@ -1,15 +1,16 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.29b8b3c7.css",
-    "main.js": "/Team-Chat/static/js/main.a4c2269b.js",
+    "main.css": "/Team-Chat/static/css/main.e19ae3ca.css",
+    "main.js": "/Team-Chat/static/js/main.2fa791cf.js",
+    "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
     "static/media/LogoLight.svg": "/Team-Chat/static/media/LogoLight.b8328577c3775ad708e89706d38bd8c8.svg",
     "static/media/LogoDark.svg": "/Team-Chat/static/media/LogoDark.a512f03dc4e0a68f4c63c54700d5b3b7.svg",
     "index.html": "/Team-Chat/index.html",
-    "main.29b8b3c7.css.map": "/Team-Chat/static/css/main.29b8b3c7.css.map",
-    "main.a4c2269b.js.map": "/Team-Chat/static/js/main.a4c2269b.js.map"
+    "main.e19ae3ca.css.map": "/Team-Chat/static/css/main.e19ae3ca.css.map",
+    "main.2fa791cf.js.map": "/Team-Chat/static/js/main.2fa791cf.js.map"
   },
   "entrypoints": [
-    "static/css/main.29b8b3c7.css",
-    "static/js/main.a4c2269b.js"
+    "static/css/main.e19ae3ca.css",
+    "static/js/main.2fa791cf.js"
   ]
 }
