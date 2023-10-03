@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 // import css from'./RegistrationForm.module.css';
 
 class RegistrationForm extends Component {
@@ -13,8 +15,15 @@ class RegistrationForm extends Component {
       username: '',
       email: '',
       password: '',
+      showPassword: false,
     };
   }
+
+  togglePasswordVisibility = () => {
+    this.setState((prevState) => ({
+      showPassword: !prevState.showPassword,
+    }));
+  };
 
   // Обработчик отправки формы
   handleSubmit = async (values, { setSubmitting }) => {
@@ -47,7 +56,7 @@ class RegistrationForm extends Component {
       >
         <Form>
           <div>
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Nickname:</label>
             <Field type="text" id="username" name="username" />
             <ErrorMessage name="username" component="div" />
           </div>
@@ -58,8 +67,29 @@ class RegistrationForm extends Component {
           </div>
           <div>
             <label htmlFor="password">Password:</label>
-            <Field type="password" id="password" name="password" />
+            <Field type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" />
             <ErrorMessage name="password" component="div" />
+            <span
+            onClick={this.togglePasswordVisibility}
+            className="password-toggle-icon"
+          >
+            <FontAwesomeIcon
+              icon={this.state.showPassword ? faEye : faEyeSlash}
+            />
+          </span>
+          </div>
+          <div>
+            <label htmlFor="confirmPassword">Confirm password:</label>
+            <Field type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" />
+            <ErrorMessage name="confirmPassword" component="div" />
+            <span
+            onClick={this.togglePasswordVisibility}
+            className="password-toggle-icon"
+          >
+            <FontAwesomeIcon
+              icon={this.state.showPassword ? faEye : faEyeSlash}
+            />
+          </span>
           </div>
           <button type="submit">Register</button>
         </Form>

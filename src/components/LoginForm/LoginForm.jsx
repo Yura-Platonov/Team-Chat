@@ -4,6 +4,10 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
 import './LoginForm.module.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
+
 
 class LoginForm extends Component {
   constructor(props) {
@@ -13,8 +17,15 @@ class LoginForm extends Component {
     this.state = {
       username: '',
       password: '',
+      showPassword: false,
     };
   }
+
+  togglePasswordVisibility = () => {
+    this.setState((prevState) => ({
+      showPassword: !prevState.showPassword,
+    }));
+  };
 
   // Обработчик отправки формы
   handleSubmit = async (values, { setSubmitting }) => {
@@ -41,24 +52,37 @@ class LoginForm extends Component {
   render() {
     return (
       <Formik
-        initialValues={{ username: '', password: '' }}
-        validationSchema={validationSchema}
-        onSubmit={this.handleSubmit}
-      >
-        <Form>
-          <div>
-            <label htmlFor="username">Username:</label>
-            <Field type="text" id="username" name="username" />
-            <ErrorMessage name="username" component="div" />
-          </div>
-          <div>
-            <label htmlFor="password">Password:</label>
-            <Field type="password" id="password" name="password" />
-            <ErrorMessage name="password" component="div" />
-          </div>
-          <button type="submit">Log in</button>
-        </Form>
-      </Formik>
+      initialValues={{ email: '', password: '' }}
+      validationSchema={validationSchema}
+      onSubmit={this.handleSubmit}
+    >
+      <Form>
+        <div>
+          <label htmlFor="email">Email:</label>
+          <Field type="email" id="email" name="email" />
+          <ErrorMessage name="email" component="div" />
+        </div>
+        <div>
+          <label htmlFor="password">Password:</label>
+          <Field
+            type={this.state.showPassword ? 'text' : 'password'}
+            id="password"
+            name="password"
+          />
+          <span
+            onClick={this.togglePasswordVisibility}
+            className="password-toggle-icon"
+          >
+            <FontAwesomeIcon
+              icon={this.state.showPassword ? faEye : faEyeSlash}
+            />
+          </span>
+          <ErrorMessage name="password" component="div" />
+        </div>
+        <button type="submit">Log in</button>
+      </Form>
+    </Formik>
+    
     );
   }
 }
