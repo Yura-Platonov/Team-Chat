@@ -4,6 +4,7 @@ import css from './Header.module.css';
 import LogoLight from '../Images/LogoLight.svg';
 import LogoDark from '../Images/LogoDark.svg';
 import LoginModal from '../Modal/LoginModal';
+import { useAuth } from '../LoginForm/AuthContext';
 
 
 function IconSun() {
@@ -27,6 +28,7 @@ function IconMoon() {
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     if (darkTheme) {
@@ -80,13 +82,24 @@ const Header = () => {
             checkedHandleIcon={<IconMoon />}
             checkedIcon={false}
           />
-       {/* Добавляем кнопку Login, при нажатии на которую откроется модальное окно для логина */}
-       <button className={css.login_button} onClick={openLoginModal}>Login</button>
+      
+      
       </div>
 
       {/* Модальное окно для логина */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+      <div>
+      {user ? (
+        <>
+          <p>Welcome, {user.username}!</p>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <button className={css.login_button} onClick={openLoginModal}>Login</button>
+      )}
+    </div>
     </header>
+    
   );
 };
 
