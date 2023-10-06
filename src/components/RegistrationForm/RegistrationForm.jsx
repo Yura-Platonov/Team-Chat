@@ -52,11 +52,10 @@ class RegistrationForm extends Component {
   }
 
   // Обработчик отправки формы
-  handleSubmit = async ({ user_name, email, password }, { setSubmitting }) => {
+  handleSubmit = async ({ user_name, email, password }) => {
     try {
       if (!this.state.selectedAvatar) {
         alert('Please select an avatar before submitting the form.');
-        setSubmitting(false);
         return;
       }
   
@@ -81,10 +80,7 @@ class RegistrationForm extends Component {
       // Проверьте правильность данных
       alert('Check your information and try again.');
     }
-  
-    // Сброс флага submitting после завершения отправки
-    setSubmitting(false);
-  };
+    };
   
 
   render() {

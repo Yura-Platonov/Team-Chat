@@ -13,6 +13,7 @@
     "axios": "^1.5.1",
     "formik": "^2.4.5",
     "normalize.css": "^8.0.1",
+    "qs": "^6.11.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-modal": "^3.16.1",

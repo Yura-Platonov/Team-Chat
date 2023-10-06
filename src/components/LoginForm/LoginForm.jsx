@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
+import qs from 'qs';
 // import './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +18,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       showPassword: false,
-    };
+     };
   }
 
   togglePasswordVisibility = () => {
@@ -25,63 +26,65 @@ class LoginForm extends Component {
       showPassword: !prevState.showPassword,
     }));
   };
-
-
-  handleOnSubmit = async (values, { setSubmitting }) => {
-    try {
-      // Создаем экземпляр URLSearchParams и добавляем в него параметры
-      const data = new URLSearchParams();
-      data.append('username', values.username);
-      data.append('password', values.password);
-
-      // Отправляем POST-запрос на сервер
-      const response = await axios.post('http://35.228.45.65:8800/login', data, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-
-      if (response.status === 200) {
-        // Обработка успешного ответа от сервера
-        const { access_token } = response.data;
-
-        // Сохраняем access_token в локальном хранилище
-        localStorage.setItem('access_token', access_token);
-  
-        alert('You have successfully logged in!');
-      } else {
-        // Обработка ошибки аутентификации
-        alert('Incorrect login or password');
-      }
-    } catch (error) {
-      // Обработка сетевой ошибки
-      alert('A network error has occurred. Please try again later.');
-    }
-  
-    // Сброс флага submitting после завершения отправки
-    setSubmitting(false);
+     
+  handleInputChange = (event) => {
+    // Обработчик изменения значений полей
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
+
+handleOnSubmit = async (values) => {
   
-  // login = (access_token) => {
-  //   // Получите функцию setAuthToken из контекста аутентификации
-  //   const { setAuthToken } = this.context;
-  //   // Установите токен в состоянии LoginForm или делайте другую логику аутентификации по вашему усмотрению
-  //   this.setState({ authToken: access_token });
-  //   // Установите токен в контекст аутентификации
-  //   setAuthToken(access_token);
-  // };
-  
+  try {
+    const data = qs.stringify({
+      username: this.state.username,
+      password: this.state.password,
+    });
+ 
+    const options = {
+      method: 'POST',
+      url: 'http://35.228.45.65:8800/login',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data,
+    };
+    const response = await axios(options);
+
+    if (response.status === 200) {
+      const { access_token } = response.data;
+      localStorage.setItem('access_token', access_token);
+
+      // Возвращаем данные пользователя в случае успеха
+      alert('You have successfully logged in!');
+    } else {
+      // Обработка ошибки аутентификации
+      alert('Incorrect login or password');
+    }
+  } catch (error) {
+    // Обработка сетевой ошибки
+    console.log(error.message);
+    alert('A network error has occurred. Please try again later.');
+  }
+
+  // Возвращаем null в случае ошибки
+  return null;
+}
+
+
       render() {
         return (
           <Formik
             initialValues={{ username: '', password: '' }}
             validationSchema={validationSchema}
-            onSubmit={this.handleOnSubmit}
+            // onSubmit={this.handleOnSubmit}
           >
             <Form>
               <div>
                 <label htmlFor="username">Email:</label>
-                <Field type="text" id="username" name="username" /> 
+                <Field type="text" id="username" name="username" onChange={this.handleInputChange}
+              value={this.state.username}   />
                 <ErrorMessage name="username" component="div" />
               </div>
               <div>
@@ -90,6 +93,8 @@ class LoginForm extends Component {
                   type={this.state.showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"  
+                  onChange={this.handleInputChange} 
+                  value={this.state.password}
                 />
                 <span
                   onClick={this.togglePasswordVisibility}
@@ -101,7 +106,7 @@ class LoginForm extends Component {
                 </span>
                 <ErrorMessage name="password" component="div" />
               </div>
-              <button type="submit">Log in</button>
+              <button type="submit" onClick={this.handleOnSubmit}>Log in</button>
             </Form>
           </Formik>
         );
