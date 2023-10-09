@@ -7,6 +7,7 @@ import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 
 
+
 function IconSun() {
   return (
     <svg width="24" height="24" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,15 +90,15 @@ const Header = () => {
       {/* Модальное окно для логина */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
       <div>
-      {user ? (
-        <>
-          <p>Welcome, {user.username}!</p>
-          <button onClick={logout}>Logout</button>
-        </>
-      ) : (
-        <button className={css.login_button} onClick={openLoginModal}>Login</button>
-      )}
-    </div>
+        {user ? (
+          <>
+            <p>Welcome, {user.username}!</p>
+            <button onClick={logout}>Logout</button>
+          </>
+        ) : (
+          <button className={css.login_button} onClick={openLoginModal}>Login</button>
+        )}
+      </div>
     </header>
     
   );

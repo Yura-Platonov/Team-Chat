@@ -40,6 +40,9 @@ function CreateRoom() {
     if (!roomName || !roomImage) {
       alert('Пожалуйста, заполните все поля');
       return;
+    } else if (!selectedOption) {
+      alert('Пожалуйста, выберите изображение');
+      return;
     }
 
     axios

@@ -9,6 +9,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import AuthContext from './AuthContext';
 
+
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -18,7 +19,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       showPassword: false,
-     };
+      };
   }
 
   togglePasswordVisibility = () => {
@@ -34,11 +35,12 @@ class LoginForm extends Component {
   };
 
 handleOnSubmit = async (values) => {
+  const { username, password } = this.state;
   
   try {
     const data = qs.stringify({
-      username: this.state.username,
-      password: this.state.password,
+      username,
+      password,
     });
  
     const options = {
@@ -56,8 +58,13 @@ handleOnSubmit = async (values) => {
       const { access_token } = response.data;
       localStorage.setItem('access_token', access_token);
 
+      
+      const { login } = this.context;
+      login({ username });
+
       // Возвращаем данные пользователя в случае успеха
       alert('You have successfully logged in!');
+      console.log('User logged in'); // Выводим в консоль сообщение о входе
     } else {
       // Обработка ошибки аутентификации
       alert('Incorrect login or password');
@@ -68,7 +75,6 @@ handleOnSubmit = async (values) => {
     alert('A network error has occurred. Please try again later.');
   }
 
-  // Возвращаем null в случае ошибки
   return null;
 }
 
@@ -78,7 +84,7 @@ handleOnSubmit = async (values) => {
           <Formik
             initialValues={{ username: '', password: '' }}
             validationSchema={validationSchema}
-            // onSubmit={this.handleOnSubmit}
+            
           >
             <Form>
               <div>
