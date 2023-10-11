@@ -10,6 +10,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import AuthContext from './AuthContext';
 
 
+
 class LoginForm extends Component {
   constructor(props) {
     super(props);
@@ -21,6 +22,7 @@ class LoginForm extends Component {
       showPassword: false,
       };
   }
+  
 
   togglePasswordVisibility = () => {
     this.setState((prevState) => ({
@@ -33,6 +35,7 @@ class LoginForm extends Component {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
+  
 
 handleOnSubmit = async (values) => {
   const { username, password } = this.state;
@@ -60,11 +63,12 @@ handleOnSubmit = async (values) => {
 
       
       const { login } = this.context;
-      login({ username });
-
+        login(access_token, username);
+ 
       // Возвращаем данные пользователя в случае успеха
       alert('You have successfully logged in!');
       console.log('User logged in'); // Выводим в консоль сообщение о входе
+      // window.location.reload();
     } else {
       // Обработка ошибки аутентификации
       alert('Incorrect login or password');
