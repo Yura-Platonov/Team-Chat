@@ -20,6 +20,7 @@ class LoginForm extends Component {
       username: '',
       password: '',
       showPassword: false,
+      
       };
   }
   
@@ -64,6 +65,18 @@ handleOnSubmit = async (values) => {
       
       const { login } = this.context;
         login(access_token, username);
+  //     axios.get(`http://35.228.45.65:8800/users/${username}`)
+  // .then((response) => {
+  //   const userDisplayName = response.data.user_name;
+  //   this.setState({ userDisplayName }); // Обновите состояние с именем пользователя
+  //   const { login } = this.context;
+  //   login(access_token, username);
+  // })
+  // .catch((error) => {
+  //   console.error('Ошибка при получении данных пользователя:', error);
+  // });
+  
+
  
       // Возвращаем данные пользователя в случае успеха
       alert('You have successfully logged in!');
@@ -126,3 +139,4 @@ handleOnSubmit = async (values) => {
     LoginForm.contextType = AuthContext;
     
     export default LoginForm;
+

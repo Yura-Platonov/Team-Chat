@@ -8,6 +8,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 
 
 
+
 function IconSun() {
   return (
     <svg width="24" height="24" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,6 +31,8 @@ const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { user, logout } = useAuth();
+  
+
 
   useEffect(() => {
     if (darkTheme) {
