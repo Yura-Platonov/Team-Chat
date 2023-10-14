@@ -33,7 +33,7 @@ class RegistrationForm extends Component {
 
   componentDidMount() {
     axios
-      .get('http://35.228.45.65:8800/images/Avatar')
+      .get('https://cool-chat.club/images/Avatar')
       .then((response) => {
         const imageOptions = response.data.map((avatar) => ({
           value: avatar.images,
@@ -62,7 +62,7 @@ class RegistrationForm extends Component {
       const avatar = this.state.selectedAvatar.value; // Извлекаем URL из объекта
   
       // Отправляем данные на сервер с использованием Axios
-      const response = await axios.post('http://35.228.45.65:8800/users/', {
+      const response = await axios.post('https://cool-chat.club/users/', {
         user_name,
         email,
         password,

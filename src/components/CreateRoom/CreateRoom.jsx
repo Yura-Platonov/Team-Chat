@@ -23,7 +23,7 @@ function CreateRoom({ onRoomCreated }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   useEffect(() => {
-    axios.get('http://35.228.45.65:8800/images/Home')
+    axios.get('https://cool-chat.club/images/Home')
       .then((response) => {
         setImageOptions(response.data.map((image) => ({
           value: image.images,
@@ -56,7 +56,7 @@ function CreateRoom({ onRoomCreated }) {
     };
   
     axios
-      .post('http://35.228.45.65:8800/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+      .post('https://cool-chat.club/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
       .then((response) => {
         console.log('Комната создана:', response.data);
         setRoomName('');
