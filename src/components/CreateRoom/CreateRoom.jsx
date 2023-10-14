@@ -1,7 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import Select from 'react-select';
+
+import { useAuth } from '../LoginForm/AuthContext'; 
 
 Modal.setAppElement('#root');
 
@@ -11,13 +14,14 @@ const CustomOption = ({ innerProps, label }) => (
   </div>
 );
 
-function CreateRoom() {
+function CreateRoom({ onRoomCreated }) {
+  const { authToken } = useAuth(); // Get the authentication token using the useAuth hook
   const [roomName, setRoomName] = useState('');
   const [roomImage, setRoomImage] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  
   useEffect(() => {
     axios.get('http://35.228.45.65:8800/images/Home')
       .then((response) => {
@@ -36,25 +40,37 @@ function CreateRoom() {
       });
   }, []);
 
+  
+  // console.log('authToken:', authToken);
+   
+
   const handleCreateRoom = () => {
-    if (!roomName || !roomImage) {
-      alert('Пожалуйста, заполните все поля');
+    if (!authToken) {
+      alert('Вы не авторизованы. Пожалуйста, войдите в систему.');
+      // You can redirect the user to the login page or show a login modal here.
       return;
     }
-
+  
+    const headers = {
+      Authorization: `Bearer ${authToken}`, // Добавляем токен в заголовок
+    };
+  
     axios
-      .post('http://35.228.45.65:8800/rooms/', { name_room: roomName, image_room: roomImage })
+      .post('http://35.228.45.65:8800/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
       .then((response) => {
         console.log('Комната создана:', response.data);
         setRoomName('');
         setRoomImage('');
         setSelectedOption(null);
         setIsModalOpen(false);
+        onRoomCreated(response.data);
+        
       })
       .catch((error) => {
         console.error('Ошибка при создании комнаты:', error);
       });
   };
+  
 
   return (
     <div>

@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
+import qs from 'qs';
 // import './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 import AuthContext from './AuthContext';
+
+
 
 class LoginForm extends Component {
   constructor(props) {
@@ -17,71 +20,94 @@ class LoginForm extends Component {
       username: '',
       password: '',
       showPassword: false,
-    };
+      
+      };
   }
+  
 
   togglePasswordVisibility = () => {
     this.setState((prevState) => ({
       showPassword: !prevState.showPassword,
     }));
   };
-
-
-  handleOnSubmit = async (values, { setSubmitting }) => {
-    try {
-      // Создаем экземпляр URLSearchParams и добавляем в него параметры
-      const data = new URLSearchParams();
-      data.append('username', values.username);
-      data.append('password', values.password);
-
-      // Отправляем POST-запрос на сервер
-      const response = await axios.post('http://35.228.45.65:8800/login', data, {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-      });
-
-      if (response.status === 200) {
-        // Обработка успешного ответа от сервера
-        const { access_token } = response.data;
-
-        // Сохраняем access_token в локальном хранилище
-        localStorage.setItem('access_token', access_token);
-  
-        alert('You have successfully logged in!');
-      } else {
-        // Обработка ошибки аутентификации
-        alert('Incorrect login or password');
-      }
-    } catch (error) {
-      // Обработка сетевой ошибки
-      alert('A network error has occurred. Please try again later.');
-    }
-  
-    // Сброс флага submitting после завершения отправки
-    setSubmitting(false);
+     
+  handleInputChange = (event) => {
+    // Обработчик изменения значений полей
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
   };
   
-  // login = (access_token) => {
-  //   // Получите функцию setAuthToken из контекста аутентификации
-  //   const { setAuthToken } = this.context;
-  //   // Установите токен в состоянии LoginForm или делайте другую логику аутентификации по вашему усмотрению
-  //   this.setState({ authToken: access_token });
-  //   // Установите токен в контекст аутентификации
-  //   setAuthToken(access_token);
-  // };
+
+handleOnSubmit = async (values) => {
+  const { username, password } = this.state;
   
+  try {
+    const data = qs.stringify({
+      username,
+      password,
+    });
+ 
+    const options = {
+      method: 'POST',
+      url: 'http://35.228.45.65:8800/login',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      data,
+    };
+    const response = await axios(options);
+
+    if (response.status === 200) {
+      const { access_token } = response.data;
+      localStorage.setItem('access_token', access_token);
+
+      
+      const { login } = this.context;
+        login(access_token, username);
+  //     axios.get(`http://35.228.45.65:8800/users/${username}`)
+  // .then((response) => {
+  //   const userDisplayName = response.data.user_name;
+  //   this.setState({ userDisplayName }); // Обновите состояние с именем пользователя
+  //   const { login } = this.context;
+  //   login(access_token, username);
+  // })
+  // .catch((error) => {
+  //   console.error('Ошибка при получении данных пользователя:', error);
+  // });
+  
+
+ 
+      // Возвращаем данные пользователя в случае успеха
+      alert('You have successfully logged in!');
+      console.log('User logged in'); // Выводим в консоль сообщение о входе
+      // window.location.reload();
+    } else {
+      // Обработка ошибки аутентификации
+      alert('Incorrect login or password');
+    }
+  } catch (error) {
+    // Обработка сетевой ошибки
+    console.log(error.message);
+    alert('A network error has occurred. Please try again later.');
+  }
+
+  return null;
+}
+
+
       render() {
         return (
           <Formik
             initialValues={{ username: '', password: '' }}
             validationSchema={validationSchema}
-            onSubmit={this.handleOnSubmit}
+            
           >
             <Form>
               <div>
                 <label htmlFor="username">Email:</label>
-                <Field type="text" id="username" name="username" /> 
+                <Field type="text" id="username" name="username" onChange={this.handleInputChange}
+              value={this.state.username}   />
                 <ErrorMessage name="username" component="div" />
               </div>
               <div>
@@ -90,6 +116,8 @@ class LoginForm extends Component {
                   type={this.state.showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"  
+                  onChange={this.handleInputChange} 
+                  value={this.state.password}
                 />
                 <span
                   onClick={this.togglePasswordVisibility}
@@ -101,7 +129,7 @@ class LoginForm extends Component {
                 </span>
                 <ErrorMessage name="password" component="div" />
               </div>
-              <button type="submit">Log in</button>
+              <button type="submit" onClick={this.handleOnSubmit}>Log in</button>
             </Form>
           </Formik>
         );
@@ -111,3 +139,4 @@ class LoginForm extends Component {
     LoginForm.contextType = AuthContext;
     
     export default LoginForm;
+
