@@ -7,7 +7,7 @@ function RoomList() {
   const [rooms, setRooms] = useState([]);
 
   const loadRooms = () => {
-    axios.get('http://35.228.45.65:8800/rooms/')
+    axios.get('https://cool-chat.club/rooms/')
       .then((response) => {
         setRooms(response.data);
       })

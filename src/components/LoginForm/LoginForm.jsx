@@ -49,7 +49,7 @@ handleOnSubmit = async (values) => {
  
     const options = {
       method: 'POST',
-      url: 'http://35.228.45.65:8800/login',
+      url: 'https://cool-chat.club/login',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/x-www-form-urlencoded',
