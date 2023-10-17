@@ -3,6 +3,7 @@ import Header from './Header/Header';
 import Main from './Main/Main';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
+import Footer from './Footer/Footer';
 
 export const App = () => {
   const [authToken, setAuthToken] = useState(null);
@@ -12,6 +13,7 @@ export const App = () => {
       <AuthProvider value={{ authToken, setAuthToken }}>
         <Header />
         <Main />
+        <Footer />
       </AuthProvider>
     </div>
   );
