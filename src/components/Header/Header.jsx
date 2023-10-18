@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Switch from 'react-switch';
 import css from './Header.module.css';
-import LogoLight from '../Images/LogoLight.svg';
-import LogoDark from '../Images/LogoDark.svg';
+import Logo from './Logo';
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 
@@ -58,10 +57,7 @@ const Header = () => {
 
   return (
     <header>
-        <img
-          src={darkTheme ? LogoDark : LogoLight}
-          alt="Logo company"
-        />
+        <Logo darkTheme={darkTheme} />
       <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Chat rooms</a></li>

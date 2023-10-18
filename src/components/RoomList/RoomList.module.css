@@ -14,18 +14,74 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 1px solid #000;
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    overflow: hidden;
     
   }
   
 .room_img{
     display: block;
     max-width: 100%;
-    /* object-fit: contain; */
+    object-fit: cover;
 }
 
 .room_title{
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 10px;
+  font-size: 32px;
+  font-weight: 500;
+  line-height: 1.24;
+
+  margin-bottom: 40px;
+  margin-top: 100px;
+    
+}
+.room_container {
+  position: relative;
+}
+
+.room_img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.room_name {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  text-align: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: #fff;
+  
+}
+
+.room_description {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(2, 74, 122, 0.7);
+  padding: 10px;
+  box-sizing: border-box;
+
+  margin-top: 10px;
+  padding: 10px;
+  
+}
+
+.people_count {
+  display: flex;
+  align-items: center;
+}
+
+.people_count img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.people_count span {
+  font-weight: 500;
+  font-size: 16px;
 }
