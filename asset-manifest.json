@@ -1,18 +1,22 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.fc78d308.css",
-    "main.js": "/Team-Chat/static/js/main.0f9dfc23.js",
+    "main.css": "/Team-Chat/static/css/main.c2103d5a.css",
+    "main.js": "/Team-Chat/static/js/main.e6782afc.js",
     "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
+    "static/media/CreateRoomImg.png": "/Team-Chat/static/media/CreateRoomImg.aa3b2518de8ec06b6d4a.png",
     "static/media/LogoLight.svg": "/Team-Chat/static/media/LogoLight.b8328577c3775ad708e89706d38bd8c8.svg",
     "static/media/LogoDark.svg": "/Team-Chat/static/media/LogoDark.a512f03dc4e0a68f4c63c54700d5b3b7.svg",
     "static/media/PlayMarket.svg": "/Team-Chat/static/media/PlayMarket.dead8f53da95c10aa5a0a4ffd3ecd3e4.svg",
     "static/media/AppStore.svg": "/Team-Chat/static/media/AppStore.35f1866e55968a3620a504d74c850438.svg",
+    "static/media/IconPeopleOnline.svg": "/Team-Chat/static/media/IconPeopleOnline.281f7c66f4bbb6270d4d7e9733e519a3.svg",
+    "static/media/IconPeopleAll.svg": "/Team-Chat/static/media/IconPeopleAll.f6d11568f27cddf6ed6c474c31db3147.svg",
     "index.html": "/Team-Chat/index.html",
-    "main.fc78d308.css.map": "/Team-Chat/static/css/main.fc78d308.css.map",
-    "main.0f9dfc23.js.map": "/Team-Chat/static/js/main.0f9dfc23.js.map"
+    "static/media/IconAdd.svg": "/Team-Chat/static/media/IconAdd.d2ada4f85b46da0be365cdadbd2f5554.svg",
+    "main.c2103d5a.css.map": "/Team-Chat/static/css/main.c2103d5a.css.map",
+    "main.e6782afc.js.map": "/Team-Chat/static/js/main.e6782afc.js.map"
   },
   "entrypoints": [
-    "static/css/main.fc78d308.css",
-    "static/js/main.0f9dfc23.js"
+    "static/css/main.c2103d5a.css",
+    "static/js/main.e6782afc.js"
   ]
 }
