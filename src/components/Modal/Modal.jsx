@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'react-modal';
+import css from './CustomModal.module.css';
 
 
 
@@ -9,8 +10,8 @@ const CustomModal = ({ isOpen, onClose, children }) => {
       isOpen={isOpen}
       onRequestClose={onClose}
       contentLabel="Custom Modal"
-      
-    >
+      className={css.modal}
+      >
       <button onClick={onClose}>Закрыть</button>
       {children}
     </Modal>
@@ -18,21 +19,3 @@ const CustomModal = ({ isOpen, onClose, children }) => {
 };
 
 export default CustomModal;
-
-
-  // const customStyles = {
-  //   content: {
-  //     width: '400px',
-  //     height: '400px',
-  //   },
-  //   overlay: {
-  //     backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  //     display: 'flex',
-  //     alignItems: 'center',
-  //     justifyContent: 'center',
-  //   },
-  // };
-
- 
-      // style={customStyles}
-     
