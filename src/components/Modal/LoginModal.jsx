@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CustomModal from './Modal';
+import css from './LoginModal.module.css';
 import LoginForm from 'components/LoginForm/LoginForm';
 import RegistrationForm from 'components/RegistrationForm/RegistrationForm';
 
@@ -15,8 +16,8 @@ const LoginModal = ({ isOpen, onClose }) => {
   };
 
   return (
-    <CustomModal isOpen={isOpen} onClose={onClose}>
-      <h2>{isLoginFormVisible ? 'Login' : 'Register'}</h2>
+    <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
+      <h2 className={css.title}>{isLoginFormVisible ? 'Log in to TeamChat' : 'Register in TeamChat'}</h2>
       {isLoginFormVisible ? <LoginForm /> : <RegistrationForm />}
 
       {isLoginFormVisible ? (

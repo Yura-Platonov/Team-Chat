@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import Select from 'react-select';
+import CustomModal from 'components/Modal/Modal';
+import css from './CreateRoom.module.css';
+import IconAdd from 'components/Images/IconAdd.svg';
+import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
+import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
+import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
 import { useAuth } from '../LoginForm/AuthContext'; 
 
@@ -73,13 +79,20 @@ function CreateRoom({ onRoomCreated }) {
   
 
   return (
-    <div>
-      <h2>Create a Room</h2>
-      <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-      <Modal
-        isOpen={isModalOpen}
-        onRequestClose={() => setIsModalOpen(false)}
-      >
+    <div className={css.room_item} onClick={() => setIsModalOpen(true)}>
+    <div className={css.room_container}>
+      <img
+        src={CreateRoomImg}
+        alt="CreateRoomImg"/>
+    <div className={css.room_add}>
+        <img
+        src={IconAdd}
+        alt="IconAdd"/>
+        <p className={css.room_name}>Add room</p>
+      {/* <button onClick={() => setIsModalOpen(true)}>Open Modal</button> */}
+      
+      </div>
+      <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <h2>Create a Room</h2>
         <input
           type="text"
@@ -102,7 +115,22 @@ function CreateRoom({ onRoomCreated }) {
         <button onClick={handleCreateRoom}>
           Create Room
         </button>
-      </Modal>
+      </CustomModal>
+    </div>
+    <div className={css.room_description}>
+          <div className={css.people_count}>
+          <img
+              src={IconPeopleAll}
+              alt="IconPeopleAll"/>
+            <span>0</span>
+            </div>
+            <div className={css.people_count}>
+            <img
+              src={IconPeopleOnline}
+              alt="IconPeopleOnline"/>
+            <span>0</span>
+          </div>
+        </div>
     </div>
   );
 }

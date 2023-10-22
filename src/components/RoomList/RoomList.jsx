@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import css from './RoomList.module.css';
 import CreateRoom from 'components/CreateRoom/CreateRoom';
+import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
+import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
@@ -41,7 +43,7 @@ function RoomList() {
     //     </li>
     //   </ul>
     // </div>
-    <div>
+    <div className={css.room_section}>
   <h2 className={css.room_title}>Choose a room for communication</h2>
   <ul className={css.room_list}>
     {rooms.map((room) => (
@@ -53,10 +55,16 @@ function RoomList() {
         
         <div className={css.room_description}>
           <div className={css.people_count}>
-            <img src="online_people_icon.png" alt="Online People" />
-            <span>{room.online_people_count} Online</span>
-            <img src="total_people_icon.png" alt="Total People" />
-            <span>{room.total_people_count} Total</span>
+          <img
+              src={IconPeopleAll}
+              alt="IconPeopleAll"/>
+            <span> Online</span>
+            </div>
+            <div className={css.people_count}>
+            <img
+              src={IconPeopleOnline}
+              alt="IconPeopleOnline"/>
+            <span> Total</span>
           </div>
         </div>
       </li>

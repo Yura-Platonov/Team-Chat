@@ -1,46 +1,70 @@
-/* CreateRoom.module.css */
+.room_item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  
+}
+.room_container {
+  display: flex;
+  justify-content: center;
+  position: relative;
+  width: 295px;
+  height: 250px;
+  
+}
 
-.createRoom_container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+.room_add{
+  position: absolute;
+  bottom: 0%;
+  left: 0;
+  right: 0;
+  padding-bottom: 20px;
+  display: block;
+  text-align: center;
+
+  /* padding: 20px; */
   
-  .createRoom_title {
-    font-size: 24px;
-    margin-bottom: 10px;
-  }
+
+}
+
+.room_name {
   
-  .createRoom_form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  text-align: center;
   
-  .createRoom_input {
-    width: 100%;
-    max-width: 300px;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
+  color: black;
+  font-family: Manrope;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 130%;
+
+  padding: 0;
+  margin: 0;
+}
+.people_count span {
+  font-family: Manrope;
+  font-size: 18px;
+  font-weight: 400;
+  color: #fff;}
+
   
-  .createRoom_button {
-    background-color: #ff8b2c;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+.room_description {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  width: 295px;
+  height: 60px;
+  padding: 18px;
+  box-sizing: border-box;
+
+  background-color: #024A7A;
+
   
-  .createRoom_button:hover {
-    background-color: #e86e20;
-  }
-  
+}
+
+.people_count {
+  display: flex;
+  align-items: center;
+}

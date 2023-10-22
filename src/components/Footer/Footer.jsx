@@ -14,7 +14,7 @@ const Footer = ({ darkTheme }) => {
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Chat rooms</a></li>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Personal chat</a></li>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Settings</a></li>
-          <li className={css.nav_item}><a href="/" className={css.nav_link}>Rools of the chat</a></li>
+          <li className={css.nav_item}><a href="/" className={css.nav_link}>Rules of the chat</a></li>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Privacy Policy</a></li>
         </ul>
       </nav>
