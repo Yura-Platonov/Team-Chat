@@ -6,6 +6,7 @@ import qs from 'qs';
 // import './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import css from './LoginForm.module.css';
 
 import AuthContext from './AuthContext';
 
@@ -103,19 +104,21 @@ handleOnSubmit = async (values) => {
             validationSchema={validationSchema}
             
           >
-            <Form>
+            <Form className={css.form}>
               <div>
-                <label htmlFor="username">Email:</label>
-                <Field type="text" id="username" name="username" onChange={this.handleInputChange}
-              value={this.state.username}   />
+                <label htmlFor="username" className={css.text}>Login</label>
+                <Field className={css.input} type="text" id="username" name="username" placeholder="name@gmail.com" onChange={this.handleInputChange}
+              value={this.state.username}/>
                 <ErrorMessage name="username" component="div" />
               </div>
               <div>
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password" className={css.text}>Password</label>
                 <Field
                   type={this.state.showPassword ? 'text' : 'password'}
                   id="password"
                   name="password"  
+                  className={css.input}
+                  placeholder="Enter your password"
                   onChange={this.handleInputChange} 
                   value={this.state.password}
                 />

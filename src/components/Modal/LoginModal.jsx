@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import CustomModal from './Modal';
+import CustomModal from './CustomModal';
 import css from './LoginModal.module.css';
 import LoginForm from 'components/LoginForm/LoginForm';
 import RegistrationForm from 'components/RegistrationForm/RegistrationForm';

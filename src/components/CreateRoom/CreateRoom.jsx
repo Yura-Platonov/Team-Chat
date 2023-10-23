@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import Select from 'react-select';
-import CustomModal from 'components/Modal/Modal';
+import CustomModal from 'components/Modal/CustomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
 import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
