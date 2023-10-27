@@ -31,25 +31,47 @@ class RegistrationForm extends Component {
     this.setState({ selectedAvatar: selectedOption});
   };
 
+  // componentDidMount() {
+  //   axios
+  //     .get('https://cool-chat.club/images/Avatar')
+  //     .then((response) => {
+  //       const imageOptions = response.data.map((avatar) => ({
+  //         value: avatar.images,
+  //         label: (
+  //           <div>
+  //             <img src={avatar.images} alt={avatar.image_room} width="50" height="50" />
+  //             {avatar.image_room}
+  //           </div>
+  //         ),
+  //       }));
+  //       this.setState({ imageOptions });
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error loading images:', error);
+  //     });
+  // }
   componentDidMount() {
     axios
-      .get('https://cool-chat.club/images/Avatar')
+      .get('https://cool-chat.club/images/')
       .then((response) => {
-        const imageOptions = response.data.map((avatar) => ({
-          value: avatar.images,
+        const filteredAvatars = response.data.filter((avatar) => avatar.images === 'Avatar');
+  
+        const imageOptions = filteredAvatars.map((avatar) => ({
+          value: avatar.image_room,
           label: (
             <div>
-              <img src={avatar.images} alt={avatar.image_room} width="50" height="50" />
-              {avatar.image_room}
+              <img src={avatar.image_room} alt={avatar.image_room} width="50" height="50" />
             </div>
           ),
         }));
+  
         this.setState({ imageOptions });
       })
       .catch((error) => {
         console.error('Error loading images:', error);
       });
   }
+  
 
   // Обработчик отправки формы
   handleSubmit = async ({ user_name, email, password }) => {
