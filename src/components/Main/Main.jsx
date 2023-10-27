@@ -1,4 +1,6 @@
 import React from 'react';
+// import { Outlet } from 'react-router';
+
 import RoomList from '../RoomList/RoomList';
 import css from './Main.module.css';
 
@@ -11,7 +13,9 @@ function Main() {
       </section>
       
       <RoomList />
+      
     </div>
+    
   );
 }
 

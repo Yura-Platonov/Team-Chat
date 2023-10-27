@@ -28,15 +28,32 @@ function CreateRoom({ onRoomCreated }) {
   const [imageOptions, setImageOptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
+  // useEffect(() => {
+  //   axios.get('https://cool-chat.club/images/Home')
+  //     .then((response) => {
+  //       setImageOptions(response.data.map((image) => ({
+  //         value: image.images,
+  //         label: (
+  //           <div>
+  //             <img src={image.images} alt={image.image_room} width="50" height="50" />
+  //             {image.image_room}
+  //           </div>
+  //         ),
+  //       })));
+  //     })
+  //     .catch((error) => {
+  //       console.error('Error loading images:', error);
+  //     });
+  // }, []);
   useEffect(() => {
-    axios.get('https://cool-chat.club/images/Home')
+    axios.get('https://cool-chat.club/images/')
       .then((response) => {
-        setImageOptions(response.data.map((image) => ({
-          value: image.images,
+        const filteredImages = response.data.filter((image) => image.images === "Home");
+        setImageOptions(filteredImages.map((image) => ({
+          value: image.image_room,
           label: (
             <div>
-              <img src={image.images} alt={image.image_room} width="50" height="50" />
-              {image.image_room}
+              <img src={image.image_room} alt={image.image_room} width="50" height="50" />
             </div>
           ),
         })));
@@ -45,7 +62,7 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Ошибка при загрузке изображений:', error);
       });
   }, []);
-
+  
   
   // console.log('authToken:', authToken);
    
