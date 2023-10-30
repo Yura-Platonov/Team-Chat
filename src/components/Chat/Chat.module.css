@@ -15,6 +15,8 @@ padding: 60px 100px 100px 100px;
 }
 
 .members_title{
+    margin: 0;
+    padding-bottom: 16px;
     color: inherit;
     font-size: 20px;
     font-weight: 600;
@@ -22,6 +24,7 @@ padding: 60px 100px 100px 100px;
 }
 
 .members_container{
+    padding: 16px;
     border-radius: 20px;
     border: 2px solid  #024A7A;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
@@ -88,14 +91,22 @@ input{
 
 }
 
+.chat_area{
+    height: 760px;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 30px 40px;
+
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30)
+}
+
 .no_messages{
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    border-radius: 20px;
-    border: 2px solid  #024A7A;
-    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+   
 }
 
 .no_messages_text{

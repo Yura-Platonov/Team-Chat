@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.5.1",
     "formik": "^2.4.5",
+    "nanoid": "^5.0.2",
     "normalize.css": "^8.0.1",
     "qs": "^6.11.2",
     "react": "^18.1.0",

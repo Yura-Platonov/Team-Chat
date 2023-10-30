@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import axios from 'axios';
 
 const AuthContext = createContext();
 
@@ -13,8 +14,19 @@ export const AuthProvider = ({ children }) => {
   const login = (token, username) => {
     setAuthToken(token);
     localStorage.setItem('access_token', token);
-
-    // Обновить пользователя в контексте и сохранить в localStorage
+  
+    
+    axios.get(`https://cool-chat.club/users/${username}`)
+      .then((response) => {
+        const user = response.data;
+        const user_name = user.user_name;
+  
+        localStorage.setItem("user_name", user_name);
+      })
+      .catch((error) => {
+        console.error("Ошибка при выполнении GET-запроса:", error);
+      });
+  
     const user = {
       username,
       isAuthenticated: true,
@@ -22,14 +34,15 @@ export const AuthProvider = ({ children }) => {
     setUser(user);
     localStorage.setItem('user', JSON.stringify(user));
   };
+  
 
   const logout = () => {
     setAuthToken(null);
     localStorage.removeItem('access_token');
     
-    // Установить пользователя в null при выходе и удалить из localStorage
     setUser(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('user_name');
   };
 
   return (

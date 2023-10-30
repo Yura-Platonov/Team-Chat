@@ -1,41 +1,45 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import css from './Chat.module.css';
 import Bg from '../Images/Bg_empty_chat.png'
 import io from 'socket.io-client';
 
-const Chat = ({ roomId }) => {
+const Chat = () => {
   const [chatMembers, setChatMembers] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]); 
 
-  const socket = io('https://cool-chat.club');
+  const token = localStorage.getItem('access_token');
+  const roomName = 'Holl';
 
+  const socket = io('https://cool-chat.club/${roomName}?token=${token}');
+  
   useEffect(() => {
-    // Здесь вы можете выполнить запрос к серверу для получения списка участников чата.
-    // Используйте roomId для указания нужной комнаты.
-    const apiUrl = `https://cool-chat.club/ws/users/${roomId}`;
-
-    axios.get(apiUrl)
-      .then((response) => {
-        const users = response.data.users;
-        setChatMembers(users);
-      })
-      .catch((error) => {
-        console.error('Ошибка при получении списка участников чата:', error);
-      });
-  }, [roomId]);
+    socket.on('connect', () => {
+      console.log('Connected to the server via WebSocket');
+    });
+  
+    socket.on('message', (message) => {
+      const newMessage = { text: message, sender: 'User' };
+      addMessage(newMessage);
+    });
+  
+    return () => {
+      socket.disconnect();
+    };
+  }, [token, roomName]);
+  
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
 
   const sendMessage = () => {
-    // Здесь вы можете отправить сообщение на сервер и добавить его к списку сообщений.
-    // Например, можно использовать функцию addMessage, которую вы уже объявили.
+    
+    socket.emit('sendMessage', message); 
+    
     const newMessage = { text: message, sender: 'You' };
     addMessage(newMessage);
-    
+  
     setMessage('');
   };
 
