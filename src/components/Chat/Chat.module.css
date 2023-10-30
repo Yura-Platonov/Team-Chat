@@ -1,0 +1,124 @@
+.container{
+padding: 60px 100px 100px 100px;
+
+}
+
+.title{
+    color:inherit;
+    width: 400px;
+    margin: 0;
+    padding: 0;
+    padding-bottom: 32px;
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 124%;
+}
+
+.members_title{
+    margin: 0;
+    padding-bottom: 16px;
+    color: inherit;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 130%;
+}
+
+.members_container{
+    padding: 16px;
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+}
+
+.members_list{
+    display: flex;
+    flex-direction: column;
+}
+
+.members_item{
+    border-color: aquamarine;
+}
+
+.main_container{
+    display: flex;
+    gap: 20px;
+     
+}
+
+.chat_container{
+    width: 905px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    }
+
+.input_container{
+    
+    display: flex;
+    gap: 20px;
+}
+
+input{
+    box-sizing: border-box;
+    width: 675px;
+    height: 80px;
+    padding: 28px 20px;
+    align-items: center;
+
+    font-size: 24px;
+    font-weight: 400;
+
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+}
+
+.button_send{
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 210px;
+    height: 80px;
+    
+   
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 124%;
+
+    border: none;
+    border-radius: 20px;
+    background: #024A7A;
+    color: #F5FBFF;
+
+}
+
+.chat_area{
+    height: 760px;
+    display: flex;
+    flex-direction: column-reverse;
+    padding: 30px 40px;
+
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30)
+}
+
+.no_messages{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+}
+
+.no_messages_text{
+    width: 300px;
+    color: inherit;
+    text-align: center;
+    margin: 0;
+    padding-top: 15px;
+    padding-bottom: 30px;
+   
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 124%;
+    opacity: 0.6;
+}

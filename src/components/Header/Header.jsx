@@ -5,9 +5,6 @@ import Logo from './Logo';
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 
-
-
-
 function IconSun() {
   return (
     <svg width="24" height="24" viewBox="0 0 31 31" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -30,6 +27,7 @@ const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const { user, logout } = useAuth();
+  const user_name = localStorage.getItem('user_name');
   
 
 
@@ -57,7 +55,7 @@ const Header = () => {
 
   return (
     <header>
-        <Logo darkTheme={darkTheme} />
+        <Logo darkTheme={darkTheme}/>
       <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Chat rooms</a></li>
@@ -85,13 +83,11 @@ const Header = () => {
       
       
       </div>
-
-      {/* Модальное окно для логина */}
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
       <div>
         {user ? (
           <>
-            <p>Welcome, {user.username}!</p>
+            <p>Welcome, {user_name}!</p>
             <button onClick={logout}>Logout</button>
           </>
         ) : (
