@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import css from './Chat.module.css';
 import Bg from '../Images/Bg_empty_chat.png'
 import io from 'socket.io-client';
 
 const Chat = () => {
-  const [chatMembers, setChatMembers] = useState([]);
+  // const [chatMembers, setChatMembers] = useState([]);
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]); 
 
-  const token = localStorage.getItem('access_token');
-  const roomName = 'Holl';
+  // const token = localStorage.getItem('access_token');
+  // const roomName = 'Holl';
 
-  const socket = io('https://cool-chat.club/${roomName}?token=${token}');
+  const socket = io('https://cool-chat.club/');
   
-  useEffect(() => {
-    socket.on('connect', () => {
-      console.log('Connected to the server via WebSocket');
-    });
+  // useEffect(() => {
+  //   socket.on('connect', () => {
+  //     console.log('Connected to the server via WebSocket');
+  //   });
   
-    socket.on('message', (message) => {
-      const newMessage = { text: message, sender: 'User' };
-      addMessage(newMessage);
-    });
+  //   socket.on('message', (message) => {
+  //     const newMessage = { text: message, sender: 'User' };
+  //     addMessage(newMessage);
+  //   });
   
-    return () => {
-      socket.disconnect();
-    };
-  }, [token, roomName]);
+  //   return () => {
+  //     socket.disconnect();
+  //   };
+  // }, [token, roomName]);
   
 
   const handleMessageChange = (e) => {
@@ -53,7 +53,7 @@ const Chat = () => {
       <div className={css.main_container}>
         <div className={css.members_container}>
           <h3 className={css.members_title}>Chat members</h3>
-          <ul className={css.members_list}>
+          {/* <ul className={css.members_list}>
             {chatMembers.map((member) => (
               <li key={member.id} className={css.members_item}>
                 <img
@@ -64,7 +64,7 @@ const Chat = () => {
                 {member.name}
               </li>
             ))}
-          </ul>
+          </ul> */}
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area}>
