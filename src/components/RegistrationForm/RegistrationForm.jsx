@@ -5,20 +5,19 @@ import axios from 'axios';
 import css from './RegistrationForm.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import Select from 'react-select';
+// import Select from 'react-select';
 
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
 
-    // Инициализируем состояние (state) компонента
     this.state = {
       user_name: '',
       email: '',
       password: '',
       showPassword: false,
-      selectedAvatar: null, // Изменено на null, начальное значение выбранного аватара
-      imageOptions: [], // Добавлено для хранения списка аватаров
+      selectedAvatar: null, 
+      imageOptions: [],
     };
   }
 
@@ -51,28 +50,6 @@ class RegistrationForm extends Component {
         console.error('Error loading images:', error);
       });
   }
-  // componentDidMount() {
-  //   axios
-  //     .get('https://cool-chat.club/images/')
-  //     .then((response) => {
-  //       const filteredAvatars = response.data.filter((avatar) => avatar.images === 'Avatar');
-  
-  //       const imageOptions = filteredAvatars.map((avatar) => ({
-  //         value: avatar.image_room,
-  //         label: (
-  //           <div>
-  //             <img src={avatar.image_room} alt={avatar.image_room} width="50" height="50" />
-  //           </div>
-  //         ),
-  //       }));
-  
-  //       this.setState({ imageOptions });
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error loading images:', error);
-  //     });
-  // }
-  
 
   // Обработчик отправки формы
   handleSubmit = async ({ user_name, email, password }) => {
@@ -119,19 +96,14 @@ class RegistrationForm extends Component {
         onSubmit={this.handleSubmit}
       >
         <Form className={css.registerForm}>
-          <div>
-            <label htmlFor="user_name">Nickname:</label>
-            <Field type="text" id="user_name" name="user_name" />
-            <ErrorMessage name="user_name" component="div" />
-          </div>
-          <div>
-            <label htmlFor="email">Email:</label>
-            <Field type="email" id="email" name="email" />
+            <div>
+            <label htmlFor="email" className={css.text}>Enter your email*</label>
+            <Field  className={css.input} type="email" id="email" name="email" placeholder="name@gmail.com" />
             <ErrorMessage name="email" component="div" />
           </div>
           <div>
-            <label htmlFor="password">Password:</label>
-            <Field type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" />
+            <label htmlFor="password" className={css.text}>Come up with a password*:</label>
+            <Field  className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="**********"/>
             <ErrorMessage name="password" component="div" />
             <span
               onClick={this.togglePasswordVisibility}
@@ -143,8 +115,8 @@ class RegistrationForm extends Component {
             </span>
           </div>
           <div>
-            <label htmlFor="confirmPassword">Confirm password:</label>
-            <Field type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" />
+            <label htmlFor="confirmPassword" className={css.text}>Confirm password*</label>
+            <Field className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" placeholder="**********"/>
             <ErrorMessage name="confirmPassword" component="div" />
             <span
               onClick={this.togglePasswordVisibility}
@@ -156,13 +128,36 @@ class RegistrationForm extends Component {
             </span>
           </div>
           <div>
-            <label htmlFor="avatar">Avatar:</label>
+            <label htmlFor="user_name" className={css.text}>Enter your nikname*</label>
+            <Field  className={css.input} type="text" id="user_name" name="user_name" placeholder="Nikoletta"/>
+            <ErrorMessage name="user_name" component="div" />
+          </div>
+          {/* <div>
+            <label htmlFor="avatar" className={css.text}>Choose your avatar*</label>
             <Select
               value={this.state.selectedAvatar}
               onChange={this.handleAvatarChange}
               options={this.state.imageOptions}
               placeholder="Select an Avatar"
             />
+          </div> */}
+          <div>
+          <label htmlFor="avatar" className={css.text}>Choose your avatar*</label>
+          <div className={css.avatarContainer}>
+            {this.state.imageOptions.map((avatarOption, index) => (
+              <div
+                key={index}
+                className={css.avatarCard}
+                onClick={() => this.handleAvatarChange(avatarOption)}
+              >
+                <img
+                  src={avatarOption.value}
+                  alt={avatarOption.label}
+                  className={css.avatarImage}
+                />
+              </div>
+            ))}
+          </div>
           </div>
           <button type="submit">Register</button>
         </Form>

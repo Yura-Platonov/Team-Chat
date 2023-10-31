@@ -1,3 +1,60 @@
 .registerForm{
     padding: 32px 0;
 }
+
+.text{
+    display: block;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.input{
+    width: 970px;
+    margin: 0;
+    margin-bottom: 16px;
+    height: 35px;
+    padding: 20px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 130%; 
+
+    border-radius: 20px;
+    border: 2px solid #024A7A;
+    background: #F5FBFF;
+}
+
+/* Карточка аватара */
+.avatarCard {
+    position: relative;
+    border-radius: 20px;
+    border: 2px solid #024A7A;
+    background-color: transparent;
+    width: 140px; 
+    height: 170px;
+    padding: 0; 
+    margin: 15px;
+    display: inline-block;
+    cursor: pointer;
+  }
+
+  .avatarCard:hover{
+    background-color:  #024A7A;
+    }
+  
+  /* Изображение аватара */
+  .avatarImage {
+    width: 100%; /* Ширина изображения */
+    height: 100%; /* Высота изображения */
+    object-fit: cover; 
+    position: relative;
+    z-index: 1;
+  }
+
+
+  /* Стили для контейнера аватаров */
+.avatarContainer {
+    margin: -15px;
+    height: 270px;
+    overflow-y: auto; 
+  }
+  
