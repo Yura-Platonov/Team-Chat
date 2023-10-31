@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
+import css from './RegistrationForm.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import Select from 'react-select';
@@ -117,7 +118,7 @@ class RegistrationForm extends Component {
         validationSchema={validationSchema} 
         onSubmit={this.handleSubmit}
       >
-        <Form>
+        <Form className={css.registerForm}>
           <div>
             <label htmlFor="user_name">Nickname:</label>
             <Field type="text" id="user_name" name="user_name" />
