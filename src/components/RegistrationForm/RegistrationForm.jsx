@@ -18,6 +18,7 @@ class RegistrationForm extends Component {
       showPassword: false,
       selectedAvatar: null, 
       imageOptions: [],
+      activeCardIndex: 0,
     };
   }
 
@@ -27,8 +28,8 @@ class RegistrationForm extends Component {
     }));
   };
 
-  handleAvatarChange = (selectedOption) => {
-    this.setState({ selectedAvatar: selectedOption});
+  handleAvatarChange = (selectedOption, index) => {
+    this.setState({ selectedAvatar: selectedOption, activeCardIndex: index });
   };
 
   componentDidMount() {
@@ -95,60 +96,62 @@ class RegistrationForm extends Component {
         validationSchema={validationSchema} 
         onSubmit={this.handleSubmit}
       >
-        <Form className={css.registerForm}>
+        <Form>
+        <h2 className={css.title}>Register in TeamChat</h2>
             <div>
-            <label htmlFor="email" className={css.text}>Enter your email*</label>
-            <Field  className={css.input} type="email" id="email" name="email" placeholder="name@gmail.com" />
+            <label htmlFor="email"  className={css.text}>Enter your email*</label>
+            <Field  className={css.input} type="email" id="email" name="email" autoComplete="email" placeholder="name@gmail.com" />
             <ErrorMessage name="email" component="div" />
           </div>
           <div>
-            <label htmlFor="password" className={css.text}>Come up with a password*:</label>
-            <Field  className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" placeholder="**********"/>
+            <label  htmlFor="password" className={css.text}>Come up with a password*
+            <span
+              onClick={this.togglePasswordVisibility}
+              className={css.passwordToggleIcon}
+            >
+              <FontAwesomeIcon
+                icon={this.state.showPassword ? faEye : faEyeSlash}
+              />
+            </span>
+            </label>
+            <Field  className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" autoComplete="new-password" placeholder="**********"/>
             <ErrorMessage name="password" component="div" />
-            <span
-              onClick={this.togglePasswordVisibility}
-              className="password-toggle-icon"
-            >
-              <FontAwesomeIcon
-                icon={this.state.showPassword ? faEye : faEyeSlash}
-              />
-            </span>
-          </div>
+            </div>
           <div>
-            <label htmlFor="confirmPassword" className={css.text}>Confirm password*</label>
-            <Field className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" placeholder="**********"/>
-            <ErrorMessage name="confirmPassword" component="div" />
+            <label  htmlFor="confirmPassword" className={css.text}>Confirm password*
             <span
               onClick={this.togglePasswordVisibility}
-              className="password-toggle-icon"
+              className={css.passwordToggleIcon}
             >
               <FontAwesomeIcon
                 icon={this.state.showPassword ? faEye : faEyeSlash}
               />
             </span>
+            </label>
+            <Field className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" autoComplete="new-password" placeholder="**********"/>
+            <ErrorMessage name="confirmPassword" component="div" />
+            {/* <span
+              onClick={this.togglePasswordVisibility}
+              className={css.passwordToggleIcon}
+            >
+              <FontAwesomeIcon
+                icon={this.state.showPassword ? faEye : faEyeSlash}
+              />
+            </span> */}
           </div>
           <div>
             <label htmlFor="user_name" className={css.text}>Enter your nikname*</label>
-            <Field  className={css.input} type="text" id="user_name" name="user_name" placeholder="Nikoletta"/>
+            <Field  className={css.input} type="text" id="user_name" name="user_name" autoComplete="off" placeholder="Nikoletta"/>
             <ErrorMessage name="user_name" component="div" />
           </div>
-          {/* <div>
-            <label htmlFor="avatar" className={css.text}>Choose your avatar*</label>
-            <Select
-              value={this.state.selectedAvatar}
-              onChange={this.handleAvatarChange}
-              options={this.state.imageOptions}
-              placeholder="Select an Avatar"
-            />
-          </div> */}
           <div>
-          <label htmlFor="avatar" className={css.text}>Choose your avatar*</label>
+          <label className={css.text1}>Choose your avatar*</label>
           <div className={css.avatarContainer}>
             {this.state.imageOptions.map((avatarOption, index) => (
               <div
                 key={index}
-                className={css.avatarCard}
-                onClick={() => this.handleAvatarChange(avatarOption)}
+                className={`${css.avatarCard} ${index === this.state.activeCardIndex ? css.active : ''}`}
+                onClick={() => this.handleAvatarChange(avatarOption, index)}
               >
                 <img
                   src={avatarOption.value}
@@ -159,7 +162,14 @@ class RegistrationForm extends Component {
             ))}
           </div>
           </div>
-          <button type="submit">Register</button>
+          <div className={css.buttonsContainer}>
+            <button className={css.button} type="submit">
+              Approve
+            </button>
+            <button type="button" className={css.buttonLink} onClick={this.props.showLoginForm}>
+              Already registered
+            </button>
+          </div>
         </Form>
       </Formik>
     );

@@ -104,35 +104,41 @@ handleOnSubmit = async (values) => {
             validationSchema={validationSchema}
             
           >
-            <Form className={css.form}>
+            <Form>
+            <h2 className={css.title}>Log in to TeamChat</h2>
               <div>
-                <label htmlFor="username" className={css.text}>Login</label>
-                <Field className={css.input} type="text" id="username" name="username" placeholder="name@gmail.com" onChange={this.handleInputChange}
+                <label htmlFor="username"  className={css.text}>Login</label>
+                <Field className={css.input} type="text" id="username" name="username" autoComplete="email" placeholder="name@gmail.com" onChange={this.handleInputChange}
               value={this.state.username}/>
                 <ErrorMessage name="username" component="div" />
               </div>
               <div>
-                <label htmlFor="password" className={css.text}>Password</label>
-                <Field
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"  
-                  className={css.input}
-                  placeholder="Enter your password"
-                  onChange={this.handleInputChange} 
-                  value={this.state.password}
-                />
+                <label   htmlFor="password"  className={css.text}>Password
                 <span
                   onClick={this.togglePasswordVisibility}
-                  className="password-toggle-icon"
+                  className={css.passwordToggleIcon}
                 >
                   <FontAwesomeIcon
                     icon={this.state.showPassword ? faEye : faEyeSlash}
                   />
                 </span>
+                </label>
+                <Field
+                  type={this.state.showPassword ? 'text' : 'password'}
+                  id="password"
+                  name="password"  
+                  autoComplete="current-password"
+                  className={css.input}
+                  placeholder="Enter your password"
+                  onChange={this.handleInputChange} 
+                  value={this.state.password}
+                />
                 <ErrorMessage name="password" component="div" />
               </div>
-              <button type="submit" onClick={this.handleOnSubmit}>Log in</button>
+              <div className={css.buttonsContainer}>
+              <button type="submit"  className={css.button} onClick={this.handleOnSubmit}>Log in</button>
+              <button type="button"  className={css.buttonLink} onClick={this.props.showRegistrationForm}>Register</button>
+              </div>
             </Form>
           </Formik>
         );

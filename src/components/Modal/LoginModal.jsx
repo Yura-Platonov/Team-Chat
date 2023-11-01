@@ -17,20 +17,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
-      <h2 className={css.title}>{isLoginFormVisible ? 'Log in to TeamChat' : 'Register in TeamChat'}</h2>
-      {isLoginFormVisible ? <LoginForm /> : <RegistrationForm />}
-
-      {isLoginFormVisible ? (
-        <div>
-          <p>Don't have an account? Register.</p>
-          <button onClick={showRegistrationForm}>Register</button>
-        </div>
-      ) : (
-        <div>
-          <p>Already have an account? Log in.</p>
-          <button onClick={showLoginForm}>Log in</button>
-        </div>
-      )}
+         {isLoginFormVisible ? <LoginForm showRegistrationForm={showRegistrationForm} /> :  <RegistrationForm showLoginForm={showLoginForm} />}
     </CustomModal>
   );
 };
