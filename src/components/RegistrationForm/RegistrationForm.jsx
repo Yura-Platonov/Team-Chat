@@ -2,22 +2,23 @@ import React, { Component } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
+import css from './RegistrationForm.module.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import Select from 'react-select';
+// import Select from 'react-select';
 
 class RegistrationForm extends Component {
   constructor(props) {
     super(props);
 
-    // Инициализируем состояние (state) компонента
     this.state = {
       user_name: '',
       email: '',
       password: '',
       showPassword: false,
-      selectedAvatar: null, // Изменено на null, начальное значение выбранного аватара
-      imageOptions: [], // Добавлено для хранения списка аватаров
+      selectedAvatar: null, 
+      imageOptions: [],
+      activeCardIndex: 0,
     };
   }
 
@@ -27,8 +28,8 @@ class RegistrationForm extends Component {
     }));
   };
 
-  handleAvatarChange = (selectedOption) => {
-    this.setState({ selectedAvatar: selectedOption});
+  handleAvatarChange = (selectedOption, index) => {
+    this.setState({ selectedAvatar: selectedOption, activeCardIndex: index });
   };
 
   componentDidMount() {
@@ -50,28 +51,6 @@ class RegistrationForm extends Component {
         console.error('Error loading images:', error);
       });
   }
-  // componentDidMount() {
-  //   axios
-  //     .get('https://cool-chat.club/images/')
-  //     .then((response) => {
-  //       const filteredAvatars = response.data.filter((avatar) => avatar.images === 'Avatar');
-  
-  //       const imageOptions = filteredAvatars.map((avatar) => ({
-  //         value: avatar.image_room,
-  //         label: (
-  //           <div>
-  //             <img src={avatar.image_room} alt={avatar.image_room} width="50" height="50" />
-  //           </div>
-  //         ),
-  //       }));
-  
-  //       this.setState({ imageOptions });
-  //     })
-  //     .catch((error) => {
-  //       console.error('Error loading images:', error);
-  //     });
-  // }
-  
 
   // Обработчик отправки формы
   handleSubmit = async ({ user_name, email, password }) => {
@@ -118,52 +97,79 @@ class RegistrationForm extends Component {
         onSubmit={this.handleSubmit}
       >
         <Form>
-          <div>
-            <label htmlFor="user_name">Nickname:</label>
-            <Field type="text" id="user_name" name="user_name" />
-            <ErrorMessage name="user_name" component="div" />
-          </div>
-          <div>
-            <label htmlFor="email">Email:</label>
-            <Field type="email" id="email" name="email" />
+        <h2 className={css.title}>Register in TeamChat</h2>
+            <div>
+            <label htmlFor="email"  className={css.text}>Enter your email*</label>
+            <Field  className={css.input} type="email" id="email" name="email" autoComplete="email" placeholder="name@gmail.com" />
             <ErrorMessage name="email" component="div" />
           </div>
           <div>
-            <label htmlFor="password">Password:</label>
-            <Field type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" />
+            <label  htmlFor="password" className={css.text}>Come up with a password*
+            <span
+              onClick={this.togglePasswordVisibility}
+              className={css.passwordToggleIcon}
+            >
+              <FontAwesomeIcon
+                icon={this.state.showPassword ? faEye : faEyeSlash}
+              />
+            </span>
+            </label>
+            <Field  className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="password" name="password" autoComplete="new-password" placeholder="**********"/>
             <ErrorMessage name="password" component="div" />
+            </div>
+          <div>
+            <label  htmlFor="confirmPassword" className={css.text}>Confirm password*
             <span
               onClick={this.togglePasswordVisibility}
-              className="password-toggle-icon"
+              className={css.passwordToggleIcon}
             >
               <FontAwesomeIcon
                 icon={this.state.showPassword ? faEye : faEyeSlash}
               />
             </span>
-          </div>
-          <div>
-            <label htmlFor="confirmPassword">Confirm password:</label>
-            <Field type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" />
+            </label>
+            <Field className={css.input} type={this.state.showPassword ? 'text' : 'password'} id="confirmPassword" name="confirmPassword" autoComplete="new-password" placeholder="**********"/>
             <ErrorMessage name="confirmPassword" component="div" />
-            <span
+            {/* <span
               onClick={this.togglePasswordVisibility}
-              className="password-toggle-icon"
+              className={css.passwordToggleIcon}
             >
               <FontAwesomeIcon
                 icon={this.state.showPassword ? faEye : faEyeSlash}
               />
-            </span>
+            </span> */}
           </div>
           <div>
-            <label htmlFor="avatar">Avatar:</label>
-            <Select
-              value={this.state.selectedAvatar}
-              onChange={this.handleAvatarChange}
-              options={this.state.imageOptions}
-              placeholder="Select an Avatar"
-            />
+            <label htmlFor="user_name" className={css.text}>Enter your nikname*</label>
+            <Field  className={css.input} type="text" id="user_name" name="user_name" autoComplete="off" placeholder="Nikoletta"/>
+            <ErrorMessage name="user_name" component="div" />
           </div>
-          <button type="submit">Register</button>
+          <div>
+          <label className={css.text1}>Choose your avatar*</label>
+          <div className={css.avatarContainer}>
+            {this.state.imageOptions.map((avatarOption, index) => (
+              <div
+                key={index}
+                className={`${css.avatarCard} ${index === this.state.activeCardIndex ? css.active : ''}`}
+                onClick={() => this.handleAvatarChange(avatarOption, index)}
+              >
+                <img
+                  src={avatarOption.value}
+                  alt={avatarOption.label}
+                  className={css.avatarImage}
+                />
+              </div>
+            ))}
+          </div>
+          </div>
+          <div className={css.buttonsContainer}>
+            <button className={css.button} type="submit">
+              Approve
+            </button>
+            <button type="button" className={css.buttonLink} onClick={this.props.showLoginForm}>
+              Already registered
+            </button>
+          </div>
         </Form>
       </Formik>
     );
