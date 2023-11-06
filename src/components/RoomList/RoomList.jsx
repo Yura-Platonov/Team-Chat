@@ -20,53 +20,21 @@ function RoomList() {
   };
 
   useEffect(() => {
-    // Вызываем функцию загрузки при каждом рендере компонента
+
     loadRooms();
-  }, []); // Пустой массив зависимостей означает, что эффект выполняется при каждом рендере
+  }, []); 
 
   const addRoom = (newRoom) => {
     setRooms([...rooms, newRoom]);
   };
 
   return (
-   //     <div className={css.room_section}>
-//   <h2 className={css.room_title}>Choose a room for communication</h2>
-//   <ul className={css.room_list}>
-//     {rooms.map((room) => (
-//       <li className={css.room_item} key={room.id}>
-//         <div className={css.room_container}>
-//         <img className={css.room_img} src={room.image_room} alt={room.name_room} />
-//         <p className={css.room_name}>{room.name_room}</p>
-//         </div>
-        
-//         <div className={css.room_description}>
-//           <div className={css.people_count}>
-//           <img
-//               src={IconPeopleAll}
-//               alt="IconPeopleAll"/>
-//             <span> Online</span>
-//             </div>
-//             <div className={css.people_count}>
-//             <img
-//               src={IconPeopleOnline}
-//               alt="IconPeopleOnline"/>
-//             <span> Total</span>
-//           </div>
-//         </div>
-//       </li>
-//     ))}
-//     <li className={css.room_item}>
-//       <CreateRoom onRoomCreated={addRoom} />
-//     </li>
-//   </ul>
-// </div>
-//   );
   <div className={css.room_section}>
     <h2 className={css.room_title}>Choose a room for communication</h2>
     <ul className={css.room_list}>
       {rooms.map((room) => (
         <li className={css.room_item} key={room.id}>
-          <Link to={`/chat/${room.id}`} className={css.room_link}>
+          <Link to={`/chat/${room.name_room}`} className={css.room_link}>
             <div className={css.room_container}>
               <img className={css.room_img} src={room.image_room} alt={room.name_room} />
               <p className={css.room_name}>{room.name_room}</p>
