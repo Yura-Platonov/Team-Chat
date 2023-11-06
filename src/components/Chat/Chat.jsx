@@ -101,7 +101,7 @@
 // export default Chat;
 
 import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
+import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
 const Chat = () => {
@@ -116,11 +116,12 @@ const Chat = () => {
       // Подключение к серверу сокетов с использованием токена и имени комнаты
       // const newSocket = io(`wss://cool-chat.club?token=${token}&roomName=${roomName}`);
       // const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
-         const newSocket = io(`wss://cool-chat.club/ws?${roomName}?token=${token}`);
+         const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
 
 
-      newSocket.on('connect', () => {
+      newSocket.on("connect", () => {
         console.log('Connected to the server via WebSocket');
+        console.log(newSocket.id);
       });
 
       newSocket.on('message', (message) => {
