@@ -33,7 +33,6 @@ class LoginForm extends Component {
   };
      
   handleInputChange = (event) => {
-    // Обработчик изменения значений полей
     const { name, value } = event.target;
     this.setState({ [name]: value });
   };
@@ -41,6 +40,11 @@ class LoginForm extends Component {
 
 handleOnSubmit = async (values) => {
   const { username, password } = this.state;
+
+  if (!username || !password) {
+    alert('Please fill in all fields.');
+    return;
+  }
   
   try {
     const data = qs.stringify({
@@ -88,9 +92,8 @@ handleOnSubmit = async (values) => {
       alert('Incorrect login or password');
     }
   } catch (error) {
-    // Обработка сетевой ошибки
     console.log(error.message);
-    alert('A network error has occurred. Please try again later.');
+    alert('Incorrect login or password');
   }
 
   return null;
