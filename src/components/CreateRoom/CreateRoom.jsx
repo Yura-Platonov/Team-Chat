@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-import Select from 'react-select';
 import CustomModal from 'components/Modal/CustomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
@@ -21,12 +20,13 @@ const CustomOption = ({ innerProps, label }) => (
 );
 
 function CreateRoom({ onRoomCreated }) {
-  const { authToken } = useAuth(); // Get the authentication token using the useAuth hook
+  const { authToken } = useAuth();
   const [roomName, setRoomName] = useState('');
   const [roomImage, setRoomImage] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeCardIndex, setActiveCardIndex] = useState(null);
   
   useEffect(() => {
     axios.get('https://cool-chat.club/images/Home')
@@ -67,15 +67,51 @@ function CreateRoom({ onRoomCreated }) {
   // console.log('authToken:', authToken);
    
 
+  // const handleCreateRoom = () => {
+  //   if (!authToken) {
+  //     alert('Вы не авторизованы. Пожалуйста, войдите в систему.');
+  //     // You can redirect the user to the login page or show a login modal here.
+  //     return;
+  //   }
+  
+  //   const headers = {
+  //     Authorization: `Bearer ${authToken}`, // Добавляем токен в заголовок
+  //   };
+  
+  //   axios
+  //     .post('https://cool-chat.club/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+  //     .then((response) => {
+  //       console.log('Комната создана:', response.data);
+  //       setRoomName('');
+  //       setRoomImage('');
+  //       setSelectedOption(null);
+  //       setIsModalOpen(false);
+  //       onRoomCreated(response.data);
+        
+  //     })
+  //     .catch((error) => {
+  //       console.error('Ошибка при создании комнаты:', error);
+  //     });
+  // };
+  
   const handleCreateRoom = () => {
     if (!authToken) {
-      alert('Вы не авторизованы. Пожалуйста, войдите в систему.');
-      // You can redirect the user to the login page or show a login modal here.
+      alert('You are not authorized. Please login.');
+      return;
+    }
+  
+    if (!roomName || roomName.trim() === '') {
+      alert('Please provide the room name.');
+      return;
+    }
+  
+    if (!selectedOption) {
+      alert('Please select an image for the room.');
       return;
     }
   
     const headers = {
-      Authorization: `Bearer ${authToken}`, // Добавляем токен в заголовок
+      Authorization: `Bearer ${authToken}`,
     };
   
     axios
@@ -87,7 +123,6 @@ function CreateRoom({ onRoomCreated }) {
         setSelectedOption(null);
         setIsModalOpen(false);
         onRoomCreated(response.data);
-        
       })
       .catch((error) => {
         console.error('Ошибка при создании комнаты:', error);
@@ -110,29 +145,38 @@ function CreateRoom({ onRoomCreated }) {
       
       </div>
       <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <h2>Create a Room</h2>
+        <h2 className={css.title}>Add a new chat room</h2>
+        <label className={css.text}>Name of the chat room*
         <input
+          className={css.input}
           type="text"
           placeholder="Room Name"
           value={roomName}
           onChange={(e) => setRoomName(e.target.value)}
         />
-        <Select
-          value={selectedOption}
-          onChange={(option) => {
-            setSelectedOption(option);
-            setRoomImage(option.value);
-          }}
-          options={imageOptions}
-          placeholder="Select an Image"
-          components={{
-            Option: CustomOption, // Используем свой компонент Option
-          }}
-        />
-        <button onClick={handleCreateRoom}>
-          Create Room
-        </button>
-      </CustomModal>
+        </label>
+        <div>
+          <label className={css.text1}>Choose a photo of the room*</label>
+          <div className={css.roomImgContainer}>
+            {imageOptions.map((roomImg, index) => (
+              <div
+                key={index}
+                className={`${css.roomImgCard} ${activeCardIndex === index ? css.active : ''}`}
+                onClick={() => {
+                  setActiveCardIndex(index);
+                  setSelectedOption(roomImg);
+                  setRoomImage(roomImg.value);
+                }}
+              >
+                <img src={roomImg.value} alt={roomImg.label} className={css.roomImg} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className={css.center}><button  className={css.button} onClick={handleCreateRoom}>
+          Approve
+        </button></div>
+              </CustomModal>
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>

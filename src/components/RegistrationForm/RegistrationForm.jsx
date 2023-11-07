@@ -251,6 +251,13 @@ class RegistrationForm extends Component {
     }
 
     try {
+      const existingUsers = await axios.get('https://cool-chat.club/users/');
+    
+      if (existingUsers.data.some((user) => user.email === email)) {
+        alert('Email is already in use. Please choose another email.');
+        return;
+    }
+
       const avatar = selectedAvatar.value;
       const response = await axios.post('https://cool-chat.club/users/', {
         user_name,
