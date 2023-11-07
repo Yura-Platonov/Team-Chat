@@ -13,11 +13,6 @@ import { useAuth } from '../LoginForm/AuthContext';
 
 Modal.setAppElement('#root');
 
-const CustomOption = ({ innerProps, label }) => (
-  <div {...innerProps}>
-    {label}
-  </div>
-);
 
 function CreateRoom({ onRoomCreated }) {
   const { authToken } = useAuth();
@@ -45,54 +40,6 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Error loading images:', error);
       });
   }, []);
-  // useEffect(() => {
-  //   axios.get('https://cool-chat.club/images/')
-  //     .then((response) => {
-  //       const filteredImages = response.data.filter((image) => image.images === "Home");
-  //       setImageOptions(filteredImages.map((image) => ({
-  //         value: image.image_room,
-  //         label: (
-  //           <div>
-  //             <img src={image.image_room} alt={image.image_room} width="50" height="50" />
-  //           </div>
-  //         ),
-  //       })));
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при загрузке изображений:', error);
-  //     });
-  // }, []);
-  
-  
-  // console.log('authToken:', authToken);
-   
-
-  // const handleCreateRoom = () => {
-  //   if (!authToken) {
-  //     alert('Вы не авторизованы. Пожалуйста, войдите в систему.');
-  //     // You can redirect the user to the login page or show a login modal here.
-  //     return;
-  //   }
-  
-  //   const headers = {
-  //     Authorization: `Bearer ${authToken}`, // Добавляем токен в заголовок
-  //   };
-  
-  //   axios
-  //     .post('https://cool-chat.club/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
-  //     .then((response) => {
-  //       console.log('Комната создана:', response.data);
-  //       setRoomName('');
-  //       setRoomImage('');
-  //       setSelectedOption(null);
-  //       setIsModalOpen(false);
-  //       onRoomCreated(response.data);
-        
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при создании комнаты:', error);
-  //     });
-  // };
   
   const handleCreateRoom = () => {
     if (!authToken) {
