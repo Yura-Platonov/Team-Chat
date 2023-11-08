@@ -100,42 +100,223 @@
 
 // export default Chat;
 
+
+// ---------------------------------------------
+// import React, { useState, useEffect } from 'react';
+// import io  from 'socket.io-client';
+// import { useParams } from 'react-router-dom';
+
+// const Chat = () => {
+//   const [message, setMessage] = useState('');
+//   const [messages, setMessages] = useState([]);
+//   const [token, setToken] = useState(localStorage.getItem('access_token'));
+//   const [socket, setSocket] = useState(null);
+//   const { roomName } = useParams();
+
+//   useEffect(() => {
+//     if (token) {
+//       console.log(1);
+//       console.log(`${token}`);
+//       console.log(`${roomName}`);
+
+//       // Подключение к серверу сокетов с использованием токена и имени комнаты
+//       // const newSocket = io(`wss://cool-chat.club?token=${token}&roomName=${roomName}`);
+//       // const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+//          const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+
+
+//       newSocket.on("connect", () => {
+//         console.log('Connected to the server via WebSocket');
+//         console.log(newSocket.id);
+//       });
+
+//       newSocket.on('message', (message) => {
+//         // Принимаем сообщение и добавляем его в список сообщений
+//         addMessage({ text: message, sender: 'User' });
+//       });
+
+//       setSocket(newSocket);
+
+//       return () => {
+//         newSocket.disconnect();
+//       };
+//     }
+//   }, [token, roomName]);
+
+//   const handleMessageChange = (e) => {
+//     setMessage(e.target.value);
+//   };
+
+//   const sendMessage = () => {
+//     if (socket) {
+//       // Отправляем сообщение на сервер
+//       socket.emit('sendMessage', message);
+
+//       // Добавляем отправленное сообщение в список сообщений
+//       addMessage({ text: message, sender: 'You' });
+
+//       setMessage('');
+//     }
+//   };
+
+//   const addMessage = (newMessage) => {
+//     setMessages([...messages, newMessage]);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Mini Chat</h1>
+//       <h2>Chat Room: {roomName}</h2>
+//       <div>
+//         <div>
+//           {messages.map((message, index) => (
+//             <div key={index}>
+//               {message.sender}: {message.text}
+//             </div>
+//           ))}
+//         </div>
+//         <div>
+//           <input
+//             type="text"
+//             value={message}
+//             onChange={handleMessageChange}
+//             placeholder="Write message"
+//           />
+//           <button onClick={sendMessage}>Send</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Chat;
+
+// ------------------------------------
+// import React, { useState, useEffect } from 'react';
+// import io from 'socket.io-client';
+// import { useParams } from 'react-router-dom';
+
+// const Chat = () => {
+//   const [message, setMessage] = useState('');
+//   const [messages, setMessages] = useState([]);
+//   const [socket, setSocket] = useState(null); // Состояние для сокета
+//   const { roomName } = useParams();
+
+//   useEffect(() => {
+//     const token = localStorage.getItem('access_token');
+//     if (token) {
+//       console.log(1);
+//       console.log(token);
+//       console.log(roomName);
+
+//       // Создайте экземпляр сокета с безопасным соединением (wss)
+//       const newSocket = io('wss://cool-chat.club', {
+//         path: `/ws/${roomName}`, // Укажите правильный путь к вашей комнате
+//         query: `token=${token}`, // Замените yourToken на ваш токен
+//         transports: ['websocket'], // Указывает использовать только WebSocket
+//       });
+
+//       newSocket.on('connect', () => {
+//         console.log('Connected to the server via WebSocket');
+//         console.log(newSocket.id);
+//       });
+
+//       newSocket.on('message', (message) => {
+//         // Принимаем сообщение и добавляем его в список сообщений
+//         addMessage({ text: message, sender: 'User' });
+//       });
+
+//       setSocket(newSocket); // Устанавливаем сокет в состоянии
+//     }
+//   }, [roomName]);
+
+//   const handleMessageChange = (e) => {
+//     setMessage(e.target.value);
+//   };
+
+//   const sendMessage = () => {
+//     if (socket) { // Теперь используем socket из состояния
+//       // Отправляем сообщение на сервер
+//       socket.emit('sendMessage', message);
+
+//       // Добавляем отправленное сообщение в список сообщений
+//       addMessage({ text: message, sender: 'You' });
+
+//       setMessage('');
+//     }
+//   };
+
+//   const addMessage = (newMessage) => {
+//     setMessages([...messages, newMessage]);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Mini Chat</h1>
+//       <h2>Chat Room: {roomName}</h2>
+//       <div>
+//         <div>
+//           {messages.map((message, index) => (
+//             <div key={index}>
+//               {message.sender}: {message.text}
+//             </div>
+//           ))}
+//         </div>
+//         <div>
+//           <input
+//             type="text"
+//             value={message}
+//             onChange={handleMessageChange}
+//             placeholder="Write message"
+//           />
+//           <button onClick={sendMessage}>Send</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Chat;
+// 
+
 import React, { useState, useEffect } from 'react';
-import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('access_token'));
   const [socket, setSocket] = useState(null);
   const { roomName } = useParams();
 
   useEffect(() => {
+     const token = localStorage.getItem('access_token');
+    const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
     if (token) {
-      // Подключение к серверу сокетов с использованием токена и имени комнаты
-      // const newSocket = io(`wss://cool-chat.club?token=${token}&roomName=${roomName}`);
-      // const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
-         const newSocket = io(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+      console.log(1);
+      console.log(token);
+      console.log(roomName);
 
+      // Создайте экземпляр WebSocket
+      const newSocket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
 
-      newSocket.on("connect", () => {
+      newSocket.onopen = () => {
         console.log('Connected to the server via WebSocket');
-        console.log(newSocket.id);
-      });
+      };
 
-      newSocket.on('message', (message) => {
+      newSocket.onmessage = (event) => {
         // Принимаем сообщение и добавляем его в список сообщений
-        addMessage({ text: message, sender: 'User' });
-      });
+        addMessage({ text: event.data, sender: 'User' });
+      };
 
       setSocket(newSocket);
 
       return () => {
-        newSocket.disconnect();
+        if (socket.readyState === 1) { // Проверка на открытое состояние
+          socket.close();
+        }
       };
     }
-  }, [token, roomName]);
+  }, [roomName]);
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
@@ -144,7 +325,7 @@ const Chat = () => {
   const sendMessage = () => {
     if (socket) {
       // Отправляем сообщение на сервер
-      socket.emit('sendMessage', message);
+      socket.send(message);
 
       // Добавляем отправленное сообщение в список сообщений
       addMessage({ text: message, sender: 'You' });
