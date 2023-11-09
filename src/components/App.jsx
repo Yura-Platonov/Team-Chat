@@ -18,7 +18,9 @@ export const App = () => {
         <Routes>
             <Route path="/Team-Chat" exact element={<Main/>} />
             
-            <Route path="/chat/:roomId" element={<Chat/>} />
+            {/* <Route path="/chat/:roomId" element={<Chat/>} /> */}
+            <Route path="/chat/:roomName" element={<Chat/>}/>
+
           </Routes>
         <Footer />
       </AuthProvider>
