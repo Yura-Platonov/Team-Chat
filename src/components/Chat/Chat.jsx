@@ -11,7 +11,7 @@
 //   const token = localStorage.getItem('access_token');
 //   // const roomName = 'Holl';
 
-//   const socket = io('wss://cool-chat.club/ws/{roomName}?token={token}');
+//   const socket = io('wss://cool-chat.club/ws/${roomName}?token=${token}');
   
 //   // useEffect(() => {
 //   //   socket.on('connect', () => {
@@ -213,8 +213,7 @@
 //       const newSocket = io('wss://cool-chat.club', {
 //         path: `/ws/${roomName}`, // Укажите правильный путь к вашей комнате
 //         query: `token=${token}`, // Замените yourToken на ваш токен
-//         transports: ['websocket'], // Указывает использовать только WebSocket
-//       });
+//              });
 
 //       newSocket.on('connect', () => {
 //         console.log('Connected to the server via WebSocket');
@@ -297,18 +296,18 @@ const Chat = () => {
       console.log(roomName);
 
       // Создайте экземпляр WebSocket
-      const newSocket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+      // const newSocket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
 
-      newSocket.onopen = () => {
+      socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
       };
 
-      newSocket.onmessage = (event) => {
+      socket.onmessage = (event) => {
         // Принимаем сообщение и добавляем его в список сообщений
         addMessage({ text: event.data, sender: 'User' });
       };
 
-      setSocket(newSocket);
+      setSocket(socket);
 
       return () => {
         if (socket.readyState === 1) { // Проверка на открытое состояние
