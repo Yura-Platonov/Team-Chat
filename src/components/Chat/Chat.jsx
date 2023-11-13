@@ -278,6 +278,99 @@
 // export default Chat;
 // 
 
+// import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+
+// const Chat = () => {
+//   const [message, setMessage] = useState('');
+//   const [messages, setMessages] = useState([]);
+//   const [socket, setSocket] = useState(null);
+//   const { roomName } = useParams();
+
+//   useEffect(() => {
+//      const token = localStorage.getItem('access_token');
+//     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+//     if (token) {
+//       console.log(1);
+//       console.log(token);
+//       console.log(roomName);
+
+//       // Создайте экземпляр WebSocket
+//       // const newSocket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+
+//       socket.onopen = () => {
+//         console.log('Connected to the server via WebSocket');
+//       };
+
+//       socket.onmessage = (event) => {
+//         try {
+//           const messageData = JSON.parse(event.data);
+//           addMessage({
+//             text: messageData.message,
+//             sender: messageData.user_name,
+//             avatar: messageData.avatar,
+//             // Другие поля сообщения, которые вы хотите использовать
+//           });
+//         } catch (error) {
+//           console.error('Error parsing JSON:', error);
+//         }
+//       };
+      
+
+//       setSocket(socket);
+
+//       return () => {
+//         if (socket.readyState === 1) { // Проверка на открытое состояние
+//           socket.close();
+//         }
+//       };
+//     }
+//   }, [roomName]);
+
+//   const handleMessageChange = (e) => {
+//     setMessage(e.target.value);
+//   };
+
+//   const sendMessage = () => {
+//     if (socket) {
+//       socket.send(message);
+//       addMessage({ text: message, sender: 'You' });
+//       setMessage('');
+//     }
+//   };
+
+//   const addMessage = (newMessage) => {
+//     setMessages([...messages, newMessage]);
+//   };
+
+//   return (
+//     <div>
+//       <h1>Mini Chat</h1>
+//       <h2>Chat Room: {roomName}</h2>
+//       <div>
+//         <div>
+//           {messages.map((message, index) => (
+//             <div key={index}>
+//               {message.sender}: {message.text}
+//             </div>
+//           ))}
+//         </div>
+//         <div>
+//           <input
+//             type="text"
+//             value={message}
+//             onChange={handleMessageChange}
+//             placeholder="Write message"
+//           />
+//           <button onClick={sendMessage}>Send</button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Chat;
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -288,29 +381,39 @@ const Chat = () => {
   const { roomName } = useParams();
 
   useEffect(() => {
-     const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('access_token');
+    const storedMessages = localStorage.getItem(`chat_messages_${roomName}`);
+    const initialMessages = storedMessages ? JSON.parse(storedMessages) : [];
+
+    setMessages(initialMessages);
+
     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+    
     if (token) {
-      console.log(1);
-      console.log(token);
-      console.log(roomName);
-
-      // Создайте экземпляр WebSocket
-      // const newSocket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
-
       socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
       };
-
       socket.onmessage = (event) => {
-        // Принимаем сообщение и добавляем его в список сообщений
-        addMessage({ text: event.data, sender: 'User' });
+        try {
+          const messageData = JSON.parse(event.data);
+          addMessage({
+            text: messageData.message,
+            sender: messageData.user_name,
+            avatar: messageData.avatar,
+          });
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
       };
 
       setSocket(socket);
 
+      socket.onerror = (error) => {
+        console.error('WebSocket Error:', error);
+      };
+
       return () => {
-        if (socket.readyState === 1) { // Проверка на открытое состояние
+        if (socket.readyState === 1) {
           socket.close();
         }
       };
@@ -321,21 +424,31 @@ const Chat = () => {
     setMessage(e.target.value);
   };
 
+  const addMessage = (newMessage) => {
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
+
   const sendMessage = () => {
     if (socket) {
-      // Отправляем сообщение на сервер
-      socket.send(message);
-
-      // Добавляем отправленное сообщение в список сообщений
-      addMessage({ text: message, sender: 'You' });
-
+      const user_name = localStorage.getItem('user_name');
+      
+      if (!user_name) {
+        console.error('User name not found in localStorage');
+        return;
+      }
+  
+      const messageObject = {
+        message: message,
+      };
+  
+      const messageString = JSON.stringify(messageObject);
+      socket.send(messageString);
+  
+      addMessage({ text: message, sender: user_name });
       setMessage('');
     }
   };
 
-  const addMessage = (newMessage) => {
-    setMessages([...messages, newMessage]);
-  };
 
   return (
     <div>
@@ -364,3 +477,4 @@ const Chat = () => {
 };
 
 export default Chat;
+
