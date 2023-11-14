@@ -267,7 +267,6 @@ class RegistrationForm extends Component {
       });
 
       if (response.status === 201) {
-        alert('Registration successful! You can now log in.');
         this.setState({
           user_name: '',
           email: '',
@@ -276,6 +275,8 @@ class RegistrationForm extends Component {
           selectedAvatar: null,
           activeCardIndex: 0,
         });
+        alert('Registration successful! You can now log in.');
+        this.props.onClose(); 
       } else {
         alert('Registration failed. Please check your information and try again.');
       }
@@ -295,7 +296,7 @@ class RegistrationForm extends Component {
           confirmPassword: '',
         }}
         validationSchema={validationSchema}
-      >
+        >
         <Form>
           <h2 className={css.title}>Register in TeamChat</h2>
           <div>

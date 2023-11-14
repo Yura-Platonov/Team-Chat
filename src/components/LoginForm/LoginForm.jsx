@@ -69,24 +69,12 @@ handleOnSubmit = async (values) => {
 
       
       const { login } = this.context;
-        login(access_token, username);
-  //     axios.get(`http://35.228.45.65:8800/users/${username}`)
-  // .then((response) => {
-  //   const userDisplayName = response.data.user_name;
-  //   this.setState({ userDisplayName }); // Обновите состояние с именем пользователя
-  //   const { login } = this.context;
-  //   login(access_token, username);
-  // })
-  // .catch((error) => {
-  //   console.error('Ошибка при получении данных пользователя:', error);
-  // });
-  
+      login(access_token, username);
+      
+      this.props.onClose(); 
 
- 
-      // Возвращаем данные пользователя в случае успеха
-      alert('You have successfully logged in!');
-      console.log('User logged in'); // Выводим в консоль сообщение о входе
-      // window.location.reload();
+      console.log('User logged in'); 
+      
     } else {
       // Обработка ошибки аутентификации
       alert('Incorrect login or password');

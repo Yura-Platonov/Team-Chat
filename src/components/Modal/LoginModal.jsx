@@ -17,7 +17,11 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
-         {isLoginFormVisible ? <LoginForm showRegistrationForm={showRegistrationForm} /> :  <RegistrationForm showLoginForm={showLoginForm} />}
+      {isLoginFormVisible ? (
+        <LoginForm showRegistrationForm={showRegistrationForm} onClose={onClose} />
+      ) : (
+        <RegistrationForm showLoginForm={showLoginForm} onClose={onClose} />
+      )}
     </CustomModal>
   );
 };
