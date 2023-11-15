@@ -20,8 +20,11 @@ export const AuthProvider = ({ children }) => {
       .then((response) => {
         const user = response.data;
         const user_name = user.user_name;
+        const avatar = user.avatar;
   
         localStorage.setItem("user_name", user_name);
+        localStorage.setItem("avatar", avatar);
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Ошибка при выполнении GET-запроса:", error);
@@ -33,7 +36,7 @@ export const AuthProvider = ({ children }) => {
     };
     setUser(user);
     localStorage.setItem('user', JSON.stringify(user));
-  };
+    };
   
 
   const logout = () => {
@@ -43,6 +46,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('user_name');
+    localStorage.removeItem('avatar');
+    
   };
 
   return (

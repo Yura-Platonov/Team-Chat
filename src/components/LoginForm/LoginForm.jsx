@@ -3,7 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
 import qs from 'qs';
-// import './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import css from './LoginForm.module.css';
@@ -69,24 +68,12 @@ handleOnSubmit = async (values) => {
 
       
       const { login } = this.context;
-        login(access_token, username);
-  //     axios.get(`http://35.228.45.65:8800/users/${username}`)
-  // .then((response) => {
-  //   const userDisplayName = response.data.user_name;
-  //   this.setState({ userDisplayName }); // Обновите состояние с именем пользователя
-  //   const { login } = this.context;
-  //   login(access_token, username);
-  // })
-  // .catch((error) => {
-  //   console.error('Ошибка при получении данных пользователя:', error);
-  // });
-  
+      login(access_token, username);
+      
+      this.props.onClose(); 
 
- 
-      // Возвращаем данные пользователя в случае успеха
-      alert('You have successfully logged in!');
-      console.log('User logged in'); // Выводим в консоль сообщение о входе
-      // window.location.reload();
+      console.log('User logged in'); 
+      
     } else {
       // Обработка ошибки аутентификации
       alert('Incorrect login or password');
@@ -107,7 +94,7 @@ handleOnSubmit = async (values) => {
             validationSchema={validationSchema}
             
           >
-            <Form>
+            <Form className={css.loginForm}>
             <h2 className={css.title}>Log in to TeamChat</h2>
               <div>
                 <label htmlFor="username"  className={css.text}>Login</label>
