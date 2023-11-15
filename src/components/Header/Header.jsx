@@ -80,6 +80,7 @@ const Header = () => {
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Privacy Policy</a></li>
         </ul>
       </nav>
+      <div className={css.userInfo}>
       <div className={css.avatarCircle}  onClick={user ? openAvatarModal : openLoginModal}>
         <img
           src={user ? user_avatar : defaultAvatar}
@@ -118,6 +119,7 @@ const Header = () => {
             // checkedHandleIcon={<IconMoon />}
             checkedIcon={false}
           />     
+      </div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
       <AvatarModal isOpen={isAvatarModalOpen} onClose={closeAvatarModal}/>
