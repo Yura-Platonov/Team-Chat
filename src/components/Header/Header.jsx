@@ -80,6 +80,13 @@ const Header = () => {
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Privacy Policy</a></li>
         </ul>
       </nav>
+      <div className={css.avatarCircle}  onClick={user ? openAvatarModal : openLoginModal}>
+        <img
+          src={user ? user_avatar : defaultAvatar}
+          alt={user ? 'User Avatar' : 'Default Avatar'}
+          className={css.avatar}
+        />
+      </div>
       <div>
           <Switch
             onChange={toggleTheme}
@@ -113,24 +120,7 @@ const Header = () => {
           />     
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-      <div className={css.avatarCircle}  onClick={user ? openAvatarModal : openLoginModal}>
-        <img
-          src={user ? user_avatar : defaultAvatar}
-          alt={user ? 'User Avatar' : 'Default Avatar'}
-          className={css.avatar}
-        />
-      </div>
       <AvatarModal isOpen={isAvatarModalOpen} onClose={closeAvatarModal}/>
-        {/* <div>
-        {user ? (
-          <>
-            {user_avatar && <img src={user_avatar} alt="User Avatar" className={css.avatar} />}
-            <button onClick={logout}>Logout</button>
-          </>
-        ) : (
-          <button className={css.login_button} onClick={openLoginModal}>Login</button>
-        )}
-      </div> */}
     </header>
     
   );

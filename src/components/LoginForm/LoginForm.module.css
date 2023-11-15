@@ -1,8 +1,12 @@
 .Container{
 display: flex;
 
-
 }
+
+.loginForm{
+    width: 1020px;
+}
+
 .text{
     display: block;
     font-size: 24px;

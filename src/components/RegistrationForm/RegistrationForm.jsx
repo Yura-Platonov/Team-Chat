@@ -297,7 +297,7 @@ class RegistrationForm extends Component {
         }}
         validationSchema={validationSchema}
         >
-        <Form>
+        <Form className={css.registerForm}>
           <h2 className={css.title}>Register in TeamChat</h2>
           <div>
             <label htmlFor="email" className={css.text}>

@@ -3,7 +3,6 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
 import qs from 'qs';
-// import './LoginForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import css from './LoginForm.module.css';
@@ -95,7 +94,7 @@ handleOnSubmit = async (values) => {
             validationSchema={validationSchema}
             
           >
-            <Form>
+            <Form className={css.loginForm}>
             <h2 className={css.title}>Log in to TeamChat</h2>
               <div>
                 <label htmlFor="username"  className={css.text}>Login</label>
