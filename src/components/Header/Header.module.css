@@ -48,6 +48,10 @@ header {
 .userInfo{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: baseline;
     gap: 15px;
+}
+
+.toggle{
+    border: 2px solid black;
 }
