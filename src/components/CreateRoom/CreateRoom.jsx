@@ -5,8 +5,8 @@ import Modal from 'react-modal';
 import CustomModal from 'components/Modal/CustomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
-import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
-import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
+// import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
+// import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
 import { useAuth } from '../LoginForm/AuthContext'; 
@@ -127,7 +127,7 @@ function CreateRoom({ onRoomCreated }) {
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
-          <img
+          {/* <img
               src={IconPeopleAll}
               alt="IconPeopleAll"/>
             <span>0</span>
@@ -136,7 +136,7 @@ function CreateRoom({ onRoomCreated }) {
             <img
               src={IconPeopleOnline}
               alt="IconPeopleOnline"/>
-            <span>0</span>
+            <span>0</span> */}
           </div>
         </div>
     </div>

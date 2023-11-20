@@ -47,6 +47,10 @@ footer{
     padding: 0;
 }
 
+.footer_item:not(:last-child){
+    margin-left: 15px;
+}
+
 .footer_list_text{
     display: flex;
     justify-content: space-between;
@@ -54,3 +58,19 @@ footer{
     margin: 0;
     padding: 0;
 }
+
+ .footer_img,
+ .footer_imgHover {
+   display: block;
+ }
+ 
+ .footer_imgHover {
+   display: none; 
+ }
+ 
+ .footer_item:hover .footer_img {
+   display: none; 
+ }
+ 
+ .footer_item:hover .footer_imgHover {
+   display: block;}
