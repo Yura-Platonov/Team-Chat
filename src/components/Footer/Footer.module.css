@@ -27,6 +27,11 @@ footer{
     margin-right: 40px;
 }
 
+.nav_item:hover {
+    color: #024A7A;
+    cursor: pointer;
+}
+
 .nav_link {
     text-decoration: none;
 
@@ -70,7 +75,10 @@ footer{
  
  .footer_item:hover .footer_img {
    display: none; 
+   ;
  }
  
  .footer_item:hover .footer_imgHover {
-   display: block;}
+   display: block;
+   cursor: pointer
+}

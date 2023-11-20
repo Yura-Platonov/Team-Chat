@@ -1,3 +1,7 @@
+.createRoomContainer{
+  width: 1020px;
+}
+
 .room_item {
   display: flex;
   flex-direction: column;
@@ -94,6 +98,8 @@
   font-size: 20px;
   font-weight: 400;
   line-height: 130%; 
+  box-sizing: border-box;
+
 
   border-radius: 20px;
   border: 2px solid #024A7A;
@@ -159,11 +165,11 @@
   object-fit: cover; 
 }
 
- 
  .roomImgContainer { 
   display: flex;
   flex-wrap: wrap;
-  height: 400px;
+  /* height: 400px; */
+
   margin: -10px;
   overflow-y: auto; 
 }

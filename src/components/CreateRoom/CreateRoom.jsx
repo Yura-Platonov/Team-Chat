@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
-import CustomModal from 'components/Modal/CustomModal';
+// import CustomModal from 'components/Modal/CustomModal';
+import CreateRoomModal from 'components/Modal/CreateRoomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
 // import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
@@ -20,7 +21,7 @@ function CreateRoom({ onRoomCreated }) {
   const [roomImage, setRoomImage] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateRoomModal, setIsCreateRoomModal] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   
   useEffect(() => {
@@ -68,7 +69,7 @@ function CreateRoom({ onRoomCreated }) {
         setRoomName('');
         setRoomImage('');
         setSelectedOption(null);
-        setIsModalOpen(false);
+        setIsCreateRoomModal(false);
         onRoomCreated(response.data);
       })
       .catch((error) => {
@@ -76,9 +77,16 @@ function CreateRoom({ onRoomCreated }) {
       });
   };
   
+  const openCreateRoomModal = () => {
+    setIsCreateRoomModal(true);
+  };
+
+  const closeCreateRoomModal = () => {
+    setIsCreateRoomModal(false);
+  };
 
   return (
-    <div className={css.room_item} onClick={() => setIsModalOpen(true)}>
+    <div className={css.room_item} onClick={() => openCreateRoomModal()}>
     <div className={css.room_container}>
       <img
         src={CreateRoomImg}
@@ -91,7 +99,8 @@ function CreateRoom({ onRoomCreated }) {
       {/* <button onClick={() => setIsModalOpen(true)}>Open Modal</button> */}
       
       </div>
-      <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+      {/* <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <div className={css.createRoomContainer}>
         <h2 className={css.title}>Add a new chat room</h2>
         <label className={css.text}>Name of the chat room*
         <input
@@ -123,7 +132,22 @@ function CreateRoom({ onRoomCreated }) {
         <div className={css.center}><button  className={css.button} onClick={handleCreateRoom}>
           Approve
         </button></div>
-              </CustomModal>
+        </div>
+              </CustomModal> */}
+              <CreateRoomModal
+                isOpen={isCreateRoomModal} 
+                onClose={closeCreateRoomModal}
+                roomName={roomName}
+                setRoomName={setRoomName}
+                roomImage={roomImage}
+                setRoomImage={setRoomImage}
+                selectedOption={selectedOption}
+                setSelectedOption={setSelectedOption}
+                imageOptions={imageOptions}
+                activeCardIndex={activeCardIndex}
+                setActiveCardIndex={setActiveCardIndex}
+                handleCreateRoom={handleCreateRoom}
+              />
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
