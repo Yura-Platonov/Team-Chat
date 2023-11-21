@@ -1,9 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Modal from 'react-modal';
-// import CustomModal from 'components/Modal/CustomModal';
-import CreateRoomModal from 'components/Modal/CreateRoomModal';
+import CreateRoomModal from '../Modal/CreateRoomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
 // import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
@@ -12,7 +10,6 @@ import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
 import { useAuth } from '../LoginForm/AuthContext'; 
 
-Modal.setAppElement('#root');
 
 
 function CreateRoom({ onRoomCreated }) {
@@ -21,7 +18,7 @@ function CreateRoom({ onRoomCreated }) {
   const [roomImage, setRoomImage] = useState('');
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
-  const [isCreateRoomModal, setIsCreateRoomModal] = useState(false);
+  const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   
   useEffect(() => {
@@ -69,7 +66,7 @@ function CreateRoom({ onRoomCreated }) {
         setRoomName('');
         setRoomImage('');
         setSelectedOption(null);
-        setIsCreateRoomModal(false);
+        setIsCreateRoomModalOpen(false);
         onRoomCreated(response.data);
       })
       .catch((error) => {
@@ -78,11 +75,11 @@ function CreateRoom({ onRoomCreated }) {
   };
   
   const openCreateRoomModal = () => {
-    setIsCreateRoomModal(true);
+    setIsCreateRoomModalOpen(true);
   };
 
   const closeCreateRoomModal = () => {
-    setIsCreateRoomModal(false);
+    setIsCreateRoomModalOpen(false);
   };
 
   return (
@@ -96,58 +93,21 @@ function CreateRoom({ onRoomCreated }) {
         src={IconAdd}
         alt="IconAdd"/>
         <p className={css.room_name}>Add room</p>
-      {/* <button onClick={() => setIsModalOpen(true)}>Open Modal</button> */}
-      
       </div>
-      {/* <CustomModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <div className={css.createRoomContainer}>
-        <h2 className={css.title}>Add a new chat room</h2>
-        <label className={css.text}>Name of the chat room*
-        <input
-          className={css.input}
-          type="text"
-          placeholder="Room Name"
-          value={roomName}
-          onChange={(e) => setRoomName(e.target.value)}
+        <CreateRoomModal
+          isOpen={isCreateRoomModalOpen} 
+          onClose={closeCreateRoomModal}
+          roomName={roomName}
+          setRoomName={setRoomName}
+          roomImage={roomImage}
+          setRoomImage={setRoomImage}
+          selectedOption={selectedOption}
+          setSelectedOption={setSelectedOption}
+          imageOptions={imageOptions}
+          activeCardIndex={activeCardIndex}
+          setActiveCardIndex={setActiveCardIndex}
+          handleCreateRoom={handleCreateRoom}
         />
-        </label>
-        <div>
-          <label className={css.text1}>Choose a photo of the room*</label>
-          <div className={css.roomImgContainer}>
-            {imageOptions.map((roomImg, index) => (
-              <div
-                key={index}
-                className={`${css.roomImgCard} ${activeCardIndex === index ? css.active : ''}`}
-                onClick={() => {
-                  setActiveCardIndex(index);
-                  setSelectedOption(roomImg);
-                  setRoomImage(roomImg.value);
-                }}
-              >
-                <img src={roomImg.value} alt={roomImg.label} className={css.roomImg} />
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className={css.center}><button  className={css.button} onClick={handleCreateRoom}>
-          Approve
-        </button></div>
-        </div>
-              </CustomModal> */}
-              <CreateRoomModal
-                isOpen={isCreateRoomModal} 
-                onClose={closeCreateRoomModal}
-                roomName={roomName}
-                setRoomName={setRoomName}
-                roomImage={roomImage}
-                setRoomImage={setRoomImage}
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
-                imageOptions={imageOptions}
-                activeCardIndex={activeCardIndex}
-                setActiveCardIndex={setActiveCardIndex}
-                handleCreateRoom={handleCreateRoom}
-              />
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
