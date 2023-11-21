@@ -373,6 +373,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import css from './Chat.module.css';
+import Bg from '../Images/Bg_empty_chat.png'
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -451,25 +453,50 @@ const Chat = () => {
 
 
   return (
-    <div>
-      <h1>Mini Chat</h1>
-      <h2>Chat Room: {roomName}</h2>
-      <div>
-        <div>
-          {messages.map((message, index) => (
-            <div key={index}>
-              {message.sender}: {message.text}
-            </div>
-          ))}
+    <div className={css.container}>
+      <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
+      <div className={css.main_container}>
+        <div className={css.members_container}>
+          <h3 className={css.members_title}>Chat members</h3>
+          {/* <ul className={css.members_list}>
+            {chatMembers.map((member) => (
+              <li key={member.id} className={css.members_item}>
+                <img
+                  src={member.avatar}
+                  alt={member.name}
+                  className={css.avatar}
+                />
+                {member.name}
+              </li>
+            ))}
+          </ul> */}
         </div>
-        <div>
-          <input
-            type="text"
-            value={message}
-            onChange={handleMessageChange}
-            placeholder="Write message"
-          />
-          <button onClick={sendMessage}>Send</button>
+        <div className={css.chat_container}>
+          <div className={css.chat_area}>
+            {messages.length === 0 ? (
+              <div className={css.no_messages}>
+                 <img src={Bg} alt="No messages" />
+                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+              </div>
+            ) : (
+              messages.map((message, index) => (
+                <div key={index} className={css.message}>
+                  {message.sender}: {message.text}
+                </div>
+              ))
+            )}
+          </div>
+          <div className={css.input_container}>
+            <input
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+              placeholder="Write message"
+            />
+            <button onClick={sendMessage} className={css.button_send}>
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -478,3 +505,25 @@ const Chat = () => {
 
 export default Chat;
 
+    // <div>
+    //   <h1>Mini Chat</h1>
+    //   <h2>Chat Room: {roomName}</h2>
+    //   <div>
+    //     <div>
+    //       {messages.map((message, index) => (
+    //         <div key={index}>
+    //           {message.sender}: {message.text}
+    //         </div>
+    //       ))}
+    //     </div>
+    //     <div>
+    //       <input
+    //         type="text"
+    //         value={message}
+    //         onChange={handleMessageChange}
+    //         placeholder="Write message"
+    //       />
+    //       <button onClick={sendMessage}>Send</button>
+    //     </div>
+    //   </div>
+    // </div>
