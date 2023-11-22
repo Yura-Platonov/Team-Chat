@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import css from './RoomList.module.css';
 import CreateRoom from 'components/CreateRoom/CreateRoom';
-import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
+import Heart from 'components/Images/Heart.svg';
 import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 
 function RoomList() {
@@ -30,7 +30,7 @@ function RoomList() {
 
   return (
   <div className={css.room_section}>
-    <h2 className={css.room_title}>Choose a room for communication</h2>
+    <h2 className={css.room_title}>Choose a room for <br/> communication</h2>
     <ul className={css.room_list}>
       {rooms.map((room) => (
         <li className={css.room_item} key={room.id}>
@@ -41,8 +41,8 @@ function RoomList() {
             </div>
             <div className={css.room_description}>
               <div className={css.people_count}>
-                <img src={IconPeopleAll} alt="IconPeopleAll" />
-                <span> Online</span>
+                <img src={Heart} alt="favorites"/>
+                
               </div>
               <div className={css.people_count}>
                 <img src={IconPeopleOnline} alt="IconPeopleOnline" />

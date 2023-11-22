@@ -75,7 +75,6 @@ handleOnSubmit = async (values) => {
       console.log('User logged in'); 
       
     } else {
-      // Обработка ошибки аутентификации
       alert('Incorrect login or password');
     }
   } catch (error) {

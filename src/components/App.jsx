@@ -6,6 +6,9 @@ import Chat from './Chat/Chat';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
 import Footer from './Footer/Footer';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#root');
 
 export const App = () => {
   const [authToken, setAuthToken] = useState(null);

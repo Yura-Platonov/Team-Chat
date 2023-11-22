@@ -94,8 +94,10 @@ input{
 .chat_area{
     height: 760px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     padding: 30px 40px;
+    overflow: hidden;
+    overflow-y: scroll;
 
     border-radius: 20px;
     border: 2px solid  #024A7A;

@@ -371,105 +371,122 @@
 
 // export default Chat;
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
+import css from './Chat.module.css';
+import Bg from '../Images/Bg_empty_chat.png';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState(null);
   const { roomName } = useParams();
+  const user_name = localStorage.getItem('user_name');
+  const token = localStorage.getItem('access_token');
+
+  const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [roomName, token]);
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token');
-    const storedMessages = localStorage.getItem(`chat_messages_${roomName}`);
-    const initialMessages = storedMessages ? JSON.parse(storedMessages) : [];
+    socket.onopen = () => {
+      console.log('Connected to the server via WebSocket');
+    };
 
-    setMessages(initialMessages);
-
-    const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+    socket.onmessage = (event) => {
+      try {
+        const messageData = JSON.parse(event.data);
+        console.log('Received message:', messageData);
     
-    if (token) {
-      socket.onopen = () => {
-        console.log('Connected to the server via WebSocket');
-      };
-      socket.onmessage = (event) => {
-        try {
-          const messageData = JSON.parse(event.data);
-          addMessage({
-            text: messageData.message,
-            sender: messageData.user_name,
-            avatar: messageData.avatar,
-          });
-        } catch (error) {
-          console.error('Error parsing JSON:', error);
-        }
-      };
+        addMessage({
+          text: messageData.message,
+          sender: messageData.user_name,
+          avatar: messageData.avatar,
+        });
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    };
 
-      setSocket(socket);
+    socket.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
 
-      socket.onerror = (error) => {
-        console.error('WebSocket Error:', error);
-      };
-
-      return () => {
-        if (socket.readyState === 1) {
-          socket.close();
-        }
-      };
-    }
-  }, [roomName]);
+    return () => {
+      if (socket.readyState === 1) {
+        socket.close();
+      }
+    };
+  }, [roomName, socket]);
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
 
-  const addMessage = (newMessage) => {
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
-
   const sendMessage = () => {
-    if (socket) {
-      const user_name = localStorage.getItem('user_name');
-      
-      if (!user_name) {
-        console.error('User name not found in localStorage');
-        return;
-      }
-  
+    if (socket && socket.readyState === WebSocket.OPEN) {
       const messageObject = {
         message: message,
       };
-  
+
       const messageString = JSON.stringify(messageObject);
       socket.send(messageString);
-  
-      addMessage({ text: message, sender: user_name });
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: message, sender: user_name },
+      ]);
       setMessage('');
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
     }
   };
 
+  const addMessage = (newMessage) => {
+    const user_name = localStorage.getItem('user_name');
+  
+    // Check if the sender is the current user
+    if (newMessage.sender === user_name) {
+      // This message was sent by the current user, do not duplicate
+      return;
+    }
+  
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
 
+  
   return (
-    <div>
-      <h1>Mini Chat</h1>
-      <h2>Chat Room: {roomName}</h2>
-      <div>
-        <div>
-          {messages.map((message, index) => (
-            <div key={index}>
-              {message.sender}: {message.text}
-            </div>
-          ))}
+    <div className={css.container}>
+      <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
+      <div className={css.main_container}>
+        <div className={css.members_container}>
+          <h3 className={css.members_title}>Chat members</h3>
         </div>
-        <div>
-          <input
-            type="text"
-            value={message}
-            onChange={handleMessageChange}
-            placeholder="Write message"
-          />
-          <button onClick={sendMessage}>Send</button>
+        <div className={css.chat_container}>
+          <div className={css.chat_area}>
+            {messages.length === 0 ? (
+              <div className={css.no_messages}>
+                <img src={Bg} alt="No messages" />
+                <p className={css.no_messages_text}>
+                  Oops... There are no messages here yet. Write first!
+                </p>
+              </div>
+            ) : (
+              messages.map((message, index) => (
+                <div key={index} className={css.message}>
+                  {message.sender}: {message.text}
+                </div>
+              ))
+            )}
+          </div>
+          <div className={css.input_container}>
+            <input
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+              placeholder="Write message"
+            />
+            <button onClick={sendMessage} className={css.button_send}>
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -478,3 +495,145 @@ const Chat = () => {
 
 export default Chat;
 
+
+// import React, { useState, useEffect } from 'react';
+// import { useParams } from 'react-router-dom';
+// import css from './Chat.module.css';
+// import Bg from '../Images/Bg_empty_chat.png'
+
+// const Chat = () => {
+//   const [message, setMessage] = useState('');
+//   const [messages, setMessages] = useState([]);
+//   const [socket, setSocket] = useState(null);
+//   const { roomName } = useParams();
+
+//   useEffect(() => {
+//     const token = localStorage.getItem('access_token');
+//     // const storedMessages = localStorage.getItem(`chat_messages_${roomName}`);
+//     // const initialMessages = storedMessages ? JSON.parse(storedMessages) : [];
+
+//     // setMessages(initialMessages);
+
+//     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+    
+//     if (token) {
+//       socket.onopen = () => {
+//         console.log('Connected to the server via WebSocket');
+//       };
+//       socket.onmessage = (event) => {
+//         try {
+//           const messageData = JSON.parse(event.data);
+//           addMessage({
+//             text: messageData.message,
+//             sender: messageData.user_name,
+//             avatar: messageData.avatar,
+//           });
+//         } catch (error) {
+//           console.error('Error parsing JSON:', error);
+//         }
+//       };
+
+//       setSocket(socket);
+
+//       socket.onerror = (error) => {
+//         console.error('WebSocket Error:', error);
+//       };
+
+//       return () => {
+//         if (socket.readyState === 1) {
+//           socket.close();
+//         }
+//       };
+//     }
+//   }, [roomName]);
+
+//   const handleMessageChange = (e) => {
+//     setMessage(e.target.value);
+//   };
+
+//   const addMessage = (newMessage) => {
+//     // const user_name = localStorage.getItem('user_name');
+  
+//     // // Check if the sender is the current user
+//     // if (newMessage.sender === user_name) {
+//     //   return;
+//     // }
+  
+//     setMessages((prevMessages) => [...prevMessages, newMessage]);
+//   };
+  
+
+//   const sendMessage = () => {
+//     if (socket) {
+//       const user_name = localStorage.getItem('user_name');
+      
+//       if (!user_name) {
+//         console.error('User name not found in localStorage');
+//         return;
+//       }
+  
+//       const messageObject = {
+//         message: message,
+//       };
+  
+//       const messageString = JSON.stringify(messageObject);
+//       socket.send(messageString);
+  
+//       addMessage({ text: message, sender: user_name });
+//       setMessage('');
+//     }
+//   };
+
+
+//   return (
+//     <div className={css.container}>
+//       <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
+//       <div className={css.main_container}>
+//         <div className={css.members_container}>
+//           <h3 className={css.members_title}>Chat members</h3>
+//           {/* <ul className={css.members_list}>
+//             {chatMembers.map((member) => (
+//               <li key={member.id} className={css.members_item}>
+//                 <img
+//                   src={member.avatar}
+//                   alt={member.name}
+//                   className={css.avatar}
+//                 />
+//                 {member.name}
+//               </li>
+//             ))}
+//           </ul> */}
+//         </div>
+//         <div className={css.chat_container}>
+//           <div className={css.chat_area}>
+//             {messages.length === 0 ? (
+//               <div className={css.no_messages}>
+//                  <img src={Bg} alt="No messages" />
+//                  <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+//               </div>
+//             ) : (
+//               messages.map((message, index) => (
+//                 <div key={index} className={css.message}>
+//                   {message.sender}: {message.text}
+//                 </div>
+//               ))
+//             )}
+//           </div>
+//           <div className={css.input_container}>
+//             <input
+//               type="text"
+//               value={message}
+//               onChange={handleMessageChange}
+//               placeholder="Write message"
+//             />
+//             <button onClick={sendMessage} className={css.button_send}>
+//               Send
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Chat;

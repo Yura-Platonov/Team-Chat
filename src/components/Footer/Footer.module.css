@@ -27,6 +27,11 @@ footer{
     margin-right: 40px;
 }
 
+.nav_item:hover {
+    color: #024A7A;
+    cursor: pointer;
+}
+
 .nav_link {
     text-decoration: none;
 
@@ -47,10 +52,33 @@ footer{
     padding: 0;
 }
 
+.footer_item:not(:last-child){
+    margin-left: 15px;
+}
+
 .footer_list_text{
     display: flex;
     justify-content: space-between;
     
     margin: 0;
     padding: 0;
+}
+
+ .footer_img,
+ .footer_imgHover {
+   display: block;
+ }
+ 
+ .footer_imgHover {
+   display: none; 
+ }
+ 
+ .footer_item:hover .footer_img {
+   display: none; 
+   ;
+ }
+ 
+ .footer_item:hover .footer_imgHover {
+   display: block;
+   cursor: pointer
 }
