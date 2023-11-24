@@ -371,245 +371,123 @@
 
 // export default Chat;
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
-import css from './Chat.module.css';
-import Bg from '../Images/Bg_empty_chat.png';
-
-const Chat = () => {
-  const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const { roomName } = useParams();
-  const user_name = localStorage.getItem('user_name');
-  const token = localStorage.getItem('access_token');
-
-  const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [roomName, token]);
-
-  useEffect(() => {
-    socket.onopen = () => {
-      console.log('Connected to the server via WebSocket');
-    };
-
-    socket.onmessage = (event) => {
-      try {
-        const messageData = JSON.parse(event.data);
-        console.log('Received message:', messageData);
-    
-        addMessage({
-          text: messageData.message,
-          sender: messageData.user_name,
-          avatar: messageData.avatar,
-        });
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      }
-    };
-
-    socket.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
-
-    return () => {
-      if (socket.readyState === 1) {
-        socket.close();
-      }
-    };
-  }, [roomName, socket]);
-
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
-  };
-
-  const sendMessage = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const messageObject = {
-        message: message,
-      };
-
-      const messageString = JSON.stringify(messageObject);
-      socket.send(messageString);
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: message, sender: user_name },
-      ]);
-      setMessage('');
-    } else {
-      console.error('WebSocket is not open. Message not sent.');
-    }
-  };
-
-  const addMessage = (newMessage) => {
-    const user_name = localStorage.getItem('user_name');
-  
-    // Check if the sender is the current user
-    if (newMessage.sender === user_name) {
-      // This message was sent by the current user, do not duplicate
-      return;
-    }
-  
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
-
-  
-  return (
-    <div className={css.container}>
-      <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
-      <div className={css.main_container}>
-        <div className={css.members_container}>
-          <h3 className={css.members_title}>Chat members</h3>
-        </div>
-        <div className={css.chat_container}>
-          <div className={css.chat_area}>
-            {messages.length === 0 ? (
-              <div className={css.no_messages}>
-                <img src={Bg} alt="No messages" />
-                <p className={css.no_messages_text}>
-                  Oops... There are no messages here yet. Write first!
-                </p>
-              </div>
-            ) : (
-              messages.map((message, index) => (
-                <div key={index} className={css.message}>
-                  {message.sender}: {message.text}
-                </div>
-              ))
-            )}
-          </div>
-          <div className={css.input_container}>
-            <input
-              type="text"
-              value={message}
-              onChange={handleMessageChange}
-              placeholder="Write message"
-            />
-            <button onClick={sendMessage} className={css.button_send}>
-              Send
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default Chat;
-
-
-// import React, { useState, useEffect } from 'react';
+// import React, { useState, useEffect, useMemo } from 'react';
 // import { useParams } from 'react-router-dom';
 // import css from './Chat.module.css';
-// import Bg from '../Images/Bg_empty_chat.png'
+// import Bg from '../Images/Bg_empty_chat.png';
 
 // const Chat = () => {
 //   const [message, setMessage] = useState('');
 //   const [messages, setMessages] = useState([]);
-//   const [socket, setSocket] = useState(null);
+//   const [initialMessages, setInitialMessages] = useState([]);
 //   const { roomName } = useParams();
+//   const user_name = localStorage.getItem('user_name');
+//   const token = localStorage.getItem('access_token');
+
+//   const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [roomName, token]);
 
 //   useEffect(() => {
-//     const token = localStorage.getItem('access_token');
-//     // const storedMessages = localStorage.getItem(`chat_messages_${roomName}`);
-//     // const initialMessages = storedMessages ? JSON.parse(storedMessages) : [];
+//     setMessages((prevMessages) => [...prevMessages, ...initialMessages]);
+//     setInitialMessages([]);
+//   }, [initialMessages]);
 
-//     // setMessages(initialMessages);
+  
+// useEffect(() => {
+//   // Сохраните текущее состояние messages
+//   const currentMessages = [...messages];
 
-//     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+//   // Добавьте новые сообщения из initialMessages
+//   setMessages((prevMessages) => [...prevMessages, ...initialMessages]);
+
+//   // Очистите initialMessages
+//   setInitialMessages([]);
+
+//   // Верните текущее состояние messages для предотвращения пустых дубликатов
+//   return () => setMessages(currentMessages);
+// }, [initialMessages, messages]);
+
+//   useEffect(() => {
+//     socket.onopen = () => {
+//       console.log('Connected to the server via WebSocket');
+//     };
+
+//     socket.onmessage = (event) => {
+//       try {
+//         const messageData = JSON.parse(event.data);
+//         console.log('Received message:', messageData);
     
-//     if (token) {
-//       socket.onopen = () => {
-//         console.log('Connected to the server via WebSocket');
-//       };
-//       socket.onmessage = (event) => {
-//         try {
-//           const messageData = JSON.parse(event.data);
-//           addMessage({
-//             text: messageData.message,
-//             sender: messageData.user_name,
-//             avatar: messageData.avatar,
-//           });
-//         } catch (error) {
-//           console.error('Error parsing JSON:', error);
+//         if (messageData.type === 'active_users') {
+
+//         } else {
+//           setInitialMessages((prevMessages) => [...prevMessages, messageData]);
 //         }
-//       };
+//       } catch (error) {
+//         console.error('Error parsing JSON:', error);
+//       }
+//     };
+    
 
-//       setSocket(socket);
+//     socket.onerror = (error) => {
+//       console.error('WebSocket Error:', error);
+//     };
 
-//       socket.onerror = (error) => {
-//         console.error('WebSocket Error:', error);
-//       };
-
-//       return () => {
-//         if (socket.readyState === 1) {
-//           socket.close();
-//         }
-//       };
-//     }
-//   }, [roomName]);
+//     return () => {
+//       if (socket && socket.readyState === WebSocket.OPEN) {
+//         socket.close();
+//       }
+//     };
+//   }, [roomName, socket]);
 
 //   const handleMessageChange = (e) => {
 //     setMessage(e.target.value);
 //   };
 
-//   const addMessage = (newMessage) => {
-//     // const user_name = localStorage.getItem('user_name');
-  
-//     // // Check if the sender is the current user
-//     // if (newMessage.sender === user_name) {
-//     //   return;
-//     // }
-  
-//     setMessages((prevMessages) => [...prevMessages, newMessage]);
-//   };
-  
-
 //   const sendMessage = () => {
-//     if (socket) {
-//       const user_name = localStorage.getItem('user_name');
-      
-//       if (!user_name) {
-//         console.error('User name not found in localStorage');
-//         return;
-//       }
-  
+//     if (socket && socket.readyState === WebSocket.OPEN) {
 //       const messageObject = {
 //         message: message,
 //       };
-  
+
 //       const messageString = JSON.stringify(messageObject);
 //       socket.send(messageString);
-  
-//       addMessage({ text: message, sender: user_name });
+
+//       setMessages((prevMessages) => [
+//         ...prevMessages,
+//         { text: message, sender: user_name },
+//       ]);
 //       setMessage('');
+//     } else {
+//       console.error('WebSocket is not open. Message not sent.');
 //     }
 //   };
 
+//   // const addMessage = (newMessage) => {
+//   //   // Check if the sender is the current user
+//   //   if (newMessage.sender === user_name) {
+//   //     // This message was sent by the current user, do not duplicate
+//   //     return;
+//   //   }
+    
+//   //   setMessages((prevMessages) => [...prevMessages, newMessage]);
+//   // };
 
+
+  
 //   return (
 //     <div className={css.container}>
 //       <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
 //       <div className={css.main_container}>
 //         <div className={css.members_container}>
 //           <h3 className={css.members_title}>Chat members</h3>
-//           {/* <ul className={css.members_list}>
-//             {chatMembers.map((member) => (
-//               <li key={member.id} className={css.members_item}>
-//                 <img
-//                   src={member.avatar}
-//                   alt={member.name}
-//                   className={css.avatar}
-//                 />
-//                 {member.name}
-//               </li>
-//             ))}
-//           </ul> */}
 //         </div>
 //         <div className={css.chat_container}>
 //           <div className={css.chat_area}>
 //             {messages.length === 0 ? (
 //               <div className={css.no_messages}>
-//                  <img src={Bg} alt="No messages" />
-//                  <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+//                 <img src={Bg} alt="No messages" />
+//                 <p className={css.no_messages_text}>
+//                   Oops... There are no messages here yet. Write first!
+//                 </p>
 //               </div>
 //             ) : (
 //               messages.map((message, index) => (
@@ -637,3 +515,241 @@ export default Chat;
 // };
 
 // export default Chat;
+
+// import React, { useState, useEffect, useMemo } from 'react';
+// import { useParams } from 'react-router-dom';
+// import css from './Chat.module.css';
+// // import Bg from '../Images/Bg_empty_chat.png';
+
+// const Chat = () => {
+//   const [message, setMessage] = useState('');
+//   const { roomName } = useParams();
+//   // const user_name = localStorage.getItem('user_name');
+//   const token = localStorage.getItem('access_token');
+
+//   const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [roomName, token]);
+
+//   useEffect(() => {
+//     socket.onopen = () => {
+//       console.log('Connected to the server via WebSocket');
+//     };
+
+//     socket.onmessage = (event) => {
+//       try {
+//         const messageData = JSON.parse(event.data);
+//         console.log('Received message:', messageData);
+
+//         // Добавьте код отображения сообщения напрямую в компоненте
+//         const messageContainer = document.getElementById('messageContainer');
+//         const newMessageElement = document.createElement('div');
+//         newMessageElement.textContent = `${messageData.sender}: ${messageData.message}`;
+//         messageContainer.appendChild(newMessageElement);
+//       } catch (error) {
+//         console.error('Error parsing JSON:', error);
+//       }
+//     };
+
+//     socket.onerror = (error) => {
+//       console.error('WebSocket Error:', error);
+//     };
+
+//     return () => {
+//       if (socket && socket.readyState === WebSocket.OPEN) {
+//         socket.close();
+//       }
+//     };
+//   }, [roomName, socket]);
+
+//   const handleMessageChange = (e) => {
+//     setMessage(e.target.value);
+//   };
+
+//   const sendMessage = () => {
+//     if (socket && socket.readyState === WebSocket.OPEN) {
+//       const messageObject = {
+//         message: message,
+//       };
+
+//       const messageString = JSON.stringify(messageObject);
+//       socket.send(messageString);
+
+//       setMessage('');
+//     } else {
+//       console.error('WebSocket is not open. Message not sent.');
+//     }
+//   };
+
+//   return (
+//     <div className={css.container}>
+//       <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
+//       <div className={css.main_container}>
+//         <div className={css.members_container}>
+//           <h3 className={css.members_title}>Chat members</h3>
+//         </div>
+//         <div className={css.chat_container}>
+//           <div className={css.chat_area} id="messageContainer">
+//             {/* Сообщения будут добавляться здесь */}
+//           </div>
+//           <div className={css.input_container}>
+//             <input
+//               type="text"
+//               value={message}
+//               onChange={handleMessageChange}
+//               placeholder="Write message"
+//             />
+//             <button onClick={sendMessage} className={css.button_send}>
+//               Send
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Chat;
+
+
+import React, { useState, useEffect, useMemo, useRef  } from 'react';
+import { useParams } from 'react-router-dom';
+import css from './Chat.module.css';
+// import Bg from '../Images/Bg_empty_chat.png';
+
+const Chat = () => {
+  const [message, setMessage] = useState('');
+  const { roomName } = useParams();
+  const token = localStorage.getItem('access_token');
+  const userListRef = useRef(null);
+
+  const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [roomName, token]);
+
+  useEffect(() => {
+    socket.onopen = () => {
+      console.log('Connected to the server via WebSocket');
+    };
+
+    // socket.onmessage = (event) => {
+    //   try {
+    //     const messageData = JSON.parse(event.data);
+    //     console.log('Received message:', messageData);
+    
+    //     const sender = messageData.user_name || 'Unknown Sender';
+    
+    //     const messageContainer = document.getElementById('messageContainer');
+    //     const newMessageElement = document.createElement('div');
+    //     newMessageElement.className = css.chat_message;
+    //     newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><span class="${css.chat_sender}">${sender}:</span> <span class="${css.messageText} ${messageData.message}">${messageData.message}</span>`;
+    //     messageContainer.appendChild(newMessageElement);
+    
+    //     // Проверка наличия пользователя в списке перед добавлением
+    //     const userListItems = userListRef.current.getElementsByTagName('li');
+    //     const userExists = Array.from(userListItems).some(item => {
+    //       const existingUserName = item.querySelector(`.${css.user_name}`).textContent;
+    //       return existingUserName === sender;
+    //     });
+    
+    //     // Добавление пользователя, если его нет в списке
+    //     if (!userExists) {
+    //       const userItem = document.createElement('li');
+    //       userItem.classList.add(`${css.userItem}`); // Добавляем класс '.userItem' к элементу li
+    //       userItem.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.user_avatar}" /><span class="${css.user_name}">${sender}</span>`;
+    //       userListRef.current.appendChild(userItem);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing JSON:', error);
+    //   }
+    // };
+
+    socket.onmessage = (event) => {
+      try {
+        const messageData = JSON.parse(event.data);
+        console.log('Received message:', messageData);
+    
+        if (messageData.type === 'active_users') {
+          // Обработка обновления списка пользователей
+          // Возможно, здесь вы захотите очистить userListRef и пересоздать его на основе полученных данных
+    
+          const userListItems = userListRef.current.getElementsByTagName('li');
+          Array.from(userListItems).forEach(item => {
+            userListRef.current.removeChild(item);
+          });
+    
+          messageData.data.forEach(userData => {
+            const userItem = document.createElement('li');
+            userItem.classList.add(`${css.userItem}`);
+            userItem.innerHTML = `<img src="${userData.avatar}" alt="${userData.user_name}'s Avatar" class="${css.user_avatar}" /><span class="${css.user_name}">${userData.user_name}</span>`;
+            userListRef.current.appendChild(userItem);
+          });
+        } else {
+          // Обработка обычного сообщения
+          const sender = messageData.user_name || 'Unknown Sender';
+    
+          const messageContainer = document.getElementById('messageContainer');
+          const newMessageElement = document.createElement('div');
+          newMessageElement.className = css.chat_message;
+          newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><span class="${css.chat_sender}">${sender}:</span> <span class="${css.messageText} ${messageData.message}">${messageData.message}</span>`;
+          messageContainer.appendChild(newMessageElement);
+        }
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    };
+    
+    socket.onerror = (error) => {
+      console.error('WebSocket Error:', error);
+    };
+
+    return () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+    };
+  }, [roomName, socket]);
+
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
+  };
+
+  const sendMessage = () => {
+    if (socket && socket.readyState === WebSocket.OPEN) {
+      const messageObject = {
+        message: message,
+      };
+
+      const messageString = JSON.stringify(messageObject);
+      socket.send(messageString);
+
+      setMessage('');
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
+    }
+  };
+
+  return (
+    <div className={css.container}>
+      <h2 className={css.title}>Topic: Tourist furniture and tableware</h2>
+      <div className={css.main_container}>
+        <div className={css.members_container}>
+          <h3 className={css.members_title}>Chat members</h3>
+          <ul ref={userListRef} className={css.userList}></ul>
+        </div>
+        <div className={css.chat_container}>
+          <div className={css.chat_area} id="messageContainer"></div>
+          <div className={css.input_container}>
+            <input
+              type="text"
+              value={message}
+              onChange={handleMessageChange}
+              placeholder="Write message"
+            />
+            <button onClick={sendMessage} className={css.button_send}>
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Chat;
