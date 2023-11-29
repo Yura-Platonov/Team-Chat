@@ -4,6 +4,11 @@ footer{
     /* background: var(--dark-tema-bg-footer-dark, #182A36); */
 }
 
+@media (max-width: 768px) {
+    footer {
+        padding: 40px;
+    }}
+
 .footer_nav {
     display: flex;
     justify-content: space-between;

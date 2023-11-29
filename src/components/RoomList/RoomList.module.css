@@ -1,6 +1,15 @@
 .room_section{
   padding: 100px;
+
 }
+
+@media screen and (max-width: 768px) {
+  .room_section {
+    padding: 40px;
+  }
+}
+
+
 
 .room_list{
     display: flex;
@@ -61,14 +70,42 @@
   text-align: center;
   
   color: #fff;
+  background: rgba(2, 74, 122, 0.30);
   font-family: Manrope;
   font-size: 20px;
   font-weight: 600;
   line-height: 130%;
 
-  padding: 20px;
-  margin: 0;
+  padding: 0;
+  margin: 20px auto;
 }
+
+/* .room_name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #fff;
+  font-family: Manrope;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 130%;
+
+  padding: 0;
+  margin: 20px;
+}
+
+.room_name::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(2, 74, 122, 0.30);
+  z-index: -1;
+} */
 
 .room_description {
   display: flex;
