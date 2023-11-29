@@ -55,7 +55,6 @@ header {
     border: 2px solid black;
 }
 
-/* Для мобильных устройств и планшетов */
 @media (max-width: 768px) {
     header {
         padding: 40px;

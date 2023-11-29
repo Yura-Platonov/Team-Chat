@@ -76,8 +76,9 @@
   font-weight: 600;
   line-height: 130%;
 
-  padding: 0;
-  margin: 20px auto;
+  padding: 20px;
+  margin: 0;
+  /* margin: 20px auto; */
 }
 
 /* .room_name {

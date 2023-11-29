@@ -164,7 +164,7 @@
   object-fit: cover; 
 }
 
- .roomImgContainer { 
+.roomImgContainer { 
   display: flex;
   flex-wrap: wrap;
   height: 400px;
