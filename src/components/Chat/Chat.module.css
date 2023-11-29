@@ -1,7 +1,12 @@
 .container{
-padding: 60px 100px 100px 100px;
-
+padding: 0 100px 50px 100px;
 }
+
+@media screen and (max-width: 768px) {
+    .container {
+      padding:  0 40px 40px 40px;
+    }
+  }
 
 .title{
     color:inherit;
@@ -92,7 +97,7 @@ input{
 }
 
 .chat_area{
-    height: 760px;
+    height: 70vh;
     display: flex;
     flex-direction: column;
     padding: 30px 40px;
@@ -201,7 +206,7 @@ input{
 
 .user_avatar{
     width: 150px;
-    height: 180px;
+    height: 160px;
 
     border-radius: 20px;
     border: 2px solid  #024A7A;

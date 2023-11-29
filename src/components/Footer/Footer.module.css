@@ -1,8 +1,13 @@
 footer{
     padding: 20px 100px;
-    background: var(--light-tema-bg-footer-light, #C5E6FD);
+    background:  #C5E6FD;
     /* background: var(--dark-tema-bg-footer-dark, #182A36); */
 }
+
+@media (max-width: 768px) {
+    footer {
+        padding: 40px;
+    }}
 
 .footer_nav {
     display: flex;
