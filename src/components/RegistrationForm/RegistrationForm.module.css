@@ -78,7 +78,7 @@
 .avatarContainer {
 
     margin: -15px;
-    /* height: 270px; */
+    height: 270px;
     overflow-y: auto; 
   }
   
