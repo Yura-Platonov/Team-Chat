@@ -60,6 +60,7 @@ padding: 0 100px 50px 100px;
     .chat_div{
     display: flex;
     flex-direction: column;
+    gap: 10px;
     }
 
 .input_container{
@@ -135,6 +136,11 @@ input{
     opacity: 0.6;
 }
 
+.chat{
+    display: flex;
+    gap: 15px;
+}
+
 .chat_avatar{
     border: 1px solid #024A7A;
     border-radius: 30%;
@@ -153,19 +159,18 @@ input{
     line-height: 130%;
 }
 
-/* .chat_message{
-    color:  #0F1E28;
-   
-    
-    font-family: Manrope;
-    font-size: 20px;
-    font-weight: 400;
-    line-height: 130%; 
-    border-radius: 0px 20px 20px 20px;
-    background:  #E2F4FF;
-    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+.chat_message{
+    padding-top: 20px;
+}
 
-} */
+.time{
+color: black;
+}
+
+.chat_nicktime{
+display: flex;
+justify-content: space-between;
+}
 
 .messageText {
     color:  #0F1E28;

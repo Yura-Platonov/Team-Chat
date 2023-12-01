@@ -60,9 +60,22 @@ const Chat = () => {
           console.log('Received message:', messageData);
 
           if (messageData.type === 'active_users') {
-            // ... (existing code for updating user list)
-          } else {
+            const userListItems = userListRef.current.getElementsByTagName('li');
+              Array.from(userListItems).forEach(item => {
+                userListRef.current.removeChild(item);
+              });
+        
+              messageData.data.forEach(userData => {
+              const userItem = document.createElement('li');
+              userItem.classList.add(`${css.userItem}`);
+              userItem.innerHTML = `<img src="${userData.avatar}" alt="${userData.user_name}'s Avatar" class="${css.user_avatar}" /><span class="${css.user_name}">${userData.user_name}</span>`;
+              userListRef.current.appendChild(userItem);
+            });
+            } else {
             const sender = messageData.user_name || 'Unknown Sender';
+            const createdAt = new Date(messageData.created_at);
+            const hours = createdAt.getHours().toString().padStart(2, '0');
+            const minutes = createdAt.getMinutes().toString().padStart(2, '0');
 
             const messageContainer = document.getElementById('messageContainer');
 
@@ -79,9 +92,9 @@ const Chat = () => {
             } else {
               // If it's a different user, create a new container
               const newMessageElement = document.createElement('div');
-              newMessageElement.className = css.chat_message;
-              newMessageElement.dataset.sender = sender; // Store sender information
-              newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><div class="${css.chat_div}"><span class="${css.chat_sender}">${sender}</span> <span class="${css.messageText}">${messageData.message}</span></div>`;
+              newMessageElement.classList.add(css.chat_message);
+              newMessageElement.dataset.sender = sender; 
+              newMessageElement.innerHTML = `<div class="${css.chat}"><img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><div class="${css.chat_div}"><div class="${css.chat_nicktime}"><span class="${css.chat_sender}">${sender}</span> <span class="${css.time}">${hours}:${minutes}</span></div>  <span class="${css.messageText}">${messageData.message}</span></div></div>`;
               messageContainer.appendChild(newMessageElement);
             }
 
