@@ -21,37 +21,77 @@ const Chat = () => {
     };
 
 
-    socket.onmessage = (event) => {
-      try {
-        const messageData = JSON.parse(event.data);
-        console.log('Received message:', messageData);
+    // socket.onmessage = (event) => {
+    //   try {
+    //     const messageData = JSON.parse(event.data);
+    //     console.log('Received message:', messageData);
     
-        if (messageData.type === 'active_users') {
-          const userListItems = userListRef.current.getElementsByTagName('li');
-          Array.from(userListItems).forEach(item => {
-            userListRef.current.removeChild(item);
-          });
+    //     if (messageData.type === 'active_users') {
+    //       const userListItems = userListRef.current.getElementsByTagName('li');
+    //       Array.from(userListItems).forEach(item => {
+    //         userListRef.current.removeChild(item);
+    //       });
     
-          messageData.data.forEach(userData => {
-            const userItem = document.createElement('li');
-            userItem.classList.add(`${css.userItem}`);
-            userItem.innerHTML = `<img src="${userData.avatar}" alt="${userData.user_name}'s Avatar" class="${css.user_avatar}" /><span class="${css.user_name}">${userData.user_name}</span>`;
-            userListRef.current.appendChild(userItem);
-          });
-        } else {
-          const sender = messageData.user_name || 'Unknown Sender';
+    //       messageData.data.forEach(userData => {
+    //         const userItem = document.createElement('li');
+    //         userItem.classList.add(`${css.userItem}`);
+    //         userItem.innerHTML = `<img src="${userData.avatar}" alt="${userData.user_name}'s Avatar" class="${css.user_avatar}" /><span class="${css.user_name}">${userData.user_name}</span>`;
+    //         userListRef.current.appendChild(userItem);
+    //       });
+    //     } else {
+    //       const sender = messageData.user_name || 'Unknown Sender';
     
-          const messageContainer = document.getElementById('messageContainer');
-          const newMessageElement = document.createElement('div');
-          newMessageElement.className = css.chat_message;
-          newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><div class="${css.chat_div}"><span class="${css.chat_sender}">${sender}</span> <span class="${css.messageText}">${messageData.message}</span></div>`;
-          messageContainer.appendChild(newMessageElement);
-          setHasMessages(true);
+    //       const messageContainer = document.getElementById('messageContainer');
+    //       const newMessageElement = document.createElement('div');
+    //       newMessageElement.className = css.chat_message;
+    //       newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><div class="${css.chat_div}"><span class="${css.chat_sender}">${sender}</span> <span class="${css.messageText}">${messageData.message}</span></div>`;
+    //       messageContainer.appendChild(newMessageElement);
+    //       setHasMessages(true);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error parsing JSON:', error);
+    //   }
+    // };
+
+    // ...
+      socket.onmessage = (event) => {
+        try {
+          const messageData = JSON.parse(event.data);
+          console.log('Received message:', messageData);
+
+          if (messageData.type === 'active_users') {
+            // ... (existing code for updating user list)
+          } else {
+            const sender = messageData.user_name || 'Unknown Sender';
+
+            const messageContainer = document.getElementById('messageContainer');
+
+            // Check if the current message is from the same user as the previous one
+            const previousMessage = messageContainer.lastChild;
+            const isSameUser = previousMessage && previousMessage.dataset.sender === sender;
+
+            // If it's the same user, append the message to the existing container
+            if (isSameUser) {
+              const messageText = document.createElement('span');
+              messageText.classList.add(css.messageText);
+              messageText.textContent = messageData.message;
+              previousMessage.querySelector(`.${css.chat_div}`).appendChild(messageText);
+            } else {
+              // If it's a different user, create a new container
+              const newMessageElement = document.createElement('div');
+              newMessageElement.className = css.chat_message;
+              newMessageElement.dataset.sender = sender; // Store sender information
+              newMessageElement.innerHTML = `<img src="${messageData.avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" /><div class="${css.chat_div}"><span class="${css.chat_sender}">${sender}</span> <span class="${css.messageText}">${messageData.message}</span></div>`;
+              messageContainer.appendChild(newMessageElement);
+            }
+
+            setHasMessages(true);
+          }
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
         }
-      } catch (error) {
-        console.error('Error parsing JSON:', error);
-      }
-    };
+      };
+
     
     socket.onerror = (error) => {
       console.error('WebSocket Error:', error);
