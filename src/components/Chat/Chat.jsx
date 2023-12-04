@@ -36,60 +36,59 @@ const Chat = () => {
     }
   };
 
+  const prevReceiverIdRef = useRef(null);
+
   useEffect(() => {
     socket.onopen = () => {
       console.log('Connected to the server via WebSocket');
     };
-
+  
     socket.onmessage = (event) => {
       try {
         const messageData = JSON.parse(event.data);
         console.log('Received message:', messageData);
-
+  
         if (messageData.type === 'active_users') {
           setUserList(messageData.data);
         } else {
-          const { user_name: sender = 'Unknown Sender', created_at, avatar, message } = messageData;
+          const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
           const formattedDate = formatTime(created_at);
-
-          const previousMessage = messageContainerRef.current.lastChild;
-          const isSameUser = previousMessage && previousMessage.dataset.sender === sender;
-
-          if (isSameUser) {
-            const messageText = document.createElement('span');
-            messageText.classList.add(css.messageText);
-            messageText.textContent = message;
-            previousMessage.querySelector(`.${css.chat_div}`).appendChild(messageText);
-          } else {
-            const newMessageElement = document.createElement('div');
-            newMessageElement.classList.add(css.chat_message);
-            newMessageElement.dataset.sender = sender;
-            newMessageElement.innerHTML = `
-              <div class="${css.chat}">
-                <img src="${avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" />
-                <div class="${css.chat_div}">
-                  <div class="${css.chat_nicktime}">
-                    <span class="${css.chat_sender}">${sender}</span>
-                    <span class="${css.time}">${formattedDate}</span>
-                  </div>
-                  <span class="${css.messageText}">${message}</span>
+  
+          const newMessageElement = document.createElement('div');
+          newMessageElement.classList.add(css.chat_message);
+          newMessageElement.dataset.sender = sender;
+          newMessageElement.innerHTML = `
+            <div class="${css.chat}">
+              <img src="${avatar}" alt="${sender}'s Avatar" class="${css.chat_avatar}" />
+              <div class="${css.chat_div}">
+                <div class="${css.chat_nicktime}">
+                  <span class="${css.chat_sender}">${sender}</span>
+                  <span class="${css.time}">${formattedDate}</span>
                 </div>
+                <span class="${css.messageText}">${message}</span>
               </div>
-            `;
+            </div>
+          `;
+  
+          setHasMessages(true);
+  
+          if (prevReceiverIdRef.current === receiver_id) {
+            messageContainerRef.current.appendChild(newMessageElement);
+          } else {
             messageContainerRef.current.appendChild(newMessageElement);
           }
-
-          setHasMessages(true);
+  
+          prevReceiverIdRef.current = receiver_id;
         }
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
     };
-
+  
     socket.onerror = (error) => {
       console.error('WebSocket Error:', error);
     };
-
+  
     return () => {
       if (socket && socket.readyState === WebSocket.OPEN) {
         socket.close();
