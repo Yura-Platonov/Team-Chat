@@ -79,6 +79,8 @@ const Chat = () => {
           }
   
           prevReceiverIdRef.current = receiver_id;
+
+          messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
         }
       } catch (error) {
         console.error('Error parsing JSON:', error);
