@@ -51,6 +51,10 @@ const Header = () => {
     setDarkTheme(!darkTheme);
   };
 
+  const toggleLang = () => {
+    console.log("change lang")
+  };
+
   const openLoginModal = () => {
     setIsLoginModalOpen(true);
   };
@@ -108,8 +112,8 @@ const Header = () => {
       <div>
           <Switch
             className={css.toggle}
-            onChange={toggleTheme}
-            checked={darkTheme}
+            onChange={toggleLang}
+            checked={false}
             height={40}
             width={80}
             onColor="#0F1E28" // включен - задний фон
