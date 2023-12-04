@@ -113,7 +113,7 @@ const Header = () => {
           <Switch
             className={css.toggle}
             onChange={toggleLang}
-            // checked={darkTheme}
+            checked={false}
             height={40}
             width={80}
             onColor="#0F1E28" // включен - задний фон
