@@ -1,0 +1,42 @@
+.container{
+    padding: 0 100px 50px 100px;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .container {
+          padding:  0 40px 40px 40px;
+        }
+      }
+    
+    .title{
+        color:inherit;
+        width: 400px;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 20px;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 124%;
+    }
+
+.noChats_text{
+    width: 300px;
+    color: #0F1E28;
+    text-align: center;
+    margin: 0 auto;
+    padding-top: 20px;
+    
+    font-family: Manrope;
+    font-size: 25px;
+    font-weight: 500;
+    line-height: 124%;
+
+    opacity: 0.6;
+}
+
+.noChats_img{
+    display: block;
+    max-width: 50%;
+    height: auto;
+    margin: 0 auto;
+}
