@@ -1,0 +1,57 @@
+.container{
+    padding: 0 100px 50px 100px;
+    
+    color: #0F1E28;
+
+    font-family: Manrope;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 130%;
+    }
+    
+    @media screen and (max-width: 768px) {
+        .container {
+          padding:  0 40px 40px 40px;
+        }
+      }
+
+    .main_container{
+        display: flex;
+        gap: 20px;
+         
+    }
+    
+    .title{
+        color:inherit;
+        width: 400px;
+        margin: 0;
+        padding: 0;
+        padding-bottom: 20px;
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 124%;
+    }
+
+    .list {
+        list-style-type: decimal;
+        margin: 0;
+        padding: 0;
+        
+      }
+      
+      .list .item {
+        margin-left: 20px;
+        margin-bottom: 10px;
+
+      }
+
+      .imgContainer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    /* .privacyPolicyImg {
+        max-width: 340px;
+    }
+       */
+

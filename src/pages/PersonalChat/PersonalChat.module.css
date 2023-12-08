@@ -13,7 +13,7 @@
         width: 400px;
         margin: 0;
         padding: 0;
-        padding-bottom: 30px;
+        padding-bottom: 20px;
         font-size: 32px;
         font-weight: 500;
         line-height: 124%;
@@ -24,10 +24,10 @@
     color: #0F1E28;
     text-align: center;
     margin: 0 auto;
-    padding-top: 30px;
+    padding-top: 20px;
     
     font-family: Manrope;
-    font-size: 32px;
+    font-size: 25px;
     font-weight: 500;
     line-height: 124%;
 
@@ -36,7 +36,7 @@
 
 .noChats_img{
     display: block;
-    max-width: 100%;
+    max-width: 50%;
     height: auto;
     margin: 0 auto;
 }
