@@ -122,6 +122,11 @@ input{
    
 }
 
+.no_messagesImg{
+max-width: 75vh;
+
+}
+
 .no_messages_text{
     width: 300px;
     color: inherit;
