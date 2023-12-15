@@ -140,7 +140,7 @@ const Chat = () => {
           <div className={css.chat_area} ref={messageContainerRef}>
             {isDataReady && !hasMessages && (
               <div className={css.no_messages}>
-                <img src={Bg} alt="No messages" />
+                <img src={Bg} alt="No messages" className={css.no_messagesImg}/>
                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
               </div>
             )}

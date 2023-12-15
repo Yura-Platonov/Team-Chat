@@ -41,6 +41,13 @@
     margin: 0 auto;
 }
 
+.noChats_container{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+
 .chatList{
     display: flex;
     flex-wrap: wrap;
@@ -70,8 +77,8 @@
     align-items: flex-start;
   
     width: 295px;
-    height: 60px;
-    padding: 18px;
+    height: 65px;
+    padding: 20px;
     box-sizing: border-box;
   
     background-color: #024A7A;
@@ -97,16 +104,36 @@
     width: 105%;
     height: 105%;
  
-    z-index: 2;
-    /* object-fit: cover; */
+    /* z-index: 1; */
     object-position: center bottom;
-    
-/* width: 100px;
-height: 140px; */
-/* position: absolute; */
-/* border-radius: 20px;
-border: 2px solid  #F5FBFF; */
+}
 
-/* top: 50%;
-left: 50%; */
+.userName{
+    color: #F5FBFF;
+    text-align: center;
+    margin: 0;
+    text-decoration: none;
+    
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 130%;
+}
+
+.unreadMsg{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* .unreadMsgSvg{
+    fill: #F5FBFF;
+} */
+
+.unreadMsgText{
+    color: #F5FBFF;
+    padding: 0;
+    margin: 0;
+    font-size: 20px;
+    line-height: 130%;
 }

@@ -259,29 +259,36 @@ import PersonalChatImg from '../../components/Images/PersonalChatImg.png';
 import { Link } from 'react-router-dom';
 import BgPersonalChat  from 'components/Images/BgPersonalChat.jpg';
 
-import css from './PersonalChat.module.css';
+import css from './PersonalChatPage.module.css';
 
 const ChatCard = ({ messageData }) => {
   const { recipient_name, recipient_avatar, is_read } = messageData;
 
   return (
-    <Link to={`/chat/${recipient_name}`} className={css.chatCard}>
+    <Link to={`/Personalchat/${recipient_name}`} className={css.chatCard}>
       <img src={BgPersonalChat} alt="фон" className={css.bg} />
       <div className={css.avatarBorder}>
       <img src={recipient_avatar} alt={`${recipient_name}'s Avatar`} className={css.avatar} />
       </div>
       <div className={css.info}>
         <p className={css.userName}>{recipient_name}</p>
-        <p className={css.unreadMessages}>{`${is_read ? 0 : 1}`}</p>
+        <div className={css.unreadMsg}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="22" viewBox="0 0 28 22"  fill={is_read ? "#F5FBFF" : "#E02849"} >
+          <rect width="28" height="22" rx="4" fill="current"/>
+          <path d="M4.00391 3.88227L11.5507 9.74214C12.9942 10.8629 15.0137 10.8629 16.4571 9.74214L24.0039 3.88227" stroke="#024A7A" strokeWidth="1.5" strokeLinecap="round"/>
+        </svg>
+        <p className={css.unreadMsgText}>{`${is_read ? 0 : 1}`}</p>
+        </div>
+
       </div>
     </Link>
   );
 };
 
-const PersonalChat = () => {
+const PersonalChatPage = () => {
   const [privateMessages, setPrivateMessages] = useState([]);
   const [userId, setUserId] = useState(null);
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -298,29 +305,30 @@ const PersonalChat = () => {
                 const userIdFromResponse = userData.id;
                 setUserId(userIdFromResponse);
       
-                // Создаем сокет только после получения userId
-                const newSocket = new WebSocket(`wss://cool-chat.club/private/${userIdFromResponse}?token=${localStorage.getItem('access_token')}`);
+                // // Создаем сокет только после получения userId
+                // const newSocket = new WebSocket(`wss://cool-chat.club/private/${userIdFromResponse}?token=${localStorage.getItem('access_token')}`);
       
-                // Устанавливаем обработчики событий для WebSocket
-                newSocket.onopen = () => {
-                  console.log('Connected to the server via WebSocket');
-                };
+                // // Устанавливаем обработчики событий для WebSocket
+                // newSocket.onopen = () => {
+                //   console.log('Connected to the server via WebSocket');
+                // };
       
-                newSocket.onmessage = (event) => {
-                  console.log('Received message:', event.data);
-                  // Обработка полученных данных, если необходимо
-                };
+                // newSocket.onmessage = (event) => {
+                //   console.log('Received message:', event.data);
+                //   // Обработка полученных данных, если необходимо
+                // };
       
-                newSocket.onclose = (event) => {
-                  console.log('WebSocket connection closed:', event);
-                };
+                // newSocket.onclose = (event) => {
+                //   console.log('WebSocket connection closed:', event);
+
+                // };
       
-                newSocket.onerror = (error) => {
-                  console.error('WebSocket error:', error);
-                };
+                // newSocket.onerror = (error) => {
+                //   console.error('WebSocket error:', error);
+                // };
       
                 // Сохраняем созданный сокет в состоянии
-                setSocket(newSocket);
+                // setSocket(newSocket);
               } else {
                 console.error('User object or username not found in local storage');
               }
@@ -366,14 +374,14 @@ const PersonalChat = () => {
             <ChatCard key={message.recipient_id} messageData={message} />
           ))
         ) : (
-          <>
+          <div className={css.noChats_container}>
             <img className={css.noChats_img} src={PersonalChatImg} alt="Personal Chat Img" />
             <p className={css.noChats_text}>Your personal chats will be here soon</p>
-          </>
+          </div>
         )}
       </div>
     </div>
   );
 };
 
-export default PersonalChat;
+export default PersonalChatPage;

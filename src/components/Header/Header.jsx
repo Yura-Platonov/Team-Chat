@@ -78,7 +78,7 @@ const Header = () => {
       <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><a href="/Team-Chat" className={css.nav_link}>Chat rooms</a></li>
-          <li className={css.nav_item}><a href="/PersonalChat" className={css.nav_link}>Personal chat</a></li>
+          <li className={css.nav_item}><a href="/PersonalChatPage" className={css.nav_link}>Personal chat</a></li>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Favorites</a></li>
           <li className={css.nav_item}><a href="/" className={css.nav_link}>Rules of the chat</a></li>
           <li className={css.nav_item}><a href="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</a></li>
