@@ -144,7 +144,7 @@
 // };
 
 // export default PersonalChat;
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
 
 import css from './PersonalChat.module.css';
@@ -186,7 +186,10 @@ const PersonalChat = () => {
   }, []);
 
   
-  const socket = new WebSocket(`wss://cool-chat.club/private/${userId}?token=${localStorage.getItem('access_token')}`);
+  // const socket = new WebSocket(`wss://cool-chat.club/private/${userId}?token=${localStorage.getItem('access_token')}`);
+  const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/private/${userId}?token=${localStorage.getItem('access_token')}`), [
+  userId,
+]);
 
   const formatTime = (created) => {
     const dateTime = new Date(created);
@@ -305,7 +308,7 @@ const PersonalChat = () => {
     if (userId !== null) {
       fetchPrivateMessages();
     }
-  }, [userId]);
+  }, [socket, setPrivateMessages, userId]);
 
   return (
     <div className={css.container}>
