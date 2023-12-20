@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import axios from 'axios';
-
-import css from './PersonalChat.module.css';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
+
+import css from './PersonalChat.module.css';
 
 const PersonalChat = () => {
   const [message, setMessage] = useState('');
@@ -19,10 +19,17 @@ const PersonalChat = () => {
     setPartnerId(recipientId);
   }, []);
 
+  const isWebSocketSupported = 'WebSocket' in window;
+
+  const socket = useMemo(() => {
+    if (isWebSocketSupported && partnerId) {
+      return new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${localStorage.getItem('access_token')}`);
+    }
+    return null;
+  }, [partnerId, isWebSocketSupported]);
+
   useEffect(() => {
     if (partnerId) {
-      const socket = new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${localStorage.getItem('access_token')}`);
-
       socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
       };
@@ -75,7 +82,7 @@ const PersonalChat = () => {
         }
       };
     }
-  }, [partnerId]);
+  }, [partnerId, socket]);
 
   useEffect(() => {
     setIsDataReady(true);
@@ -127,7 +134,7 @@ const PersonalChat = () => {
           const response = await axios.get(`https://cool-chat.club/direct/${partnerId}`);
           const data = response.data;
           console.log('Received private messages data:', data);
-          // Добавьте логику обработки полученных данных, если необходимо
+          // Add logic to handle received data if necessary
         }
       } catch (error) {
         console.error('Error fetching private messages:', error);
