@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import Header from './Header/Header';
 import Main from './Main/Main';
 import Chat from './Chat/Chat';
@@ -17,12 +17,11 @@ export const App = () => {
   const [authToken, setAuthToken] = useState(null);
 
   return (
-    <Router>
     <div className="app">
       <AuthProvider value={{ authToken, setAuthToken }}>
         <Header />
-        <Routes>
-            <Route path="/Team-Chat" exact element={<Main/>} />  
+        <Routes >
+            <Route path="/" exact element={<Main/>} />  
             <Route path="/PersonalChatPage" element={<PersonalChatPage/>} />
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
             <Route path="/chat/:roomName" element={<Chat/>}/>
@@ -32,6 +31,5 @@ export const App = () => {
         <Footer />
       </AuthProvider>
     </div>
-    </Router>
   );
 };
