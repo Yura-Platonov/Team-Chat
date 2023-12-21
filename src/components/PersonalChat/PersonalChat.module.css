@@ -103,7 +103,7 @@
     }
     
     .chat_area{
-        height: 70vh;
+        height: 60vh;
         display: flex;
         flex-direction: column;
         padding: 30px 40px;

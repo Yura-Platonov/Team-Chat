@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user_name');
     localStorage.removeItem('avatar');
 
-    navigate('/Team-Chat');
+    navigate('/');
   };
 
   return (

@@ -5,7 +5,7 @@ import LogoDark from '../Images/LogoDark.svg';
 
 const Logo = ({ darkTheme }) => {
     return (
-      <Link href="/">
+      <Link to="/">
       <img
         src={darkTheme ? LogoDark : LogoLight}
         alt="Logo company"
