@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Switch from 'react-switch';
 import css from './Header.module.css';
 import Logo from './Logo';
@@ -77,11 +78,11 @@ const Header = () => {
         <Logo darkTheme={darkTheme}/>
       <nav>
         <ul className={css.nav_list}>
-          <li className={css.nav_item}><a href="/Team-Chat" className={css.nav_link}>Chat rooms</a></li>
-          <li className={css.nav_item}><a href="/PersonalChatPage" className={css.nav_link}>Personal chat</a></li>
-          <li className={css.nav_item}><a href="/" className={css.nav_link}>Favorites</a></li>
-          <li className={css.nav_item}><a href="/" className={css.nav_link}>Rules of the chat</a></li>
-          <li className={css.nav_item}><a href="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</a></li>
+          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
+          <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
+          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Favorites</Link></li>
+          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Rules of the chat</Link></li>
+          <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
       </nav>
       <div className={css.userInfo}>
