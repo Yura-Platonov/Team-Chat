@@ -1,15 +1,16 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import LogoLight from '../Images/LogoLight.svg';
 import LogoDark from '../Images/LogoDark.svg';
 
 const Logo = ({ darkTheme }) => {
     return (
-      <a href="/">
+      <Link href="/">
       <img
         src={darkTheme ? LogoDark : LogoLight}
         alt="Logo company"
       />
-      </a>
+      </Link>
     );
   };
 
