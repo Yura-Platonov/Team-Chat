@@ -13,11 +13,53 @@ const Chat = () => {
   const token = localStorage.getItem('access_token');
   const userListRef = useRef(null);
   const messageContainerRef = useRef(null);
+  const [showMenu, setShowMenu] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const menuRef = useRef(null);
 
   const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [
     roomName,
     token,
   ]);
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    if (showMenu) {
+      document.addEventListener('click', handleOutsideClick);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, [showMenu]);
+
+  const handleAvatarClick = (userData, clientX, clientY) => {
+    const menu = document.createElement('div');
+  menu.classList.add(css.userMenu);
+  menu.style.position = 'absolute';
+  menu.style.top = `${clientY}px`;
+  menu.style.left = `${clientX}px`;
+
+  // Добавляем варианты меню
+  menu.innerHTML = `
+    <p>Write direct message to ${userData.user_name}</p>
+    <!-- Добавьте здесь дополнительные варианты меню -->
+  `;
+
+  // Добавляем меню в DOM
+  document.body.appendChild(menu);
+
+  // Обновляем ссылку на DOM-элемент меню
+  menuRef.current = menu;
+
+    setSelectedUser(userData);
+    setShowMenu(true);
+  };
 
   const formatTime = (created) => {
     const dateTime = new Date(created);
@@ -67,6 +109,7 @@ const Chat = () => {
               </div>
             </div>
           `;
+          newMessageElement.addEventListener('click', handleAvatarClick);
   
           setHasMessages(true);
   
@@ -128,13 +171,20 @@ const Chat = () => {
           <ul ref={userListRef} className={css.userList}>
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}>
-                <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
+                <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar}/>
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
             ))}
           </ul>
         </div>
         <div className={css.chat_container}>
+        {showMenu && selectedUser && (
+            <div className={css.userMenu}>
+              <p>Write direct message to {selectedUser.user_name}</p>
+              
+            </div>
+          )}
+          
           <div className={css.chat_area} ref={messageContainerRef}>
             {isDataReady && !hasMessages && (
               <div className={css.no_messages}>
