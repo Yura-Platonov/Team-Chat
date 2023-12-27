@@ -230,3 +230,13 @@ justify-content: space-between;
 
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
 }
+
+.userMenu{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

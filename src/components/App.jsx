@@ -6,6 +6,7 @@ import Chat from './Chat/Chat';
 import PersonalChatPage from '../pages/PersonalChatPage/PersonalChatPage';
 import PersonalChat from '../components/PersonalChat/PersonalChat';
 import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
+import RoolsOfTheChat from '../pages/RoolsOfTheChat/RoolsOfTheChat';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
 import Footer from './Footer/Footer';
@@ -24,6 +25,7 @@ export const App = () => {
             <Route path="/" exact element={<Main/>} />  
             <Route path="/PersonalChatPage" element={<PersonalChatPage/>} />
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
+            <Route path="/RoolsOfTheChat" element={<RoolsOfTheChat/>} />
             <Route path="/chat/:roomName" element={<Chat/>}/>
             <Route path="/PersonalChat/:recipient_name" element={<PersonalChat/>}/>
 

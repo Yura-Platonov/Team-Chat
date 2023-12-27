@@ -81,7 +81,7 @@ const Header = () => {
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
           <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Favorites</Link></li>
-          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Rules of the chat</Link></li>
+          <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
       </nav>

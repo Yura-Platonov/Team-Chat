@@ -277,19 +277,27 @@ const PersonalChat = () => {
   };
 
   const sendMessage = () => {
-    if (socket && socket.readyState === WebSocket.OPEN) {
-      const messageObject = {
-        message: message,
-      };
-
-      const messageString = JSON.stringify(messageObject);
-      socket.send(messageString);
-
-      setMessage('');
-    } else {
-      console.error('WebSocket is not open. Message not sent.');
+    try {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        const messageObject = {
+          message: message,
+        };
+  
+        const messageString = JSON.stringify(messageObject);
+        console.log('Sending message:', messageObject);
+        socket.send(messageString);
+  
+        setMessage('');
+      } else {
+        console.error('WebSocket is not open. Message not sent. Current readyState:', socket.readyState);
+        throw new Error('WebSocket is not open. Message not sent.');
+      }
+    } catch (error) {
+      console.error(error.message);
+      // Можно добавить дополнительные действия при ошибке, если необходимо
     }
   };
+  
 
   // useEffect(() => {
   //   const fetchPrivateMessages = async () => {
