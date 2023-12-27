@@ -280,7 +280,7 @@ const PersonalChat = () => {
     try {
       if (socket && socket.readyState === WebSocket.OPEN) {
         const messageObject = {
-          message: message,
+          messages: message,
         };
   
         const messageString = JSON.stringify(messageObject);
