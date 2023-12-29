@@ -3,7 +3,7 @@ footer{
     background:  #C5E6FD;
     /* background: var(--dark-tema-bg-footer-dark, #182A36); */
   
-    @media screen and (min-width:1400px){
+    @media screen and (min-width:1440px){
         padding: 40px 100px;
     }
 }

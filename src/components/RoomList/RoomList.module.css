@@ -1,13 +1,11 @@
 .room_section{
+  padding: 40px;
+
+@media screen and (min-width:1440px){
   padding: 100px;
-
+}
 }
 
-@media screen and (max-width: 768px) {
-  .room_section {
-    padding: 40px;
-  }
-}
 
 
 
@@ -20,7 +18,7 @@
   }
   
   .room_item {
-    width: calc(25% - 25px);
+    width: 290px;
     height: 310px;
     margin: 10px;
     display: flex;

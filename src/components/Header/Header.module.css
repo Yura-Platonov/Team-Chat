@@ -4,7 +4,7 @@ header {
     align-items: center;
     padding: 40px;
 
-    @media screen and (min-width:1400px){
+    @media screen and (min-width:1440px){
         padding: 40px 100px;
     }
     
@@ -68,6 +68,20 @@ display: none;    }
 
 .toggle {
     border: 2px solid black;
+    /* height: 20px;
+    width: 40px;
+
+    @media screen and (min-width:800px){
+        height: 30px;
+        width: 60px;
+        
+    }
+
+    @media screen and (min-width:1200px){
+        height: 40px;
+        width: 80px;
+        
+    } */
 }
 
 
