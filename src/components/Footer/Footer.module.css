@@ -1,13 +1,14 @@
 footer{
-    padding: 20px 100px;
+    padding: 40px;
     background:  #C5E6FD;
     /* background: var(--dark-tema-bg-footer-dark, #182A36); */
+  
+    @media screen and (min-width:1400px){
+        padding: 40px 100px;
+    }
 }
 
-@media (max-width: 768px) {
-    footer {
-        padding: 40px;
-    }}
+
 
 .footer_nav {
     display: flex;
@@ -26,6 +27,9 @@ footer{
 
     margin: 0;
     padding: 0;
+    margin-left: 40px;
+    @media screen and (max-width:1000px){
+        display: none;    }
 }
 
 .nav_item:not(:last-child) {
