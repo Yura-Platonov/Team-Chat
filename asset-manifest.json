@@ -1,11 +1,12 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.f76f22a0.css",
-    "main.js": "/Team-Chat/static/js/main.3f0b70cf.js",
+    "main.css": "/Team-Chat/static/css/main.5204c1c8.css",
+    "main.js": "/Team-Chat/static/js/main.7955fabd.js",
     "static/media/BgPersonalChat.jpg": "/Team-Chat/static/media/BgPersonalChat.1756b8c1aa51dd3eea73.jpg",
     "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
     "static/media/UvU.png": "/Team-Chat/static/media/UvU.114fff4cf77801b75fd2.png",
     "static/media/Bg_empty_chat.png": "/Team-Chat/static/media/Bg_empty_chat.4e68ae4c655a8c6ae8ac.png",
+    "static/media/Main2x.jpg": "/Team-Chat/static/media/Main2x.8afcc58caf30e08a0319.jpg",
     "static/media/PersonalChatImg.png": "/Team-Chat/static/media/PersonalChatImg.d22787f55fe0fa98047f.png",
     "static/media/CreateRoomImg.png": "/Team-Chat/static/media/CreateRoomImg.aa3b2518de8ec06b6d4a.png",
     "static/media/PlayMarketHover.svg": "/Team-Chat/static/media/PlayMarketHover.d2a3e04b36eb3d7f915caffb8be6ecea.svg",
@@ -16,8 +17,8 @@
     "static/media/6.svg": "/Team-Chat/static/media/6.82dffb398ffe116a1d41729b280c0baf.svg",
     "static/media/1.svg": "/Team-Chat/static/media/1.d1dc053f5f21fe5b48d97ee1b54919b5.svg",
     "static/media/PlayMarket.svg": "/Team-Chat/static/media/PlayMarket.dead8f53da95c10aa5a0a4ffd3ecd3e4.svg",
-    "static/media/AppStoreHover.svg": "/Team-Chat/static/media/AppStoreHover.2387d6ef2107527288cbb700347458e4.svg",
-    "static/media/AppStore.svg": "/Team-Chat/static/media/AppStore.35f1866e55968a3620a504d74c850438.svg",
+    "static/media/AppStoreHover.svg": "/Team-Chat/static/media/AppStoreHover.7b7af1b1d07e5f790b1cfd488b4e94f7.svg",
+    "static/media/AppStore.svg": "/Team-Chat/static/media/AppStore.76b224e98cacffb1ea821e0f807b65dd.svg",
     "static/media/IconPeopleOnline.svg": "/Team-Chat/static/media/IconPeopleOnline.281f7c66f4bbb6270d4d7e9733e519a3.svg",
     "static/media/defaultAvatar.svg": "/Team-Chat/static/media/defaultAvatar.8b025487985270a71f7cf749d13af944.svg",
     "index.html": "/Team-Chat/index.html",
@@ -31,11 +32,11 @@
     "static/media/Xbutton.svg": "/Team-Chat/static/media/Xbutton.ee7432aa2c926a15e72d0430c46547a6.svg",
     "static/media/Heart.svg": "/Team-Chat/static/media/Heart.42d14a43d92639212673a58bc80b5389.svg",
     "static/media/2.svg": "/Team-Chat/static/media/2.c6bb4b5c025f54de590a4d3c7a5c9147.svg",
-    "main.f76f22a0.css.map": "/Team-Chat/static/css/main.f76f22a0.css.map",
-    "main.3f0b70cf.js.map": "/Team-Chat/static/js/main.3f0b70cf.js.map"
+    "main.5204c1c8.css.map": "/Team-Chat/static/css/main.5204c1c8.css.map",
+    "main.7955fabd.js.map": "/Team-Chat/static/js/main.7955fabd.js.map"
   },
   "entrypoints": [
-    "static/css/main.f76f22a0.css",
-    "static/js/main.3f0b70cf.js"
+    "static/css/main.5204c1c8.css",
+    "static/js/main.7955fabd.js"
   ]
 }
