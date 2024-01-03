@@ -87,11 +87,15 @@ function CreateRoom({ onRoomCreated }) {
     <div className={css.room_container}>
       <img
         src={CreateRoomImg}
-        alt="CreateRoomImg"/>
+        alt="CreateRoomImg"
+        className={css.room_img}
+        />
     <div className={css.room_add}>
         <img
         src={IconAdd}
-        alt="IconAdd"/>
+        alt="IconAdd"
+        className={css.room_imgAdd}
+        />
         <p className={css.room_name}>Add room</p>
       </div>
         <CreateRoomModal

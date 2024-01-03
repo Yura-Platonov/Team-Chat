@@ -1,13 +1,16 @@
 .room_section{
-  padding: 40px;
+  padding: 60px 15px;
 
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    padding: 60px 25px;
+} 
+@media screen and (min-width: 1024px) {
+    padding: 60px 40px;
+  }
 @media screen and (min-width:1440px){
-  padding: 100px;
+    padding: 100px;
 }
 }
-
-
-
 
 .room_list{
     display: flex;
@@ -18,8 +21,8 @@
   }
   
   .room_item {
-    width: 290px;
-    height: 310px;
+    width: 170px;
+    height: 210px;
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -29,6 +32,19 @@
     border: 2px solid  #024A7A;
     overflow: hidden;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      width: 230px;
+      height: 260px;
+     
+  } 
+
+  @media screen and (min-width: 1024px) {
+    width: 290px;
+    height: 310px;
+    
+    }
+  
     
   }
   
@@ -39,19 +55,43 @@
 }
 
 .room_title{
-  font-size: 32px;
+  font-size: 24px;
   font-weight: 500;
   line-height: 1.24;
 
   margin-top: 0;
+  margin-bottom: 20px;
+
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    font-size: 28px;
+  
+    margin-bottom: 30px;
+} 
+
+@media screen and (min-width: 1024px) {
+  font-size: 32px;
+  
   margin-bottom: 40px;
+  
+  }
     
 }
 .room_container {
   position: relative;
-  width: 295px;
+  width: 170px;
+  height: 170px;
+
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    width: 230px;
+  height: 210px;
+} 
+@media screen and (min-width: 1024px) {
+  width: 290px;
   height: 250px;
+  }
+
 }
+
 
 .room_img {
   width: 100%;
@@ -70,53 +110,46 @@
   color: #fff;
   background: rgba(2, 74, 122, 0.30);
   font-family: Manrope;
-  font-size: 20px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 130%;
 
-  padding: 20px;
+  padding: 10px;
   margin: 0;
-  /* margin: 20px auto; */
-}
 
-/* .room_name {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  text-align: center;
-  color: #fff;
-  font-family: Manrope;
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    font-size: 17px;
+    padding: 15px;
+  } 
+@media screen and (min-width: 1024px) {
   font-size: 20px;
-  font-weight: 600;
-  line-height: 130%;
-
-  padding: 0;
-  margin: 20px;
+  padding: 20px;
+  }
 }
-
-.room_name::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(2, 74, 122, 0.30);
-  z-index: -1;
-} */
 
 .room_description {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
 
-  width: 295px;
-  height: 60px;
-  padding: 18px;
+  width: 170px;
+  height: 40px;
+  padding: 10px;
   box-sizing: border-box;
 
   background-color: #024A7A;
+
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    width: 230px;
+    height: 50px;
+    padding: 14px;
+} 
+@media screen and (min-width: 1024px) {
+  width: 290px;
+  height: 60px;
+  padding: 18px;
+  
+  }
 
   
 }
@@ -126,10 +159,34 @@
   align-items: center;
 }
 
-.people_count img {
+/* .people_countSpan{
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    width: 20px;
+    height: 20px;
+    
+  } 
+@media screen and (min-width: 1024px) {
   width: 20px;
   height: 20px;
+  
+  }
+} */
+
+.people_count img {
+  width: 15px;
+  height: 15px;
   margin-right: 5px;
+
+  @media screen and (min-width: 768px) and (max-width: 1023px){
+    width: 20px;
+    height: 20px;
+    
+  } 
+@media screen and (min-width: 1024px) {
+  width: 25px;
+  height: 25px;
+  
+  }
 }
 
 .people_count span {
