@@ -34,7 +34,7 @@ function RoomList() {
     <ul className={css.room_list}>
       {rooms.map((room) => (
         <li className={css.room_item} key={room.id}>
-          <Link to={`/chat/${room.name_room}`} className={css.room_link}>
+          <Link to={`/chat/${room.name_room}`}>
             <div className={css.room_container}>
               <img className={css.room_img} src={room.image_room} alt={room.name_room} />
               <p className={css.room_name}>{room.name_room}</p>
@@ -46,7 +46,7 @@ function RoomList() {
               </div>
               <div className={css.people_count}>
                 <img src={IconPeopleOnline} alt="IconPeopleOnline" />
-                <span> Total</span>
+                
               </div>
             </div>
           </Link>

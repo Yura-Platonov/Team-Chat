@@ -16,13 +16,13 @@ const Footer = ({ darkTheme }) => {
         <ul className={css.nav_list}>
         <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
           <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
-          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Favorites</Link></li>
+          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Settings</Link></li>
           <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
       </nav>
       <div>
-      <p style={{ margin: '0px', fontSize: '20px', lineHeight: 1.3, color: 'inherit' }}>Download our app</p>
+      <p className={css.footer_title}>Download our app</p>
         <ul className={css.footer_list}>
           <li className={css.footer_item}>
             <img
@@ -52,8 +52,8 @@ const Footer = ({ darkTheme }) => {
       </div>
       </div>
         <ul className={css.footer_list_text}>
-          <li><p style={{ margin: '0px', fontSize: '18px', lineHeight: 1.3, color: 'inherit' }}>©All rights reserved</p></li>
-          <li><p style={{ margin: '0px', fontSize: '18px', lineHeight: 1.3, color: 'inherit' }}>Site was created: Cool Team</p></li>
+          <li><p className={css.footer_text}>©All rights reserved</p></li>
+          <li><p className={css.footer_text}>Site was created: Cool Team</p></li>
         </ul>
       
     </footer>
