@@ -28,7 +28,7 @@ header {
     padding: 0;
     margin-left: 40px;
 
-    @media screen and (max-width:1000px){
+    @media screen and (max-width:1023px){
 display: none;    }
 
 }
@@ -81,8 +81,13 @@ display: none;    }
 .userInfo {
     display: flex;
     justify-content: center;
-    align-items: baseline;
+    align-items: center;
     gap: 15px;
+
+    @media screen and (min-width:1024px){
+        align-items: baseline;
+        
+    } 
 }
 
 
@@ -104,12 +109,44 @@ display: none;    }
     } */
 }
 
+   .mobLogo{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
 
-/* 
-    .nav_list {
-        flex-direction: column;
-        align-items: flex-start;
-    } */
 
+.mob_list{
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+
+}
+  
+  .menu-content {
+    /* Ваши стили для содержимого меню */
+  }
+  
+  .mobMenuButton{
     
+    background: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
 
+    @media (min-width: 1024px) {
+       
+          display: none;
+       
+      }
+}
+
+
+
+  
