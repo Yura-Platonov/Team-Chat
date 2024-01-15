@@ -7,6 +7,7 @@ import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 import AvatarModal from '../Modal/AvatarModal';
+import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
 
 function IconSun() {
   return (
@@ -24,6 +25,31 @@ function IconMoon() {
 </svg>
   );
 }
+
+const MobileMenu = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  return (
+    <div className={`mobile-menu-container ${isMenuOpen ? 'open' : ''}`}>
+      <button onClick={toggleMenu} className={css.mobMenuButton}>
+        <MobileMenuSVG/>
+        </button>
+      {isMenuOpen && (
+         <ul className={css.mob_list}>
+         <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
+         <li className={css.nav_item}><Link to="/" className={css.nav_link}>Settings</Link></li>
+         <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
+         <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
+       </ul>
+      )}
+    </div>
+  );
+};
+
 
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
@@ -75,7 +101,10 @@ const Header = () => {
 
   return (
     <header>
+        <div className={css.mobLogo}>
+        <MobileMenu/>
         <Logo darkTheme={darkTheme}/>
+        </div>
       <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
