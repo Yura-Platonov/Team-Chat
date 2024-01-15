@@ -1,38 +1,76 @@
 .container{
-padding: 0 100px 50px 100px;
-}
+    padding:  0 15px 15px 15px;
+   
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding:  0 25px 25px 25px;
+    } 
 
-@media screen and (max-width: 768px) {
-    .container {
-      padding:  0 40px 40px 40px;
+    @media screen and (min-width: 1024px) {
+        padding: 0 40px 40px 40px;
+
     }
-  }
+    @media screen and (min-width: 1439px) {
+        padding: 0 100px 50px 100px;
+
+    }
+}
 
 .title{
     color:inherit;
-    width: 400px;
+    width: 360px;
     margin: 0;
     padding: 0;
-    padding-bottom: 32px;
-    font-size: 32px;
+    padding-bottom: 24px;
+    font-size: 24px;
     font-weight: 500;
     line-height: 124%;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 400px;
+        padding-bottom: 32px;
+        font-size: 32px;
+        
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 400px;
+        padding-bottom: 32px;
+        font-size: 32px;
+      }
 }
 
 .members_title{
     margin: 0;
-    padding-bottom: 16px;
+    padding-bottom: 8px;
     color: inherit;
-    font-size: 20px;
+    font-size: 14px;
     font-weight: 600;
     line-height: 130%;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding-bottom: 12px;
+        font-size: 17px;
+        
+    } 
+    @media screen and (min-width: 1024px) {
+        padding-bottom: 16px;
+        font-size: 20px;
+      }
+
 }
 
 .members_container{
-    padding: 16px;
+    padding: 10px;
     border-radius: 20px;
     border: 2px solid  #024A7A;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding: 13px;
+        
+    } 
+    @media screen and (min-width: 1024px) {
+        padding: 16px;
+      }
 }
 
 .members_list{
@@ -46,15 +84,42 @@ padding: 0 100px 50px 100px;
 
 .main_container{
     display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    @media screen and (max-width: 768px) {
+    
+    }
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        
+        
+    } 
+    @media screen and (min-width: 1024px) {
+    flex-direction: row;
     gap: 20px;
+    
+      }
      
 }
 
 .chat_container{
-    width: 905px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: 20px;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+       
+        
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 905px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+
     }
 
     .chat_div{
@@ -66,32 +131,59 @@ padding: 0 100px 50px 100px;
 .input_container{
     
     display: flex;
-    gap: 20px;
+    gap: 10px;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+       
+        gap: 15px;
+
+    } 
+    @media screen and (min-width: 1024px) {
+        gap: 20px;
+
+      }
+
 }
 
-input{
+.input_text{
     box-sizing: border-box;
-    width: 675px;
-    height: 80px;
-    padding: 28px 20px;
+    width: 100%;
+    height: 70px;
+    padding: 15px;
     align-items: center;
 
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 400;
 
     border-radius: 20px;
     border: 2px solid  #024A7A;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        height: 75px;
+        padding: 20px;
+    
+        font-size: 20px;
+       
+    } 
+    @media screen and (min-width: 1024px) {
+        height: 80px;
+        padding: 28px 20px;
+
+        font-size: 24px;
+
+
+      }
 }
 
 .button_send{
     cursor: pointer;
     box-sizing: border-box;
-    width: 210px;
-    height: 80px;
+    width: 120px;
+    height: 70px;
     
    
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 500;
     line-height: 124%;
 
@@ -100,20 +192,48 @@ input{
     background: #024A7A;
     color: #F5FBFF;
 
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 160px;
+        height: 75px;
+        font-size: 28px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 210px;
+        height: 80px;
+        font-size: 32px;
+
+      }
+
 }
 
 .chat_area{
     height: 60vh;
     display: flex;
     flex-direction: column;
-    padding: 30px 40px;
+    padding: 15px;
     overflow: hidden;
     overflow-y: scroll;
+    justify-content: center;
+
 
     border-radius: 20px;
     border: 2px solid  #024A7A;
-    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30)
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding: 20px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        padding: 25px;
+      }
+
 }
+
+.chat_area .no_messages{
+    overflow-y: hidden;
+}
+
 
 .no_messages{
     display: flex;
@@ -123,22 +243,42 @@ input{
 }
 
 .no_messagesImg{
-max-width: 75vh;
+max-width: 60vw;
+
+
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    max-width: 60vh;
+} 
+@media screen and (min-width: 1024px) {
+    max-width: 60vh;
+  }
 
 }
 
 .no_messages_text{
-    width: 300px;
+    width: 250px;
     color: inherit;
     text-align: center;
     margin: 0;
     padding-top: 15px;
     padding-bottom: 30px;
    
-    font-size: 32px;
+    font-size: 24px;
     font-weight: 500;
     line-height: 124%;
     opacity: 0.6;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 28px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 300px;
+        padding-top: 15px;
+        
+    
+        font-size: 32px;
+    
+      }
 }
 
 .chat{
@@ -147,10 +287,20 @@ max-width: 75vh;
 }
 
 .chat_avatar{
-    border: 1px solid #024A7A;
+    border: 2px solid #024A7A;
     border-radius: 30%;
-    width: 60px;
-    height: 70px;
+    width: 40px;
+    height: 45px;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 50px;
+        height: 55px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 60px;
+        height: 70px;
+
+      }
 }
 .chat_sender{
     color:  #0F1E28;
@@ -159,9 +309,18 @@ max-width: 75vh;
     text-edge: cap; */
     
     font-family: Manrope;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 600;
     line-height: 130%;
+
+    
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 17px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        font-size: 20px;
+      }
 }
 
 .chat_message{
@@ -169,8 +328,19 @@ max-width: 75vh;
 }
 
 .time{
+    font-size: 14px;
+
     padding-left: 15px;
 color: black;
+
+@media screen and (min-width: 768px) and (max-width: 1023px){
+    font-size: 14px;
+} 
+@media screen and (min-width: 1024px) {
+    
+    font-size: 17px;
+  }
+
 }
 
 .chat_nicktime{
@@ -183,29 +353,60 @@ justify-content: space-between;
     padding: 10px;
     
     font-family: Manrope;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 400;
     line-height: 130%; 
     border-radius: 0px 20px 20px 20px;
     background:  #E2F4FF;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 17px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        font-size: 20px;
+      }
+
   }
 
 .userList{
     display: flex;
-    flex-direction: column;
-    gap: 25px;
+    /* flex-direction: column; */
+    gap: 15px;
 
     list-style-type: none;
     padding: 0;
     margin: 0;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        gap: 20px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        flex-direction: column;
+        gap: 25px;
+
+      }
     
 }
 
 .userItem{
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 25px;
+    gap: 5px;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        gap: 10px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        flex-direction: row;
+        gap: 20px;
+
+      }
 
 }
 
@@ -215,20 +416,41 @@ justify-content: space-between;
     margin: 0;
 
     font-family: Manrope;
-    font-size: 24px;
+    font-size: 14px;
     font-weight: 400;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 19px;
+    } 
+    @media screen and (min-width: 1024px) {
+        
+        font-size: 24px;
+
+      }
 
 }
 
 .user_avatar{
-    width: 150px;
-    height: 160px;
+    width: 80px;
+    height: 100px;
 
     border-radius: 20px;
     border: 2px solid  #024A7A;
     background:#F5FBFF;
 
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 120px;
+        height: 130px;   
+       
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 150px;
+        height: 160px;   
+        
+      }
+
 }
 
 .userMenu{
@@ -237,6 +459,7 @@ justify-content: space-between;
     right: 0;
     background-color: white;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+

@@ -136,7 +136,7 @@ const PersonalChat = () => {
             )}
           </div>
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} placeholder="Write message" />
+            <input type="text" value={message} onChange={handleMessageChange} placeholder="Write message" className={css.input_text}/>
             <button onClick={sendMessage} className={css.button_send}>
               Send
             </button>
