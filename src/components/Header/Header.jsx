@@ -33,11 +33,46 @@ const MobileMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const closeMenu = () => {
+    setIsMenuOpen(false);
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      const menuContainer = document.getElementById('mobile-menu-container');
+
+      if (menuContainer && !menuContainer.contains(event.target)) {
+        closeMenu();
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => {
+      document.removeEventListener('click', handleOutsideClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    
+    const menuButton = document.querySelector('.mobMenuButton');
+    if (menuButton) {
+      if (isMenuOpen) {
+        menuButton.classList.add('menu-opened');
+      } else {
+        menuButton.classList.remove('menu-opened');
+      }
+    }
+
+  }, [isMenuOpen]);
+
+ 
+
   return (
-    <div className={`mobile-menu-container ${isMenuOpen ? 'open' : ''}`}>
-      <button onClick={toggleMenu} className={css.mobMenuButton}>
-        <MobileMenuSVG/>
-        </button>
+    <div id="mobile-menu-container" className={`${isMenuOpen ? 'open' : ''}`}>
+      <button onClick={toggleMenu} className={`${css.mobMenuButton} ${isMenuOpen ? css.menuOpened : ''}`}>
+        <MobileMenuSVG />
+      </button>
       {isMenuOpen && (
         <ul className={css.mob_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
@@ -45,12 +80,11 @@ const MobileMenu = () => {
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Settings</Link></li>
           <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
-       </ul>
+        </ul>
       )}
     </div>
   );
 };
-
 
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
