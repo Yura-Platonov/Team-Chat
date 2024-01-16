@@ -123,8 +123,22 @@ display: none;    }
     left: 0;
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    margin: 0;
+    gap: 20px;
+    padding: 25px 0px 20px 55px;
+    z-index: 9;
+    
+    border-radius: 0px 0px 10px 0px;
+    background: #F5FBFF;
 
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding: 35px 0px 20px 65px;
+    } 
+    @media (min-width: 1024px) {
+       
+        display: none;
+     
+    }
 }
   
   .menu-content {
@@ -132,14 +146,19 @@ display: none;    }
   }
   
   .mobMenuButton{
-    
+    position: absolute;
+    top: 3.5%;
     background: none;
     border: none;
     margin: 0;
     padding: 0;
     cursor: pointer;
     outline: none;
+    z-index: 10;
 
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        top: 5%;
+    } 
     @media (min-width: 1024px) {
        
           display: none;
