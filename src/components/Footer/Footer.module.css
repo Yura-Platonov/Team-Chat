@@ -58,7 +58,11 @@ footer{
 }
 
 .nav_item:not(:last-child) {
-    margin-right: 40px;
+    margin-right: 20px;
+    
+    @media screen and (min-width:1440px){
+        margin-right: 40px;
+    }
 }
 
 .nav_item:hover {
