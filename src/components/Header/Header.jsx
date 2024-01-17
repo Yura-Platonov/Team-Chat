@@ -6,7 +6,7 @@ import Logo from './Logo';
 import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
-import AvatarModal from '../Modal/LogoutModal';
+import LogoutModal from '../Modal/LogoutModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
 
 function IconSun() {
@@ -109,7 +109,7 @@ const MobileMenu = () => {
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false); 
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
   const { user } = useAuth();
   // const user_name = localStorage.getItem('user_name');
   const user_avatar = localStorage.getItem('avatar');
@@ -145,12 +145,12 @@ const Header = () => {
     setIsLoginModalOpen(false);
   };
 
-  const openAvatarModal = () => {
-    setIsAvatarModalOpen(true);
+  const openLogoutModal = () => {
+    setIsLogoutModalOpen(true);
   };
 
-  const closeAvatarModal = () => {
-    setIsAvatarModalOpen(false);
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
 
@@ -170,7 +170,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className={css.userInfo}>
-      <div className={css.avatarCircle}  onClick={user ? openAvatarModal : openLoginModal}>
+      <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
           src={user ? user_avatar : defaultAvatar}
           alt={user ? 'User Avatar' : 'Default Avatar'}
@@ -213,7 +213,7 @@ const Header = () => {
       </div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-      <AvatarModal isOpen={isAvatarModalOpen} onClose={closeAvatarModal}/>
+      <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
     </header>
     
   );

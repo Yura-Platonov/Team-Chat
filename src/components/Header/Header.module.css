@@ -101,20 +101,7 @@ header {
 
 .toggle {
     border: 2px solid black;
-    /* height: 20px;
-    width: 40px;
 
-    @media screen and (min-width:800px){
-        height: 30px;
-        width: 60px;
-        
-    }
-
-    @media screen and (min-width:1200px){
-        height: 40px;
-        width: 80px;
-        
-    } */
 }
 
    .mobLogo{
@@ -122,6 +109,11 @@ header {
     align-items: center;
     justify-content: center;
     gap: 12px;
+    @media (min-width: 1024px) {
+    
+        gap: 0px;
+     
+    }
 }
 
 
