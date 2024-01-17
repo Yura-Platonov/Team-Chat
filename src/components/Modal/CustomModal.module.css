@@ -3,13 +3,22 @@
     top: 50%; 
     left: 50%; 
     transform: translate(-50%, -50%);
-    padding: 40px;
+    padding: 20px;
     height: auto;
     border-radius: 20px;
     border: 2px solid black;
     background-color: #F5FBFF;
     max-height: 80vh;
     overflow-y: auto;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      padding: 30px;
+  } 
+  @media screen and (min-width: 1024px) {
+    padding: 40px;
+    }
+  /* @media screen and (min-width:1440px){
+    padding: 40px;
+  } */
   }
 
 .ReactModal__Content {
@@ -27,17 +36,6 @@
     border: none;
     border-radius: 50%;
     cursor: pointer;
+
 }
 
-/* .ReactModal__Overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; 
-  } */
