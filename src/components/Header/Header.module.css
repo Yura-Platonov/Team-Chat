@@ -155,7 +155,7 @@ header {
   
   .mobMenuButton{
     position: absolute;
-    top: 6%;
+    top: 3.5%;
     background: none;
     border: none;
     margin: 0;
@@ -165,7 +165,7 @@ header {
     z-index: 10;
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
-        top: 9%;
+        top: 6%;
     } 
     @media (min-width: 1024px) {
        
