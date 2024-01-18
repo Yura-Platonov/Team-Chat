@@ -4,8 +4,6 @@ import axios from 'axios';
 import CreateRoomModal from '../Modal/CreateRoomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
-// import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
-// import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
 import { useAuth } from '../LoginForm/AuthContext'; 
