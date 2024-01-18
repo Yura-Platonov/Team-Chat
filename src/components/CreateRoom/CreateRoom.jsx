@@ -115,16 +115,6 @@ function CreateRoom({ onRoomCreated }) {
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
-          {/* <img
-              src={IconPeopleAll}
-              alt="IconPeopleAll"/>
-            <span>0</span>
-            </div>
-            <div className={css.people_count}>
-            <img
-              src={IconPeopleOnline}
-              alt="IconPeopleOnline"/>
-            <span>0</span> */}
           </div>
         </div>
     </div>
