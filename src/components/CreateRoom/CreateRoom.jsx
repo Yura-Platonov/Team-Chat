@@ -4,8 +4,6 @@ import axios from 'axios';
 import CreateRoomModal from '../Modal/CreateRoomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
-// import IconPeopleAll from 'components/Images/IconPeopleAll.svg';
-// import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
 import { useAuth } from '../LoginForm/AuthContext'; 
@@ -115,16 +113,6 @@ function CreateRoom({ onRoomCreated }) {
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
-          {/* <img
-              src={IconPeopleAll}
-              alt="IconPeopleAll"/>
-            <span>0</span>
-            </div>
-            <div className={css.people_count}>
-            <img
-              src={IconPeopleOnline}
-              alt="IconPeopleOnline"/>
-            <span>0</span> */}
           </div>
         </div>
     </div>

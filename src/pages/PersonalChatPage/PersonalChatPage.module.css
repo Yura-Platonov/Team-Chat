@@ -1,44 +1,67 @@
 .container{
+    padding:  0 15px 15px 15px;
 
-    padding:  0 40px 40px 40px;
-
-
-          @media screen and (min-width:1440px){
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding:  0 25px 25px 25px;
+    } 
+    @media screen and (min-width: 1024px) {
+        padding:  0 40px 40px 40px;
+    }
+    @media screen and (min-width:1440px){
             padding: 0 100px 50px 100px;
         }
-      }
+    }
     
     .title{
         color:inherit;
-        width: 400px;
         margin: 0;
         padding: 0;
         padding-bottom: 20px;
-        font-size: 32px;
+        font-size: 24px;
         font-weight: 500;
         line-height: 124%;
+       
+        @media screen and (min-width: 1024px) {
+            font-size: 32px;
+        }
     }
 
 .noChats_text{
-    width: 300px;
+    width: 250px;
     color: #0F1E28;
     text-align: center;
     margin: 0 auto;
     padding-top: 20px;
+    padding-bottom: 20px;
     
     font-family: Manrope;
-    font-size: 25px;
+    font-size: 24px;
     font-weight: 500;
     line-height: 124%;
 
     opacity: 0.6;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 300px;
+        font-size: 25px;
+
+    } 
+  
 }
 
 .noChats_img{
     display: block;
-    max-width: 50%;
+    max-width: 80%;
     height: auto;
     margin: 0 auto;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        max-width: 65%;
+
+    } 
+    @media screen and (min-width: 1024px) {
+        max-width: 50%;
+
+      }
+    
 }
 
 .noChats_container{
@@ -57,8 +80,8 @@
 
 .chatCard{
     position: relative;
-    width: 290px;
-    height: 310px;
+    width: 170px;
+    height: 210px;
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -68,6 +91,17 @@
     border: 2px solid  #024A7A;
     overflow: hidden;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    position: relative;
+
+  
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      width: 200px;
+    height: 230px;
+  } 
+  @media screen and (min-width: 1024px) {
+    width: 290px;
+    height: 310px;
+    }
 
 }
 
@@ -76,12 +110,21 @@
     justify-content: space-between;
     align-items: flex-start;
   
-    width: 295px;
-    height: 65px;
-    padding: 20px;
+    width: 100%;
+    height: 40px;
+    padding: 10px;
     box-sizing: border-box;
   
     background-color: #024A7A;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        height: 55px;
+        padding: 15px;
+    } 
+    @media screen and (min-width: 1024px) {
+        height: 65px;
+        padding: 20px;
+      }
 }
 
 .bg{
@@ -94,10 +137,22 @@
 .avatarBorder{
     position: absolute;
     top: 20%;
-    width: 100px;
-    height: 140px;
-    border-radius: 20px;
+    width: 75px;
+    height: 90px;
+    border-radius: 14px;
     border: 2px solid  #F5FBFF;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 85px;
+        height: 110px;
+        top: 15%;
+        border-radius: 17px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 100px;
+        height: 140px;
+        border-radius: 20px;
+      }
 }
 
 .avatar{
@@ -117,26 +172,49 @@
     margin: 0;
     text-decoration: none;
     
-    font-size: 20px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 500;
     line-height: 130%;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 18px;
+    } 
+    @media screen and (min-width: 1024px) {
+        font-size: 22px;
+      }
 }
 
 .unreadMsg{
     display: flex;
     align-items: center;
     gap: 5px;
+ 
 }
 
-/* .unreadMsgSvg{
-    fill: #F5FBFF;
-} */
+.unreadMsgSvg{
+    width: 18px;
+    height: 14px;
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 24px;
+        height: 18px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 28px;
+        height: 22px;
+      }
+}
 
 .unreadMsgText{
     color: #F5FBFF;
     padding: 0;
     margin: 0;
-    font-size: 20px;
+    font-size: 15px;
     line-height: 130%;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 18px;
+    } 
+    @media screen and (min-width: 1024px) {
+        font-size: 22px;
+      }
 }

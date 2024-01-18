@@ -1,11 +1,11 @@
 import React from 'react';
 import CustomModal from './CustomModal';
 import { useAuth } from '../LoginForm/AuthContext';
-import css from './AvatarModal.module.css';
+import css from './LogoutModal.module.css';
 import Img from '../Images/UvU.png';
 
 
-const AvatarModal = ({ isOpen, onClose }) => {
+const LogoutModal = ({ isOpen, onClose }) => {
     const { logout } = useAuth();
 
     const handleLogout = async () => {
@@ -29,4 +29,4 @@ const AvatarModal = ({ isOpen, onClose }) => {
   );
 };
 
-export default AvatarModal;
+export default LogoutModal;

@@ -23,7 +23,7 @@ const ChatCard = ({ messageData }) => {
       <div className={css.info}>
         <p className={css.userName}>{recipient_name}</p>
         <div className={css.unreadMsg}>
-        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="22" viewBox="0 0 28 22"  fill={is_read ? "#F5FBFF" : "#E02849"} >
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="22" viewBox="0 0 28 22" className={css.unreadMsgSvg} fill={is_read ? "#F5FBFF" : "#E02849"} >
           <rect width="28" height="22" rx="4" fill="current"/>
           <path d="M4.00391 3.88227L11.5507 9.74214C12.9942 10.8629 15.0137 10.8629 16.4571 9.74214L24.0039 3.88227" stroke="#024A7A" strokeWidth="1.5" strokeLinecap="round"/>
         </svg>

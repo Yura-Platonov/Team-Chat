@@ -35,3 +35,8 @@ code {
   background-color: #F5FBFF;
   color: #000;
 }
+
+.ReactModal__Overlay--after-open {
+  
+  z-index: 11; 
+} 

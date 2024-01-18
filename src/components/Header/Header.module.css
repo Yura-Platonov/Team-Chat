@@ -29,13 +29,15 @@ header {
     margin-left: 40px;
 
     @media screen and (max-width:1023px){
-display: none;    }
+        display: none;    
+    }
 
 }
 
 .nav_item:not(:last-child) {
     margin-right: 20px;
-    @media screen and (min-width:1000px){
+    
+    @media screen and (min-width:1440px){
         margin-right: 40px;
     }
 }
@@ -52,6 +54,12 @@ display: none;    }
     font-size: 20px;
     line-height: 1.3;
     color: inherit;
+    @media screen and (min-width:1024px){
+        font-size: 18px;
+    }
+    @media screen and (min-width:1440px){
+        font-size: 20px;
+    }
 }
 
 .avatarCircle {
@@ -93,20 +101,7 @@ display: none;    }
 
 .toggle {
     border: 2px solid black;
-    /* height: 20px;
-    width: 40px;
 
-    @media screen and (min-width:800px){
-        height: 30px;
-        width: 60px;
-        
-    }
-
-    @media screen and (min-width:1200px){
-        height: 40px;
-        width: 80px;
-        
-    } */
 }
 
    .mobLogo{
@@ -114,39 +109,53 @@ display: none;    }
     align-items: center;
     justify-content: center;
     gap: 12px;
+    @media (min-width: 1024px) {
+    
+        gap: 0px;
+     
+    }
 }
 
 
 .mob_list{
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    margin: 0;
+    gap: 20px;
+    padding: 25px 0px 20px 30px;
+    z-index: 9;
+    
+    border-radius: 0px 0px 10px 0px;
+    background: #F5FBFF;
 
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding: 35px 0px 20px 30px;
+    } 
+    @media (min-width: 1024px) {
+       
+        display: none;
+     
+    }
 }
-  
-  .menu-content {
-    /* Ваши стили для содержимого меню */
-  }
+
   
   .mobMenuButton{
-    
     background: none;
     border: none;
     margin: 0;
     padding: 0;
     cursor: pointer;
     outline: none;
+    z-index: 10;
 
     @media (min-width: 1024px) {
-       
-          display: none;
-       
-      }
+        display: none;
+    }
 }
-
-
-
-  
+.active{
+    color: #024A7A;
+    text-decoration: underline;
+}
