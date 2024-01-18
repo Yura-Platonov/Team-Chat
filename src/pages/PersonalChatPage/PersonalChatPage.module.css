@@ -1,22 +1,31 @@
 .container{
 
-    padding:  0 40px 40px 40px;
+    padding:  0 15px 15px 15px;
 
-
-          @media screen and (min-width:1440px){
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        padding:  0 25px 25px 25px;
+    } 
+    @media screen and (min-width: 1024px) {
+        padding:  0 40px 40px 40px;
+    }
+    @media screen and (min-width:1440px){
             padding: 0 100px 50px 100px;
         }
-      }
+    }
     
     .title{
         color:inherit;
-        width: 400px;
         margin: 0;
         padding: 0;
         padding-bottom: 20px;
-        font-size: 32px;
+        font-size: 24px;
         font-weight: 500;
         line-height: 124%;
+       
+        @media screen and (min-width: 1024px) {
+            font-size: 32px;
+        }
+        
     }
 
 .noChats_text{
@@ -57,8 +66,8 @@
 
 .chatCard{
     position: relative;
-    width: 290px;
-    height: 310px;
+    width: 170px;
+    height: 210px;
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -68,6 +77,17 @@
     border: 2px solid  #024A7A;
     overflow: hidden;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    position: relative;
+
+  
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+      width: 200px;
+    height: 230px;
+  } 
+  @media screen and (min-width: 1024px) {
+    width: 290px;
+    height: 310px;
+    }
 
 }
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Switch from 'react-switch';
 import css from './Header.module.css';
 import Logo from './Logo';
 import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
-import AvatarModal from '../Modal/AvatarModal';
+import LogoutModal from '../Modal/LogoutModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
 
 function IconSun() {
@@ -28,6 +28,7 @@ function IconMoon() {
 
 const MobileMenu = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -53,33 +54,52 @@ const MobileMenu = () => {
     };
   }, []);
 
-  useEffect(() => {
+  // useEffect(() => {
     
-    const menuButton = document.querySelector('.mobMenuButton');
-    if (menuButton) {
-      if (isMenuOpen) {
-        menuButton.classList.add('menu-opened');
-      } else {
-        menuButton.classList.remove('menu-opened');
-      }
-    }
+  //   const menuButton = document.querySelector('.mobMenuButton');
+  //   if (menuButton) {
+  //     if (isMenuOpen) {
+  //       menuButton.classList.add('menu-opened');
+  //     } else {
+  //       menuButton.classList.remove('menu-opened');
+  //     }
+  //   }
 
-  }, [isMenuOpen]);
+  // }, [isMenuOpen]);
 
- 
 
   return (
     <div id="mobile-menu-container" className={`${isMenuOpen ? 'open' : ''}`}>
-      <button onClick={toggleMenu} className={`${css.mobMenuButton} ${isMenuOpen ? css.menuOpened : ''}`}>
+      <button onClick={toggleMenu} className={`${css.mobMenuButton}`}>
         <MobileMenuSVG />
       </button>
       {isMenuOpen && (
         <ul className={css.mob_list}>
-          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
-          <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
-          <li className={css.nav_item}><Link to="/" className={css.nav_link}>Settings</Link></li>
-          <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
-          <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
+          <li className={css.nav_item}>
+            <Link to="/" className={`${css.nav_link} ${location.pathname === '/' ? css.active : ''}`} onClick={closeMenu}>
+              Chat rooms
+            </Link>
+          </li>
+          <li className={css.nav_item}>
+            <Link to="/PersonalChatPage" className={`${css.nav_link} ${location.pathname === '/PersonalChatPage' ? css.active : ''}`} onClick={closeMenu}>
+              Personal chat
+            </Link>
+          </li>
+          <li className={css.nav_item}>
+            <Link to="/" className={`${css.nav_link} ${location.pathname === '/1' ? css.active : ''}`} onClick={closeMenu}>
+              Settings
+            </Link>
+          </li>
+          <li className={css.nav_item}>
+            <Link to="/RoolsOfTheChat" className={`${css.nav_link} ${location.pathname === '/RoolsOfTheChat' ? css.active : ''}`} onClick={closeMenu}>
+              Rules of the chat
+            </Link>
+          </li>
+          <li className={css.nav_item}>
+            <Link to="/PrivacyPolicy" className={`${css.nav_link} ${location.pathname === '/PrivacyPolicy' ? css.active : ''}`} onClick={closeMenu}>
+              Privacy Policy
+            </Link>
+          </li>
         </ul>
       )}
     </div>
@@ -89,7 +109,7 @@ const MobileMenu = () => {
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false); 
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
   const { user } = useAuth();
   // const user_name = localStorage.getItem('user_name');
   const user_avatar = localStorage.getItem('avatar');
@@ -125,12 +145,12 @@ const Header = () => {
     setIsLoginModalOpen(false);
   };
 
-  const openAvatarModal = () => {
-    setIsAvatarModalOpen(true);
+  const openLogoutModal = () => {
+    setIsLogoutModalOpen(true);
   };
 
-  const closeAvatarModal = () => {
-    setIsAvatarModalOpen(false);
+  const closeLogoutModal = () => {
+    setIsLogoutModalOpen(false);
   };
 
 
@@ -150,7 +170,7 @@ const Header = () => {
         </ul>
       </nav>
       <div className={css.userInfo}>
-      <div className={css.avatarCircle}  onClick={user ? openAvatarModal : openLoginModal}>
+      <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
           src={user ? user_avatar : defaultAvatar}
           alt={user ? 'User Avatar' : 'Default Avatar'}
@@ -193,7 +213,7 @@ const Header = () => {
       </div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
-      <AvatarModal isOpen={isAvatarModalOpen} onClose={closeAvatarModal}/>
+      <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
     </header>
     
   );
