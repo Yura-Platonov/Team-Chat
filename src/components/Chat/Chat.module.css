@@ -97,8 +97,7 @@
     @media screen and (min-width: 1024px) {
     flex-direction: row;
     gap: 20px;
-    
-      }
+    }
      
 }
 
@@ -112,14 +111,13 @@
        
         
     } 
+
     @media screen and (min-width: 1024px) {
         width: 905px;
         display: flex;
         flex-direction: column;
         gap: 20px;
       }
-
-
     }
 
     .chat_div{
@@ -129,7 +127,6 @@
     }
 
 .input_container{
-    
     display: flex;
     gap: 10px;
 
@@ -213,7 +210,7 @@
     padding: 15px;
     overflow: hidden;
     overflow-y: scroll;
-    justify-content: center;
+    justify-content: flex-end;
 
 
     border-radius: 20px;
