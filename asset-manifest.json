@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.68cf0e5f.css",
-    "main.js": "/Team-Chat/static/js/main.aa9ae997.js",
+    "main.css": "/Team-Chat/static/css/main.bbd22949.css",
+    "main.js": "/Team-Chat/static/js/main.fd2cc7a5.js",
     "static/media/BgPersonalChat.jpg": "/Team-Chat/static/media/BgPersonalChat.1756b8c1aa51dd3eea73.jpg",
     "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
     "static/media/UvU.png": "/Team-Chat/static/media/UvU.114fff4cf77801b75fd2.png",
@@ -33,11 +33,11 @@
     "static/media/Heart.svg": "/Team-Chat/static/media/Heart.42d14a43d92639212673a58bc80b5389.svg",
     "static/media/mobileMenu.svg": "/Team-Chat/static/media/mobileMenu.7455f398db526ccd56ebc9412da8fb25.svg",
     "static/media/2.svg": "/Team-Chat/static/media/2.c6bb4b5c025f54de590a4d3c7a5c9147.svg",
-    "main.68cf0e5f.css.map": "/Team-Chat/static/css/main.68cf0e5f.css.map",
-    "main.aa9ae997.js.map": "/Team-Chat/static/js/main.aa9ae997.js.map"
+    "main.bbd22949.css.map": "/Team-Chat/static/css/main.bbd22949.css.map",
+    "main.fd2cc7a5.js.map": "/Team-Chat/static/js/main.fd2cc7a5.js.map"
   },
   "entrypoints": [
-    "static/css/main.68cf0e5f.css",
-    "static/js/main.aa9ae997.js"
+    "static/css/main.bbd22949.css",
+    "static/js/main.fd2cc7a5.js"
   ]
 }
