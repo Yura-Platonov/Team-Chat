@@ -3,8 +3,6 @@ import Modal from 'react-modal';
 import css from './CustomModal.module.css';
 import Xbutton from '../../components/Images/Xbutton.svg';
 
-
-
 const CustomModal = ({ isOpen, onClose, children }) => {
   return (
     <Modal

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import CreateRoomModal from '../Modal/CreateRoomModal';
@@ -6,7 +5,7 @@ import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 
-import { useAuth } from '../LoginForm/AuthContext'; 
+import { useAuth } from '../LoginForm/AuthContext';
 
 
 
@@ -18,7 +17,7 @@ function CreateRoom({ onRoomCreated }) {
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
-  
+
   useEffect(() => {
     axios.get('https://cool-chat.club/images/Home')
       .then((response) => {
@@ -36,27 +35,27 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Error loading images:', error);
       });
   }, []);
-  
+
   const handleCreateRoom = () => {
     if (!authToken) {
       alert('You are not authorized. Please login.');
       return;
     }
-  
+
     if (!roomName || roomName.trim() === '') {
       alert('Please provide the room name.');
       return;
     }
-  
+
     if (!selectedOption) {
       alert('Please select an image for the room.');
       return;
     }
-  
+
     const headers = {
       Authorization: `Bearer ${authToken}`,
     };
-  
+
     axios
       .post('https://cool-chat.club/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
       .then((response) => {
@@ -71,16 +70,21 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Ошибка при создании комнаты:', error);
       });
   };
-  
+
   const openCreateRoomModal = () => {
+    console.log('hihihihih');
     setIsCreateRoomModalOpen(true);
   };
 
-  const closeCreateRoomModal = () => {
+  const closeCreateRoomModal = (e) => {
+    e.stopPropagation()
+    console.log('hihihi');
     setIsCreateRoomModalOpen(false);
   };
+  console.log('isCreateRoomModalOpen', isCreateRoomModalOpen);
 
   return (
+    <>
     <div className={css.room_item} onClick={() => openCreateRoomModal()}>
     <div className={css.room_container}>
       <img
@@ -96,26 +100,27 @@ function CreateRoom({ onRoomCreated }) {
         />
         <p className={css.room_name}>Add room</p>
       </div>
-        <CreateRoomModal
-          isOpen={isCreateRoomModalOpen} 
-          onClose={closeCreateRoomModal}
-          roomName={roomName}
-          setRoomName={setRoomName}
-          roomImage={roomImage}
-          setRoomImage={setRoomImage}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-          imageOptions={imageOptions}
-          activeCardIndex={activeCardIndex}
-          setActiveCardIndex={setActiveCardIndex}
-          handleCreateRoom={handleCreateRoom}
-        />
     </div>
     <div className={css.room_description}>
           <div className={css.people_count}>
           </div>
         </div>
     </div>
+      <CreateRoomModal
+        isOpen={isCreateRoomModalOpen}
+        onClose={closeCreateRoomModal}
+        roomName={roomName}
+        setRoomName={setRoomName}
+        roomImage={roomImage}
+        setRoomImage={setRoomImage}
+        selectedOption={selectedOption}
+        setSelectedOption={setSelectedOption}
+        imageOptions={imageOptions}
+        activeCardIndex={activeCardIndex}
+        setActiveCardIndex={setActiveCardIndex}
+        handleCreateRoom={handleCreateRoom}
+      />
+    </>
   );
 }
 
