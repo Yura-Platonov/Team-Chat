@@ -210,7 +210,8 @@
     padding: 15px;
     overflow: hidden;
     overflow-y: scroll;
-    justify-content: flex-end;
+    /* justify-content: center; */
+
 
 
     border-radius: 20px;

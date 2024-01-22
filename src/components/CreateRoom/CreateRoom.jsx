@@ -72,16 +72,14 @@ function CreateRoom({ onRoomCreated }) {
   };
 
   const openCreateRoomModal = () => {
-    console.log('hihihihih');
     setIsCreateRoomModalOpen(true);
   };
 
   const closeCreateRoomModal = (e) => {
     e.stopPropagation()
-    console.log('hihihi');
     setIsCreateRoomModalOpen(false);
   };
-  console.log('isCreateRoomModalOpen', isCreateRoomModalOpen);
+  // console.log('isCreateRoomModalOpen', isCreateRoomModalOpen);
 
   return (
     <>
