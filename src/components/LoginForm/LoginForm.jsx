@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
-// import validationSchema from '../ValidationSchema/validationSchema';
 import axios from 'axios';
 import * as yup from 'yup';
 import qs from 'qs';
@@ -12,7 +11,7 @@ import AuthContext from './AuthContext';
 
 const validationSchema = yup.object().shape({
   username: yup.string()
-  .test('is-valid-email', 'Incorrect email', value => {
+  .test('is-valid-email', 'Please input correct email', value => {
     return (
       value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
     );
@@ -20,9 +19,12 @@ const validationSchema = yup.object().shape({
   .required('Email is required'),
 
   password: yup.string()
-  .min(8, 'Password must be at least 8 characters long')
-  .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,'Password must contain at least one uppercase letter, one lowercase letter, and one digit')
-  .required('Password is required'),
+  .required('Password is required')
+  .matches(
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s)/,
+    'Use at least one: (0-9), (a-z), (A-Z), (@#$%^&+=!)'
+  )
+  .max(8, 'Password must be at most 8 characters long'),
   });
 
 const LoginForm = ({ onClose, showRegistrationForm }) => {
@@ -83,7 +85,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
           </label>
           <Field
             // className={` ${touched.username && errors.username ? css.isInvalid : css.isvalid} ${css.input}`}
-            className={`${touched.username && errors.username ? css.isInvalid : touched.username ? css.isvalid : ''} ${css.input}`}
+            className={`${touched.username && errors.username ? css.isInvalid : touched.username ? css.isValid : ''} ${css.input}`}
             type="text"
             id="username"
             name="username"
@@ -108,7 +110,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             name="password"
             autoComplete="current-password"
             // className={` ${touched.password && errors.password ? css.isInvalid : css.isvalid} ${css.input}`}
-            className={`${touched.password && errors.password ? css.isInvalid : touched.password ? css.isvalid : ''} ${css.input}`}
+            className={`${touched.password && errors.password ? css.isInvalid : touched.password ? css.isValid : ''} ${css.input}`}
             placeholder="Enter your password"
           />
           <ErrorMessage name="password" component="div" />

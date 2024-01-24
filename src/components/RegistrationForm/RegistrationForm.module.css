@@ -140,12 +140,12 @@
   .isInvalid{
     border: 2px solid red;
 }
-.isvalid{
+.isValid{
     border: 2px solid green;
 }
-input:focus-visible {
+/* input:focus-visible {
     outline: none; 
-  }
+  } */
 
   .button{
     width: 200px;
