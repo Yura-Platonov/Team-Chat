@@ -88,13 +88,17 @@ display: flex;
 
 
       }
-
-
 }
 
 .isInvalid{
     border: 2px solid red;
 }
+.isvalid{
+    border: 2px solid green;
+}
+input:focus-visible {
+    outline: none; 
+  }
 
 .button{
     width: 200px;
