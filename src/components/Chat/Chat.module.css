@@ -84,15 +84,15 @@
 
 .main_container{
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-
+  
     @media screen and (max-width: 768px) {
-    
+        flex-direction: column;
+        gap: 15px;
     }
     @media screen and (min-width: 768px) and (max-width: 1023px){
         
-        
+        flex-direction: column;
+        gap: 15px;
     } 
     @media screen and (min-width: 1024px) {
     flex-direction: row;
@@ -107,10 +107,10 @@
     flex-direction: column;
     gap: 20px;
 
-    @media screen and (min-width: 768px) and (max-width: 1023px){
+    /* @media screen and (min-width: 768px) and (max-width: 1023px){
        
         
-    } 
+    }  */
 
     @media screen and (min-width: 1024px) {
         width: 905px;
