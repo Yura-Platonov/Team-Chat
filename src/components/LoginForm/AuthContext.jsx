@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("avatar", avatar);
-        window.location.reload();
+        // window.location.reload();
       })
       .catch((error) => {
         console.error("Ошибка при выполнении GET-запроса:", error);
