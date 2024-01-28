@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }) => {
   const login = (token, username) => {
     setAuthToken(token);
     localStorage.setItem('access_token', token);
+    // localStorage.setItem('access_token', token);
     
     axios.get(`https://cool-chat.club/users/${username}`)
       .then((response) => {
