@@ -256,7 +256,7 @@ max-width: 60vw;
     text-align: center;
     margin: 0;
     padding-top: 15px;
-    padding-bottom: 30px;
+    /* padding-bottom: 30px; */
    
     font-size: 24px;
     font-weight: 500;
