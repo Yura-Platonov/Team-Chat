@@ -141,7 +141,7 @@ const RegistrationForm = (props) => {
     >
       {({ errors, touched, setFieldValue }) => (
         <Form className={css.registerForm}>
-          <h2 className={css.title}>Register in TeamChat</h2>
+          <h2 className={css.title}>Register in Coolchat</h2>
           <div>
             <label htmlFor="email" className={css.text}>
               Enter your email*

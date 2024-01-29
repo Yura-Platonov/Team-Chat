@@ -78,7 +78,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
     >
       {({ errors, touched}) => (
         <Form className={css.loginForm}>
-        <h2 className={css.title}>Log in to TeamChat</h2>
+        <h2 className={css.title}>Log in to Coolchat</h2>
         <div>
           <label htmlFor="username" className={css.text}>
             Login
