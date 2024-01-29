@@ -1,5 +1,22 @@
 @import-normalize;
 
+* {  box-sizing: border-box;
+  margin: 0;  padding: 0;
+  ::-webkit-scrollbar {
+    background-color: #024A7A;    width: 20px;
+  }
+  /* background of the scrollbar except button or resizer */  ::-webkit-scrollbar-track {
+    background-color: #E2F4FF;  }
+  /* scrollbar itself */
+  ::-webkit-scrollbar-thumb {    background-color: #024A7A;
+    border-radius: 2px;    
+    /* border: 2px solid #fff; */
+  }
+  /* set button(top and bottom of the scrollbar) */  ::-webkit-scrollbar-button {
+    display:none;
+  }
+}
+
 body {
   margin: 0;
   font-family: 'Manrope', sans-serif;
