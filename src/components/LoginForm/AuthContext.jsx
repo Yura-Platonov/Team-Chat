@@ -17,7 +17,6 @@ export const AuthProvider = ({ children }) => {
   const login = (token, username) => {
     setAuthToken(token);
     localStorage.setItem('access_token', token);
-    // localStorage.setItem('access_token', token);
     
     axios.get(`https://cool-chat.club/users/${username}`)
       .then((response) => {
@@ -27,7 +26,7 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.setItem("user_name", user_name);
         localStorage.setItem("avatar", avatar);
-        // window.location.reload();
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Ошибка при выполнении GET-запроса:", error);
