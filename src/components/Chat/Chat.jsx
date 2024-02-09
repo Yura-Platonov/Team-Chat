@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import css from './Chat.module.css';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
+import UserMenu from './UserMenu';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -15,51 +16,23 @@ const Chat = () => {
   const messageContainerRef = useRef(null);
   const [showMenu, setShowMenu] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  const menuRef = useRef(null);
+  const [menuPosition, setMenuPosition] = useState({ posX: 0, posY: 0 });
 
   const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [
     roomName,
     token,
   ]);
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowMenu(false);
-      }
-    };
-
-    if (showMenu) {
-      document.addEventListener('click', handleOutsideClick);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [showMenu]);
-
-  const handleAvatarClick = (userData, clientX, clientY) => {
-    const menu = document.createElement('div');
-  menu.classList.add(css.userMenu);
-  menu.style.position = 'absolute';
-  menu.style.top = `${clientY}px`;
-  menu.style.left = `${clientX}px`;
-
-  // Добавляем варианты меню
-  menu.innerHTML = `
-    <p>Write direct message to ${userData.user_name}</p>
-    <!-- Добавьте здесь дополнительные варианты меню -->
-  `;
-
-  // Добавляем меню в DOM
-  document.body.appendChild(menu);
-
-  // Обновляем ссылку на DOM-элемент меню
-  menuRef.current = menu;
-
+  const handleAvatarClick = (userData, e) => {
     setSelectedUser(userData);
+    setMenuPosition({ posX: e.clientX, posY: e.clientY });
     setShowMenu(true);
   };
+
+  const handleCloseMenu = () => {
+    setShowMenu(false);
+  };
+
 
   const formatTime = (created) => {
     const dateTime = new Date(created);
@@ -170,7 +143,8 @@ const Chat = () => {
           <h3 className={css.members_title}>Chat members</h3>
           <ul ref={userListRef} className={css.userList}>
             {userList.map((userData) => (
-              <li key={userData.user_name} className={css.userItem}>
+              <li key={userData.user_name} className={css.userItem}
+              onClick={(e) => handleAvatarClick(userData, e.clientX, e.clientY)}>
                 <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar}/>
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
@@ -179,11 +153,13 @@ const Chat = () => {
         </div>
         <div className={css.chat_container}>
         {showMenu && selectedUser && (
-            <div className={css.userMenu}>
-              <p>Write direct message to {selectedUser.user_name}</p>
-              
-            </div>
-          )}
+         <UserMenu
+         selectedUser={selectedUser}
+         onClose={handleCloseMenu}
+         posX={menuPosition.posX}
+         posY={menuPosition.posY}
+       />
+      )}
           
           <div className={css.chat_area} ref={messageContainerRef}>
             {isDataReady && !hasMessages && (
