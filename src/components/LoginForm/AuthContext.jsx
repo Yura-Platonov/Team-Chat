@@ -40,6 +40,29 @@ export const AuthProvider = ({ children }) => {
       axios.interceptors.response.eject(interceptor);
     };
   }, [logout]);
+  
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      try {
+        await axios.get('https://cool-chat.club/ass', {
+          params: {
+            token: authToken 
+          }
+        });
+        
+        console.log('Token is valid');
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          console.log('Token is not valid');
+          logout();
+        }
+      }
+    };
+  
+    checkTokenValidity();
+  
+  }, [authToken, logout]);
+  
 
   const login = (token, username) => {
     setAuthToken(token);
