@@ -201,7 +201,6 @@ const Chat = () => {
   const token = localStorage.getItem('access_token');
   const userListRef = useRef(null);
   const messageContainerRef = useRef(null);
-  const [showMenu, setShowMenu] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
 
   const socket = useMemo(() => new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`), [
@@ -210,12 +209,8 @@ const Chat = () => {
   ]);
 
   const handleAvatarClick = (userData) => {
-    setSelectedUser(userData);
-      setShowMenu(true);
-  };
-
-  const handleCloseMenu = () => {
-    setShowMenu(false);
+    console.log(userData);
+    setSelectedUser(userData); 
   };
 
   const formatTime = (created) => {
@@ -256,6 +251,7 @@ const Chat = () => {
             avatar,
             message,
             formattedDate,
+            receiver_id,
           };
 
           setMessages(prevMessages => [...prevMessages, newMessage]);
@@ -316,7 +312,8 @@ const Chat = () => {
           <ul ref={userListRef} className={css.userList}>
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}
-                onClick={() => handleAvatarClick(userData)}>
+                >
+                  
                 <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
@@ -324,14 +321,7 @@ const Chat = () => {
           </ul>
         </div>
         <div className={css.chat_container}>
-          {showMenu && selectedUser && (
-            <UserMenu
-              selectedUser={selectedUser}
-              onClose={handleCloseMenu}
-            />
-          )}
-
-          <div className={css.chat_area} ref={messageContainerRef}>
+           <div className={css.chat_area} ref={messageContainerRef}>
             {isDataReady && !hasMessages && (
               <div className={css.no_messages}>
                 <img src={Bg} alt="No messages" className={css.no_messagesImg} />
@@ -339,21 +329,32 @@ const Chat = () => {
               </div>
             )}
 
-            {messages.map((msg, index) => (
-              <div key={index} className={css.chat_message}>
-                <div className={css.chat}>
-                  <img src={msg.avatar} alt={`${msg.sender}'s Avatar`} className={css.chat_avatar} 
-                    onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar })} />
-                  <div className={css.chat_div}>
-                    <div className={css.chat_nicktime}>
-                      <span className={css.chat_sender}>{msg.sender}</span>
-                      <span className={css.time}>{msg.formattedDate}</span>
+              {messages.map((msg, index) => (
+                <div key={index} className={css.chat_message}>
+                  <div className={css.chat}>
+                    <img
+                      src={msg.avatar}
+                      alt={`${msg.sender}'s Avatar`}
+                      className={css.chat_avatar}
+                      onClick={() => handleAvatarClick({  user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+                    />
+                    <div className={css.chat_div}>
+                      <div className={css.chat_nicktime}>
+                        <span className={css.chat_sender}>{msg.sender}</span>
+                        <span className={css.time}>{msg.formattedDate}</span>
+                      </div>
+                      <span className={css.messageText}>{msg.message}</span>
                     </div>
-                    <span className={css.messageText}>{msg.message}</span>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+
+              {selectedUser && (
+                <div className={css.chat_menu}>
+                  <UserMenu selectedUser={selectedUser} onClose={() => setSelectedUser(null)} />
+                </div>
+              )}
+
           </div>
           <div className={css.input_container}>
             <input type="text" value={message} onChange={handleMessageChange} placeholder="Write message" className={css.input_text} />

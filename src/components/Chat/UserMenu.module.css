@@ -1,6 +1,10 @@
 .userMenu {
     position: absolute;
+  top: calc(100% + 10px); /* Располагаем меню под картинкой аватара */
+  left: 20%; /* Выравниваем по горизонтали */
+  transform: translateX(-20%);
     display: flex;
+    width: 200px;
     flex-direction: column;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -8,8 +12,8 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 10px;
     z-index: 1000;
-   top:10%;
-   left: 0;
+    /* top:10%;
+    left: 0; */
   }
   
   .userMenu p {
