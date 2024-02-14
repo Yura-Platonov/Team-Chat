@@ -41,27 +41,27 @@ export const AuthProvider = ({ children }) => {
     };
   }, [logout]);
   
-  useEffect(() => {
-    const checkTokenValidity = async () => {
-      try {
-        await axios.get('https://cool-chat.club/ass', {
-          params: {
-            token: authToken 
-          }
-        });
+  // useEffect(() => {
+  //   const checkTokenValidity = async () => {
+  //     try {
+  //       await axios.get('https://cool-chat.club/ass', {
+  //         params: {
+  //           token: authToken 
+  //         }
+  //       });
         
-        console.log('Token is valid');
-      } catch (error) {
-        if (error.response && error.response.status === 422) {
-          console.log('Token is not valid');
-          logout();
-        }
-      }
-    };
+  //       console.log('Token is valid');
+  //     } catch (error) {
+  //       if (error.response && error.response.status === 422) {
+  //         console.log('Token is not valid');
+  //         logout();
+  //       }
+  //     }
+  //   };
   
-    checkTokenValidity();
+  //   checkTokenValidity();
   
-  }, [authToken, logout]);
+  // }, [authToken, logout]);
   
 
   const login = (token, username) => {
