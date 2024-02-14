@@ -115,6 +115,8 @@ const RegistrationForm = (props) => {
                 },
                 data,
               };
+
+
     
               const loginResponse = await axios(options);
     
@@ -126,12 +128,9 @@ const RegistrationForm = (props) => {
     
                 console.log('User logged in after registration');
           
+                alert('Check Email to confirm your account');
 
-                props.onClose();
-            
-
-  setShowVerificationModal(true);
-               
+                props.onClose();            
 
               } else {
                 alert('Login after registration failed');
