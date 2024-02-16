@@ -397,6 +397,7 @@ const Chat = () => {
     const token = localStorage.getItem('access_token');
     console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
+    localStorage.setItem('currentPartnerId', partnerId);
     console.log(partnerId);
 
 
@@ -416,7 +417,7 @@ const Chat = () => {
     token,
   ]);
 
-  const handleAvatarClick = (userData, event) => {
+  const handleAvatarClick = (userData) => {
     setSelectedUser(userData);
    
   };
