@@ -7,7 +7,6 @@ import css from './RegistrationForm.module.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import AuthContext from '../LoginForm/AuthContext';
-import VerificationEmailModal from '../Modal/VerificationEmailModal';
 
 const validationSchema = yup.object().shape({
   user_name: yup.string().required('Username is required').matches(
@@ -39,7 +38,6 @@ const RegistrationForm = (props) => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [showVerificationModal, setShowVerificationModal] = useState(false); 
 
   useEffect(() => {
     axios
@@ -128,13 +126,12 @@ const RegistrationForm = (props) => {
     
                 console.log('User logged in after registration');
           
-                alert('Check Email to confirm your account');
-
                 props.onClose();            
 
               } else {
                 alert('Login after registration failed');
               }
+              props.onRegistrationSuccess();
             } catch (error) {
               console.log(error.message);
             }
@@ -243,7 +240,6 @@ const RegistrationForm = (props) => {
               Already registered
             </button>
           </div>
-          <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
 
         </Form>
       )}

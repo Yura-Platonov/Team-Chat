@@ -7,6 +7,7 @@ import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 import LogoutModal from '../Modal/LogoutModal';
+import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
 
 function IconSun() {
@@ -110,13 +111,16 @@ const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
+  const [showVerificationModal, setShowVerificationModal] = useState(false); 
   const { user } = useAuth();
   // const user_name = localStorage.getItem('user_name');
   const user_avatar = localStorage.getItem('avatar');
   const defaultAvatar = UserAvatar;
   
   
-  
+  const handleRegistrationSuccess = () => {
+    setShowVerificationModal(true);
+  };
 
 
   useEffect(() => {
@@ -212,8 +216,9 @@ const Header = () => {
           />     
       </div>
       </div>
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} />
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </header>
     
   );
