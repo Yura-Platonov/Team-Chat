@@ -157,7 +157,6 @@
     width: 110%;
     height: 110%;
  
-    /* z-index: 1; */
     object-position: center bottom;
     @media screen and (min-width: 768px) and (max-width: 1023px){
         left: -2%;

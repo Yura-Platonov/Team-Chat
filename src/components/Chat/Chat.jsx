@@ -151,7 +151,10 @@ const Chat = () => {
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}
                 >
-                <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
+                  <div className={css.user_avatarBorder}>
+                  <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
+           </div>
+                
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
             ))}
