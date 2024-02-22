@@ -86,10 +86,7 @@
     background: #024A7A;
     color: #F5FBFF;
     transition: background-color 0.3s;  
-    @media screen and (min-width: 768px) and (max-width: 1023px){
-       
-
-    } 
+   
     @media screen and (min-width: 1024px) {
       
         border-radius: 20px;
@@ -120,12 +117,15 @@
     align-items: center;
     width: 300px;
 
- 
-    @media screen and (min-width: 1024px) {
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        min-width: 450px;
 
+    } 
+    @media screen and (min-width: 1024px) {
+        min-width: 580px;
       }
     @media screen and (min-width:1440px){
-        min-width: 580px;
+        min-width: 680px;
 
     }
 
@@ -160,7 +160,7 @@
     /* z-index: 1; */
     object-position: center bottom;
     @media screen and (min-width: 768px) and (max-width: 1023px){
-       
+        left: -2%;
     } 
     @media screen and (min-width: 1024px) {
         left: -5%;
@@ -168,6 +168,5 @@
 }
 
 .accent{
-
     color: #024A7A ;
 }
