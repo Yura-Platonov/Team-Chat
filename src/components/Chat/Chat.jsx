@@ -5,6 +5,7 @@ import css from './Chat.module.css';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
+
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [hasMessages, setHasMessages] = useState(false);
