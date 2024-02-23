@@ -5,6 +5,7 @@ import css from './Chat.module.css';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
+
 const Chat = () => {
   const [message, setMessage] = useState('');
   const [hasMessages, setHasMessages] = useState(false);
@@ -150,7 +151,10 @@ const Chat = () => {
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}
                 >
-                <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
+                  <div className={css.user_avatarBorder}>
+                  <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
+           </div>
+                
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
             ))}

@@ -60,9 +60,12 @@
 
 .members_container{
     padding: 10px;
+    max-height: 100%;
     border-radius: 20px;
     border: 2px solid  #024A7A;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    overflow: auto; 
+
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
         padding: 13px;
@@ -70,6 +73,7 @@
     } 
     @media screen and (min-width: 1024px) {
         padding: 16px;
+        max-height: 100vh;
       }
 }
 
@@ -374,7 +378,6 @@ justify-content: space-between;
 .userList{
 
     display: flex;
-    /* flex-direction: column; */
     gap: 15px;
 
     list-style-type: none;
@@ -431,8 +434,27 @@ justify-content: space-between;
 
 }
 
+.user_avatarBorder{
+    width: 75px;
+    height: 90px;
+    border-radius: 14px;
+    border: 2px solid  #024A7A;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 85px;
+        height: 110px;
+        top: 15%;
+        border-radius: 17px;
+    } 
+    @media screen and (min-width: 1024px) {
+        width: 85px;
+        height: 110px;
+        border-radius: 20px;
+      }
+}
+
 .user_avatar{
-    width: 80px;
+    /* width: 80px;
     height: 100px;
 
     border-radius: 20px;
@@ -450,7 +472,21 @@ justify-content: space-between;
         width: 150px;
         height: 160px;   
         
-      }
+      } */
+
+      position: relative;
+      top: -10%;
+      left: 5%;
+      width: 110%;
+      height: 110%;
+   
+      object-position: center bottom;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+          
+      } 
+      @media screen and (min-width: 1024px) {
+    
+        }
 
 }
 

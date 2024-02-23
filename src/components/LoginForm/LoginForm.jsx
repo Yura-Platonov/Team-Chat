@@ -8,6 +8,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import css from './LoginForm.module.css';
 
 import AuthContext from './AuthContext';
+import LoginErrorModal from '../Modal/LoginErrorModal';
 
 const validationSchema = yup.object().shape({
   username: yup.string()
@@ -18,6 +19,7 @@ const validationSchema = yup.object().shape({
   })
   .required('Email is required'),
 
+  
   password: yup.string()
   .required('Password is required')
   .matches(
@@ -30,6 +32,8 @@ const validationSchema = yup.object().shape({
 const LoginForm = ({ onClose, showRegistrationForm }) => {
   const { login } = useContext(AuthContext);
   const [showPassword, setShowPassword] = useState(false);
+  const [showLoginErrorModal, setShowLoginErrorModal] = useState(false);
+
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
@@ -66,11 +70,11 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             onClose();
             console.log('User logged in');
           } else {
-            alert('Incorrect login or password');
+            setShowLoginErrorModal(true);
           }
         } catch (error) {
           console.log(error.message);
-          alert('Incorrect login or password');
+          setShowLoginErrorModal(true);
         } finally {
           setSubmitting(false);
         }
@@ -109,7 +113,6 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             id="password"
             name="password"
             autoComplete="current-password"
-            // className={` ${touched.password && errors.password ? css.isInvalid : css.isvalid} ${css.input}`}
             className={`${touched.password && errors.password ? css.isInvalid : touched.password ? css.isValid : ''} ${css.input}`}
             placeholder="Enter your password"
           />
@@ -123,6 +126,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             Register
           </button>
         </div>
+        {showLoginErrorModal && <LoginErrorModal isOpen={true} onClose={() => setShowLoginErrorModal(false)} />}
       </Form>
       
       )}
