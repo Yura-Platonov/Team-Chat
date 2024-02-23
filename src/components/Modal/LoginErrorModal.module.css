@@ -1,0 +1,126 @@
+.title{
+    margin: 0;
+    margin-top: 15px;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 124%;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+    font-size: 28px;
+
+    } 
+    @media screen and (min-width: 1024px) {
+        margin-top: 30px;
+        font-size: 28px;
+
+      }
+    @media screen and (min-width:1440px){
+        font-size: 32px;
+
+    }
+}
+
+.text{
+   
+    margin-top: 10px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 400;
+    text-align: center;
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        
+    font-size: 19px;
+
+    } 
+    @media screen and (min-width: 1024px) {
+      
+        margin-top: 20px;
+        margin-bottom: 30px;
+        font-size: 22px;
+
+      }
+    @media screen and (min-width:1440px){
+     
+       
+        font-size: 24px;
+
+    }
+}
+
+.button{
+    width: 120px;
+    height: 60px;
+    padding: 15px;
+    margin: 0;
+    cursor: pointer;
+    box-sizing: border-box;
+       
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 124%;
+
+    border: none;
+    border-radius: 14px;
+    background: #024A7A;
+    color: #F5FBFF;
+    transition: background-color 0.3s; 
+
+ 
+    @media screen and (min-width: 1024px) {
+        width: 300px;
+        height: 80px;
+        padding: 20px;
+        font-size: 32px;
+        border-radius: 20px;
+      }
+  }
+
+
+
+.button:hover{
+    color: #0F1E28;
+    background-color: #F5FBFF;
+    border: 2px solid #024A7A;
+
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    }
+
+.Container{
+   display: block;
+   text-align: center;
+   min-width: 250px;
+   
+    @media screen and (min-width: 1024px) {
+        width: 500px;
+
+      }
+    @media screen and (min-width:1440px){
+        
+        
+
+    }
+
+}
+
+.img{
+        margin: 0;
+        padding: 0;
+        width: 100px;
+        height: auto;
+              
+        @media screen and (min-width: 768px) and (max-width: 1023px){
+           
+    
+        } 
+        @media screen and (min-width: 1024px) {
+           width: 180px;
+        height: auto;
+    
+          }
+        @media screen and (min-width:1440px){
+          
+    
+        }
+
+    }
