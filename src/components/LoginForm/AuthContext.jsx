@@ -68,7 +68,7 @@ export const AuthProvider = ({ children }) => {
     setAuthToken(token);
     localStorage.setItem('access_token', token);
 
-    axios.get(`https://cool-chat.club/users/${username}`)
+    axios.get(`https://cool-chat.club/api/users/${username}`)
       .then((response) => {
         const userData = response.data;
         const { user_name, avatar } = userData;
