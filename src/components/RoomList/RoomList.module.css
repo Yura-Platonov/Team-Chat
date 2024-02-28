@@ -19,6 +19,17 @@
     margin: -10px;
     
   }
+
+  .countList{
+    display: flex;
+    gap: 20px;
+  }
+
+  .whiteText{
+    font-size: 22px;
+    padding-left: 5px;
+  color: #fff;
+  }
   
   .room_item {
     width: 170px;

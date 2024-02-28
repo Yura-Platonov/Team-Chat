@@ -41,7 +41,7 @@ const RegistrationForm = (props) => {
 
   useEffect(() => {
     axios
-      .get('https://cool-chat.club/images/Avatar')
+      .get('https://cool-chat.club/api/images/Avatar')
       .then((response) => {
         const imageOptions = response.data.map((avatar) => ({
           value: avatar.images,
@@ -80,7 +80,7 @@ const RegistrationForm = (props) => {
       onSubmit={async (values) => {
         console.log('Form values:', values);
         try {
-          const existingUsers = await axios.get('https://cool-chat.club/users/');
+          const existingUsers = await axios.get('https://cool-chat.club/api/users/');
     
           if (existingUsers.data.some((user) => user.email === values.email)) {
             alert('Email is already in use. Please choose another email.');
@@ -88,7 +88,7 @@ const RegistrationForm = (props) => {
           }
     
           const avatar = selectedAvatar.value;
-          const response = await axios.post('https://cool-chat.club/users/', {
+          const response = await axios.post('https://cool-chat.club/api/users/', {
             user_name: values.user_name,
             email: values.email,
             password: values.password,
@@ -106,7 +106,7 @@ const RegistrationForm = (props) => {
     
               const options = {
                 method: 'POST',
-                url: 'https://cool-chat.club/login',
+                url: 'https://cool-chat.club/api/login',
                 headers: {
                   'Accept': 'application/json',
                   'Content-Type': 'application/x-www-form-urlencoded',

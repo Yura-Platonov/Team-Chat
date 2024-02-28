@@ -181,8 +181,8 @@ const Header = () => {
           className={css.avatar}
         />
       </div>
-      <div>
-          <Switch
+      <div style={{ display: 'none' }}>
+          <Switch 
             className={css.toggle}
             onChange={toggleTheme}
             checked={darkTheme}
@@ -198,7 +198,7 @@ const Header = () => {
             checkedIcon={false}
           />     
       </div>
-      <div>
+      <div style={{ display: 'none' }}>
           <Switch
             className={css.toggle}
             onChange={toggleLang}

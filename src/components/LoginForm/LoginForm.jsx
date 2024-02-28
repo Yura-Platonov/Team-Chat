@@ -52,7 +52,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
 
           const options = {
             method: 'POST',
-            url: 'https://cool-chat.club/login',
+            url: 'https://cool-chat.club/api/login',
             headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/x-www-form-urlencoded',

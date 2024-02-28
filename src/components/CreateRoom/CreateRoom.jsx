@@ -19,7 +19,7 @@ function CreateRoom({ onRoomCreated }) {
   const [activeCardIndex, setActiveCardIndex] = useState(null);
 
   useEffect(() => {
-    axios.get('https://cool-chat.club/images/Home')
+    axios.get('https://cool-chat.club/api/images/Home')
       .then((response) => {
         setImageOptions(response.data.map((image) => ({
           value: image.images,
@@ -57,7 +57,7 @@ function CreateRoom({ onRoomCreated }) {
     };
 
     axios
-      .post('https://cool-chat.club/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+      .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
       .then((response) => {
         console.log('Комната создана:', response.data);
         setRoomName('');
