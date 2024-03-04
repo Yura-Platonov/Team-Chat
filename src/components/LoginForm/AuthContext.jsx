@@ -90,6 +90,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(() => {
     setAuthToken(null);
     localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
 
     setUser(null);
     localStorage.removeItem('user');
@@ -98,6 +99,12 @@ export const AuthProvider = ({ children }) => {
 
     navigate('/');
   }, [navigate]);
+
+  useEffect(() => {
+    if (!authToken) {
+      logout();
+    }
+  }, [authToken, logout]);
 
   const refreshAccessToken = useCallback(async () => {
     try {
