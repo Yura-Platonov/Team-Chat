@@ -100,11 +100,28 @@ export const AuthProvider = ({ children }) => {
     navigate('/');
   }, [navigate]);
 
+  // useEffect(() => {
+  //   if (!authToken) {
+  //     logout();
+  //   }
+  // }, [authToken, logout]);
+
+
   useEffect(() => {
-    if (!authToken) {
-      logout();
-    }
-  }, [authToken, logout]);
+    const interceptor = axios.interceptors.response.use(
+      response => response,
+      error => {
+        if (error.response && error.response.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, [logout]);
 
   const refreshAccessToken = useCallback(async () => {
     try {
