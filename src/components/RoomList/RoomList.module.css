@@ -1,3 +1,4 @@
+
 .room_section{
   padding: 60px 15px;
 
@@ -31,6 +32,14 @@
   color: #fff;
   }
   
+  .favoriteHeart {
+    fill: #ff0000; 
+  }
+  
+  .heart {
+    fill: #fff;
+  }
+
   .room_item {
     width: 170px;
     height: 210px;

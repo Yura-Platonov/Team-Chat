@@ -100,13 +100,6 @@ export const AuthProvider = ({ children }) => {
     navigate('/');
   }, [navigate]);
 
-  // useEffect(() => {
-  //   if (!authToken) {
-  //     logout();
-  //   }
-  // }, [authToken, logout]);
-
-
   useEffect(() => {
     const interceptor = axios.interceptors.response.use(
       response => response,
