@@ -141,6 +141,12 @@ const Chat = () => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  };
+
     return (
     <div className={css.container}>
       <h2 className={css.title}>Topic: {roomName}</h2>
@@ -201,7 +207,7 @@ const Chat = () => {
 
           </div>
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} placeholder="Write message" className={css.input_text} />
+            <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
             <button onClick={sendMessage} className={css.button_send}>
               Send
             </button>

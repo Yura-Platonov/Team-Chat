@@ -63,6 +63,7 @@
     border-radius: 20px;
     border: 2px solid  #024A7A;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    overflow: auto; 
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
         padding: 13px;
@@ -213,7 +214,7 @@
     padding: 15px;
     overflow: hidden;
     overflow-y: scroll;
-    justify-content: flex-end;
+    /* justify-content: flex-end; */
 
 
     border-radius: 20px;
