@@ -120,7 +120,11 @@ const PersonalChat = () => {
       console.error(error.message);
     }
   };
-  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  };
 
   return (
     <div className={css.container}>
@@ -136,7 +140,7 @@ const PersonalChat = () => {
             )}
           </div>
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} placeholder="Write message" className={css.input_text}/>
+            <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text}/>
             <button onClick={sendMessage} className={css.button_send}>
               Send
             </button>
