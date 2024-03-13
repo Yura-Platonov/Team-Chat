@@ -334,13 +334,13 @@ max-width: 300px;
 
 .chat_message{
     padding-top: 20px;
+
 }
 
 .my_message{
-    /* text-align: right; */
-    margin: 40px;
-    border: #0056b3;
+margin-left: auto;
 }
+
 
 .time{
     font-size: 14px;

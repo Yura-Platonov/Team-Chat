@@ -180,7 +180,7 @@ const Chat = () => {
               </div>
             )}
              {messages.map((msg, index) => (
-              <div key={index} className={`${css.chat_message} ${currentUserId === msg.receiver_id ? css.my_message : ''}`}>
+              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
                   <img
                     src={msg.avatar}
