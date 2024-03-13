@@ -19,10 +19,10 @@ const Chat = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   let userName = selectedUser ? selectedUser.user_name : '';
+  const [currentUserId] = useState(localStorage.getItem('user_id'));
 
   const handleDirectMessageClick = () => {
     console.log(`Direct message to ${selectedUser.user_name}`);
-    const token = localStorage.getItem('access_token');
     console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
     localStorage.setItem('currentPartnerId', partnerId);
@@ -179,8 +179,8 @@ const Chat = () => {
                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
               </div>
             )}
-            {messages.map((msg, index) => (
-              <div key={index} className={css.chat_message}>
+             {messages.map((msg, index) => (
+              <div key={index} className={`${css.chat_message} ${currentUserId === msg.receiver_id ? css.my_message : ''}`}>
                 <div className={css.chat}>
                   <img
                     src={msg.avatar}
@@ -198,6 +198,7 @@ const Chat = () => {
                 </div>
               </div>
             ))}
+
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
