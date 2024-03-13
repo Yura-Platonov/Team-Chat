@@ -24,10 +24,11 @@ export const AuthProvider = ({ children }) => {
     axios.get(`https://cool-chat.club/api/users/${username}`)
       .then((response) => {
         const userData = response.data;
-        const { user_name, avatar } = userData;
+        const { user_name, avatar, id } = userData;
 
         localStorage.setItem('user_name', user_name);
         localStorage.setItem('avatar', avatar);
+        localStorage.setItem('user_id', id);
 
         setUser({ username, isAuthenticated: true });
         localStorage.setItem('user', JSON.stringify({ username, isAuthenticated: true }));
