@@ -3,7 +3,8 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
-import css from './PersonalChat.module.css';
+// import css from './PersonalChat.module.css';
+import css from '../Chat/Chat.module.css';
 
 const PersonalChat = () => {
   const [message, setMessage] = useState('');

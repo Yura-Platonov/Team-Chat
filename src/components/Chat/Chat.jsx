@@ -8,8 +8,8 @@ import Bg from '../Images/Bg_empty_chat.png';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
-  const [hasMessages, setHasMessages] = useState(false);
-  const [isDataReady, setIsDataReady] = useState(false);
+  // const [hasMessages, setHasMessages] = useState(false);
+  // const [isDataReady, setIsDataReady] = useState(false);
   const [userList, setUserList] = useState([]);
   const [messages, setMessages] = useState([]);
   const { roomName } = useParams();
@@ -48,14 +48,14 @@ const Chat = () => {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           setMessages(response.data);
-          setHasMessages(true);
+          // setHasMessages(true);
         })
         .catch(error => {
           console.error('Error fetching messages:', error);
         });
     } else {
       const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
-      socketRef.current = socket; // сохраните ссылку на сокет в ref
+      socketRef.current = socket;
 
       socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
@@ -81,7 +81,7 @@ const Chat = () => {
             };
 
             setMessages(prevMessages => [...prevMessages, newMessage]);
-            setHasMessages(true);
+            // setHasMessages(true);
             prevReceiverIdRef.current = receiver_id;
           }
         } catch (error) {
@@ -103,7 +103,7 @@ const Chat = () => {
 
 
   useEffect(() => {
-    setIsDataReady(true);
+    // setIsDataReady(true);
 
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
