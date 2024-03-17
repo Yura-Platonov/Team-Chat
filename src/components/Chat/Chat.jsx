@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import css from './Chat.module.css';
 import axios from 'axios';
+import LoginModal from '../Modal/LoginModal';
+import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
@@ -18,6 +20,8 @@ const Chat = () => {
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false); 
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
 
@@ -38,6 +42,20 @@ const Chat = () => {
   const handleCloseMenu = () => {
     setSelectedUser(null);
   };
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+  
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+
+  const handleRegistrationSuccess = () => {
+    setShowVerificationModal(true);
+  };
+
 
   const prevReceiverIdRef = useRef(null);
 
@@ -115,6 +133,11 @@ const Chat = () => {
   };
 
   const sendMessage = () => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const messageObject = {
         message: message,
@@ -213,6 +236,8 @@ const Chat = () => {
           </div>
         </div>
       </div>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
   );
 };

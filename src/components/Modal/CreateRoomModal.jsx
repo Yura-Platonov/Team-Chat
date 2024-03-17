@@ -17,16 +17,7 @@ const CreateRoomModal = ({
   handleCreateRoom,
   
 }) => {
-  // const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
-  // const openCreateRoomModal = () => {
-  //   setIsCreateRoomModalOpen(true);
-  // };
 
-  // const closeCreateRoomModal = () => {
-  //   setIsCreateRoomModalOpen(false);
-  // };
-
-  
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>

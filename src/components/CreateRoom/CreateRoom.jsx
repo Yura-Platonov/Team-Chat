@@ -4,6 +4,8 @@ import CreateRoomModal from '../Modal/CreateRoomModal';
 import css from './CreateRoom.module.css';
 import IconAdd from 'components/Images/IconAdd.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
+import LoginModal from '../Modal/LoginModal';
+import VerificationEmailModal from '../Modal/VerificationEmailModal';
 
 import { useAuth } from '../LoginForm/AuthContext';
 
@@ -16,7 +18,22 @@ function CreateRoom({ onRoomCreated }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [showVerificationModal, setShowVerificationModal] = useState(false); 
+  
   const [activeCardIndex, setActiveCardIndex] = useState(null);
+
+  const openLoginModal = () => {
+    setIsLoginModalOpen(true);
+  };
+  
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const handleRegistrationSuccess = () => {
+    setShowVerificationModal(true);
+  };
 
   useEffect(() => {
     axios.get('https://cool-chat.club/api/images/Home')
@@ -38,7 +55,7 @@ function CreateRoom({ onRoomCreated }) {
 
   const handleCreateRoom = () => {
     if (!authToken) {
-      alert('You are not authorized. Please login.');
+      openLoginModal(); 
       return;
     }
 
@@ -118,6 +135,8 @@ function CreateRoom({ onRoomCreated }) {
         setActiveCardIndex={setActiveCardIndex}
         handleCreateRoom={handleCreateRoom}
       />
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </>
   );
 }
