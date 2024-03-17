@@ -173,12 +173,12 @@ const Chat = () => {
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
-           {(!token || messages.length === 0) && (
-              <div className={css.no_messages}>
-                <img src={Bg} alt="No messages" className={css.no_messagesImg} />
-                <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
-              </div>
-            )}
+          { messages.length === 0 && (
+            <div className={css.no_messages}>
+              <img src={Bg} alt="No messages" className={css.no_messagesImg} />
+              <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+            </div>
+          )}
              {messages.map((msg, index) => (
               <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
