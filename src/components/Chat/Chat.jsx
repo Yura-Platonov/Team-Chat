@@ -31,7 +31,7 @@ const Chat = () => {
       openLoginModal();
       return;
     }
-    
+
     console.log(`Direct message to ${selectedUser.user_name}`);
     console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
@@ -213,7 +213,7 @@ const Chat = () => {
                       <span className={css.chat_sender}>{msg.sender}</span>
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
-                    <span className={css.messageText}>{msg.message}</span>
+                    <p className={css.messageText}>{msg.message}</p>
                   </div>
                 </div>
               </div>
