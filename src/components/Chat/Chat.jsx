@@ -57,7 +57,20 @@ const Chat = () => {
     if (!token) {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
-          setMessages(response.data);
+          const formattedMessages = response.data.map(messageData => {
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
+            const formattedDate = formatTime(created_at);
+    
+            return {
+              sender,
+              avatar,
+              message,
+              formattedDate,
+              receiver_id,
+            };
+          });
+  
+          setMessages(prevMessages => [...prevMessages, ...formattedMessages]);
           // setHasMessages(true);
         })
         .catch(error => {
@@ -66,22 +79,22 @@ const Chat = () => {
     } else {
       const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
       socketRef.current = socket;
-
+  
       socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
       };
-
+  
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
           console.log('Received message:', messageData);
-
+  
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
             const formattedDate = formatTime(created_at);
-
+  
             const newMessage = {
               sender,
               avatar,
@@ -89,7 +102,7 @@ const Chat = () => {
               formattedDate,
               receiver_id,
             };
-
+  
             setMessages(prevMessages => [...prevMessages, newMessage]);
             // setHasMessages(true);
             prevReceiverIdRef.current = receiver_id;
@@ -98,11 +111,11 @@ const Chat = () => {
           console.error('Error parsing JSON:', error);
         }
       };
-
+  
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
       };
-
+  
       return () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
           socketRef.current.close();
@@ -110,7 +123,7 @@ const Chat = () => {
       };
     }
   }, [roomName, token]);
-
+  
 
   useEffect(() => {
     // setIsDataReady(true);
