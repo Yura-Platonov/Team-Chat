@@ -5,6 +5,7 @@ import css from './Chat.module.css';
 import axios from 'axios';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import useLoginModal from '../Hooks/useLoginModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
@@ -20,10 +21,10 @@ const Chat = () => {
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [showVerificationModal, setShowVerificationModal] = useState(false); 
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
+
+  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   const handleDirectMessageClick = () => {
     console.log(`Direct message to ${selectedUser.user_name}`);
@@ -43,21 +44,7 @@ const Chat = () => {
     setSelectedUser(null);
   };
 
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-  
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
-
-  const handleRegistrationSuccess = () => {
-    setShowVerificationModal(true);
-  };
-
-
-  const prevReceiverIdRef = useRef(null);
+   const prevReceiverIdRef = useRef(null);
 
   const socketRef = useRef(null); 
 
@@ -135,6 +122,11 @@ const Chat = () => {
   const sendMessage = () => {
     if (!token) {
       openLoginModal();
+      return;
+    }
+
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
       return;
     }
 

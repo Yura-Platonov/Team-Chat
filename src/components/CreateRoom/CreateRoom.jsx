@@ -6,6 +6,7 @@ import IconAdd from 'components/Images/IconAdd.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import useLoginModal from '../Hooks/useLoginModal';
 
 import { useAuth } from '../LoginForm/AuthContext';
 
@@ -18,22 +19,9 @@ function CreateRoom({ onRoomCreated }) {
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [showVerificationModal, setShowVerificationModal] = useState(false); 
-  
   const [activeCardIndex, setActiveCardIndex] = useState(null);
 
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-  
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
-  const handleRegistrationSuccess = () => {
-    setShowVerificationModal(true);
-  };
+  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   useEffect(() => {
     axios.get('https://cool-chat.club/api/images/Home')
@@ -52,6 +40,12 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Error loading images:', error);
       });
   }, []);
+
+  // useEffect(() => {
+  //   if (!authToken && isCreateRoomModalOpen) {
+  //     openLoginModal(); 
+  //   }
+  // }, [authToken, isCreateRoomModalOpen, openLoginModal]);
 
   const handleCreateRoom = () => {
     if (!authToken) {
@@ -96,7 +90,6 @@ function CreateRoom({ onRoomCreated }) {
     e.stopPropagation()
     setIsCreateRoomModalOpen(false);
   };
-  // console.log('isCreateRoomModalOpen', isCreateRoomModalOpen);
 
   return (
     <>
