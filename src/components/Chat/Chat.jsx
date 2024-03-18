@@ -3,6 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import css from './Chat.module.css';
 import axios from 'axios';
+import LoginModal from '../Modal/LoginModal';
+import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import useLoginModal from '../Hooks/useLoginModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 
@@ -21,7 +24,14 @@ const Chat = () => {
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
 
+  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+
   const handleDirectMessageClick = () => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
     console.log(`Direct message to ${selectedUser.user_name}`);
     console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
@@ -39,7 +49,7 @@ const Chat = () => {
     setSelectedUser(null);
   };
 
-  const prevReceiverIdRef = useRef(null);
+   const prevReceiverIdRef = useRef(null);
 
   const socketRef = useRef(null); 
 
@@ -115,6 +125,16 @@ const Chat = () => {
   };
 
   const sendMessage = () => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
+    const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const messageObject = {
         message: message,
@@ -173,12 +193,12 @@ const Chat = () => {
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
-           {(!token || messages.length === 0) && (
-              <div className={css.no_messages}>
-                <img src={Bg} alt="No messages" className={css.no_messagesImg} />
-                <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
-              </div>
-            )}
+          { messages.length === 0 && (
+            <div className={css.no_messages}>
+              <img src={Bg} alt="No messages" className={css.no_messagesImg} />
+              <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+            </div>
+          )}
              {messages.map((msg, index) => (
               <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
@@ -193,7 +213,7 @@ const Chat = () => {
                       <span className={css.chat_sender}>{msg.sender}</span>
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
-                    <span className={css.messageText}>{msg.message}</span>
+                    <p className={css.messageText}>{msg.message}</p>
                   </div>
                 </div>
               </div>
@@ -213,6 +233,8 @@ const Chat = () => {
           </div>
         </div>
       </div>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
   );
 };

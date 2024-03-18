@@ -38,7 +38,6 @@ const ChatCard = ({ messageData }) => {
 const PersonalChatPage = () => {
   const [privateMessages, setPrivateMessages] = useState([]);
   const [userId, setUserId] = useState(null);
-  // const [socket, setSocket] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,7 +75,6 @@ const PersonalChatPage = () => {
           const data = response.data;
           setPrivateMessages(data);
 
-          // Вывести данные в консоль
           console.log('Received private messages data:', data);
         }
       } catch (error) {
@@ -90,7 +88,7 @@ const PersonalChatPage = () => {
       fetchPrivateMessages();
     }
   }, [userId]);
-
+  
   return (
     <div className={css.container}>
       <h2 className={css.title}>Your personal chats</h2>
