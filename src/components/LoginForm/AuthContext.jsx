@@ -40,10 +40,11 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(() => {
     setAuthToken(null);
+    setUser(null);
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
-
-    setUser(null);
+    localStorage.removeItem('currentPartnerId');
+    localStorage.removeItem('user_id');
     localStorage.removeItem('user');
     localStorage.removeItem('user_name');
     localStorage.removeItem('avatar');
