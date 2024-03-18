@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useEffect} from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Switch from 'react-switch';
 import css from './Header.module.css';
 import Logo from './Logo';
 import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
+import useLoginModal from '../Hooks/useLoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
 import LogoutModal from '../Modal/LogoutModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
@@ -109,19 +110,13 @@ const MobileMenu = () => {
 
 const Header = () => {
   const [darkTheme, setDarkTheme] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false); 
-  const [showVerificationModal, setShowVerificationModal] = useState(false); 
   const { user } = useAuth();
-  // const user_name = localStorage.getItem('user_name');
   const user_avatar = localStorage.getItem('avatar');
   const defaultAvatar = UserAvatar;
-  
-  
-  const handleRegistrationSuccess = () => {
-    setShowVerificationModal(true);
-  };
+  const navigate = useNavigate();
 
+  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   useEffect(() => {
     if (darkTheme) {
@@ -141,14 +136,7 @@ const Header = () => {
     console.log("change lang")
   };
 
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-  };
-
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
+ 
   const openLogoutModal = () => {
     setIsLogoutModalOpen(true);
   };
@@ -157,6 +145,13 @@ const Header = () => {
     setIsLogoutModalOpen(false);
   };
 
+  const handlePersonalChatClick = () => {
+    if (user) {
+      navigate('/PersonalChatPage');
+    } else {
+      openLoginModal();
+    }
+  };
 
   return (
     <header>
@@ -167,7 +162,7 @@ const Header = () => {
       <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
-          <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link}>Personal chat</Link></li>
+          <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link} onClick={handlePersonalChatClick}>Personal chat</Link></li>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Settings</Link></li>
           <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>

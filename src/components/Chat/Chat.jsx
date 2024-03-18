@@ -27,6 +27,11 @@ const Chat = () => {
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   const handleDirectMessageClick = () => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+    
     console.log(`Direct message to ${selectedUser.user_name}`);
     console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
