@@ -6,6 +6,7 @@ import css from '../Chat/Chat.module.css';
 const PersonalChat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  
   // const [hasMessages, setHasMessages] = useState(false);
   // const [isDataReady, setIsDataReady] = useState(false);
   const [partnerId, setPartnerId] = useState(null);
