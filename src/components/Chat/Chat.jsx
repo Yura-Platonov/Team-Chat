@@ -92,13 +92,15 @@ const Chat = () => {
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
             const formattedDate = formatTime(created_at);
   
             const newMessage = {
               sender,
               avatar,
               message,
+              id,
+              vote,
               formattedDate,
               receiver_id,
             };
@@ -187,6 +189,69 @@ const Chat = () => {
     setSelectedUser(userData);
   };
 
+  // const handleLikeClick = (id) => {
+  //   console.log('Message ID:', id); 
+
+  //   const requestData = {
+  //       message_id: id,
+  //       dir: 1
+  //     };
+  
+  //     // const requestData = {
+  //     //   "vote": {
+  //     //     message_id: id,
+  //     //     dir: 1
+  //     //     }
+  //     //   };
+
+  //   console.log('Request data:', requestData);
+  //   axios.post('https://cool-chat.club/api/vote/', requestData, {
+  //     headers: {
+  //       'Authorization': `Bearer ${token}`,
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //     .then(response => {
+  //       console.log('Vote successful:', response.data);
+  //     })
+  //     .catch(error => {
+  //       console.error('Error liking message:', error);
+  //     });
+  // };
+  
+  const handleLikeClick = (id, vote) => {
+    console.log('Message ID:', id); 
+    console.log('vote:', vote); 
+  
+    let dir = 1; // По умолчанию ставим лайк
+  
+    // Если поле vote равно 1, значит, пользователь уже поставил лайк на сообщение, и нужно удалить его
+    if (vote === 1) {
+      dir = 0; // Устанавливаем значение dir равным 0 для удаления лайка
+    }
+  
+    const requestData = {
+      message_id: id,
+      dir: dir // Значение dir для установки или удаления лайка
+    };
+  
+    console.log('Request data:', requestData);
+  
+    axios.post('https://cool-chat.club/api/vote/', requestData, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('Vote successful:', response.data);
+    })
+    .catch(error => {
+      console.error('Error liking message:', error);
+    });
+  };
+  
+
   return (
     <div className={css.container}>
       <h2 className={css.title}>Topic: {roomName}</h2>
@@ -227,6 +292,11 @@ const Chat = () => {
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
                     <p className={css.messageText}>{msg.message}</p>
+                    <div className={css.actions}>
+                    
+        <button onClick={() => handleLikeClick(msg.id, msg.vote)}>Like</button>
+      
+          </div>
                   </div>
                 </div>
               </div>
