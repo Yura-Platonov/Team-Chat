@@ -171,6 +171,9 @@ const Chat = () => {
   };
 
   const formatTime = (created) => {
+    if (!created || isNaN(new Date(created))) {
+      return ''; 
+    }
     const dateTime = new Date(created);
     const now = new Date();
     const yesterday = new Date(now);
@@ -185,70 +188,27 @@ const Chat = () => {
     }
   };
 
+
   const handleAvatarClick = (userData) => {
     setSelectedUser(userData);
   };
-
-  // const handleLikeClick = (id) => {
-  //   console.log('Message ID:', id); 
-
-  //   const requestData = {
-  //       message_id: id,
-  //       dir: 1
-  //     };
   
-  //     // const requestData = {
-  //     //   "vote": {
-  //     //     message_id: id,
-  //     //     dir: 1
-  //     //     }
-  //     //   };
-
-  //   console.log('Request data:', requestData);
-  //   axios.post('https://cool-chat.club/api/vote/', requestData, {
-  //     headers: {
-  //       'Authorization': `Bearer ${token}`,
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(response => {
-  //       console.log('Vote successful:', response.data);
-  //     })
-  //     .catch(error => {
-  //       console.error('Error liking message:', error);
-  //     });
-  // };
-  
-  const handleLikeClick = (id, vote) => {
+  const handleLikeClick = (id) => {
     console.log('Message ID:', id); 
-    console.log('vote:', vote); 
-  
-    let dir = 1; // По умолчанию ставим лайк
-  
-    // Если поле vote равно 1, значит, пользователь уже поставил лайк на сообщение, и нужно удалить его
-    if (vote === 1) {
-      dir = 0; // Устанавливаем значение dir равным 0 для удаления лайка
-    }
   
     const requestData = {
-      message_id: id,
-      dir: dir // Значение dir для установки или удаления лайка
+      "vote": {
+        message_id: id,
+        dir: 1
+      }
     };
   
-    console.log('Request data:', requestData);
-  
-    axios.post('https://cool-chat.club/api/vote/', requestData, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(response => {
-      console.log('Vote successful:', response.data);
-    })
-    .catch(error => {
-      console.error('Error liking message:', error);
-    });
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const messageString = JSON.stringify(requestData);
+      socketRef.current.send(messageString);
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
+    }
   };
   
 
@@ -277,7 +237,7 @@ const Chat = () => {
               <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
             </div>
           )}
-             {messages.map((msg, index) => (
+             {/* {messages.map((msg, index) => (
               <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
                   <img
@@ -293,14 +253,37 @@ const Chat = () => {
                     </div>
                     <p className={css.messageText}>{msg.message}</p>
                     <div className={css.actions}>
-                    
-        <button onClick={() => handleLikeClick(msg.id, msg.vote)}>Like</button>
+        <button onClick={() => handleLikeClick(msg.id)}>Like</button>
       
           </div>
                   </div>
                 </div>
               </div>
-            ))}
+            ))} */}
+            {messages.map((msg, index) => (
+  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+    <div className={css.chat}>
+      <img
+        src={msg.avatar}
+        alt={`${msg.sender}'s Avatar`}
+        className={css.chat_avatar}
+        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+      />
+      <div className={css.chat_div}>
+        <div className={css.chat_nicktime}>
+          <span className={css.chat_sender}>{msg.sender}</span>
+          <span className={css.time}>{msg.formattedDate}</span>
+        </div>
+        <p className={css.messageText}>{msg.message}</p>
+        <div className={css.actions}>
+          <button onClick={() => handleLikeClick(msg.id)}>Like</button>
+          <span>Likes: {msg.vote}</span> {/* Отображение количества лайков */}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
 
             {selectedUser && (
               <div className={css.userMenu}>
