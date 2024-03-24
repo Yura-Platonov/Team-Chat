@@ -116,6 +116,9 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             />
             <ErrorMessage name="password" component="div" />
           </div>
+          <div  className={css.linksContainer}>
+            <a  className={css.forgotPass} href="/">Forgot password</a>
+          </div>
           <div className={css.buttonsContainer}>
             <button type="submit" className={css.button}>
               Log in
