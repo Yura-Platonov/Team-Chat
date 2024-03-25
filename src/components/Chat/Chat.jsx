@@ -87,14 +87,17 @@ const Chat = () => {
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
-          console.log('Received message:', messageData);
-  
+       
+          if (!messageData.id ) {
+            return;
+          }
+          
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
             const formattedDate = formatTime(created_at);
-  
+      
             const newMessage = {
               sender,
               avatar,
@@ -104,15 +107,27 @@ const Chat = () => {
               formattedDate,
               receiver_id,
             };
-  
-            setMessages(prevMessages => [...prevMessages, newMessage]);
-            // setHasMessages(true);
+      
+            setMessages(prevMessages => {
+              const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
+            
+              if (existingMessageIndex !== -1) {
+                const updatedMessages = [...prevMessages];
+                updatedMessages[existingMessageIndex] = newMessage;
+                return updatedMessages;
+              }
+            
+              return [...prevMessages, newMessage];
+            });
+            
             prevReceiverIdRef.current = receiver_id;
           }
         } catch (error) {
           console.error('Error parsing JSON:', error);
         }
       };
+      
+    
   
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
@@ -125,7 +140,10 @@ const Chat = () => {
       };
     }
   }, [roomName, token]);
-  
+
+  useEffect(() => {
+    console.log('стейт', messages);
+  }, [messages]);
 
   useEffect(() => {
     // setIsDataReady(true);
