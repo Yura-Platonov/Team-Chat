@@ -6,6 +6,7 @@ import css from '../Chat/Chat.module.css';
 const PersonalChat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  
   // const [hasMessages, setHasMessages] = useState(false);
   // const [isDataReady, setIsDataReady] = useState(false);
   const [partnerId, setPartnerId] = useState(null);
@@ -36,12 +37,13 @@ const PersonalChat = () => {
         const messageData = JSON.parse(event.data);
         console.log('Received message:', messageData);
 
-        const { user_name: sender = 'Unknown Sender', created_at, avatar, messages } = messageData;
+        const { user_name: sender = 'Unknown Sender', created_at, sender_id, avatar, messages } = messageData;
         const formattedDate = formatTime(created_at);
 
         const newMessage = {
           sender,
           avatar,
+          sender_id,
           message: messages,
           formattedDate,
         };
@@ -137,7 +139,7 @@ const PersonalChat = () => {
             </div>
           )}
             {messages.map((msg, index) => (
-              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.sender_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
                   <img
                     src={msg.avatar}

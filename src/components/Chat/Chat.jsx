@@ -87,30 +87,47 @@ const Chat = () => {
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
-          console.log('Received message:', messageData);
-  
+       
+          if (!messageData.id ) {
+            return;
+          }
+          
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
             const formattedDate = formatTime(created_at);
-  
+      
             const newMessage = {
               sender,
               avatar,
               message,
+              id,
+              vote,
               formattedDate,
               receiver_id,
             };
-  
-            setMessages(prevMessages => [...prevMessages, newMessage]);
-            // setHasMessages(true);
+      
+            setMessages(prevMessages => {
+              const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
+            
+              if (existingMessageIndex !== -1) {
+                const updatedMessages = [...prevMessages];
+                updatedMessages[existingMessageIndex] = newMessage;
+                return updatedMessages;
+              }
+            
+              return [...prevMessages, newMessage];
+            });
+            
             prevReceiverIdRef.current = receiver_id;
           }
         } catch (error) {
           console.error('Error parsing JSON:', error);
         }
       };
+      
+    
   
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
@@ -123,7 +140,10 @@ const Chat = () => {
       };
     }
   }, [roomName, token]);
-  
+
+  useEffect(() => {
+    console.log('стейт', messages);
+  }, [messages]);
 
   useEffect(() => {
     // setIsDataReady(true);
@@ -169,6 +189,9 @@ const Chat = () => {
   };
 
   const formatTime = (created) => {
+    if (!created || isNaN(new Date(created))) {
+      return ''; 
+    }
     const dateTime = new Date(created);
     const now = new Date();
     const yesterday = new Date(now);
@@ -183,9 +206,29 @@ const Chat = () => {
     }
   };
 
+
   const handleAvatarClick = (userData) => {
     setSelectedUser(userData);
   };
+  
+  const handleLikeClick = (id) => {
+    console.log('Message ID:', id); 
+  
+    const requestData = {
+      "vote": {
+        message_id: id,
+        dir: 1
+      }
+    };
+  
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const messageString = JSON.stringify(requestData);
+      socketRef.current.send(messageString);
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
+    }
+  };
+  
 
   return (
     <div className={css.container}>
@@ -212,7 +255,7 @@ const Chat = () => {
               <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
             </div>
           )}
-             {messages.map((msg, index) => (
+             {/* {messages.map((msg, index) => (
               <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
                 <div className={css.chat}>
                   <img
@@ -227,10 +270,38 @@ const Chat = () => {
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
                     <p className={css.messageText}>{msg.message}</p>
+                    <div className={css.actions}>
+        <button onClick={() => handleLikeClick(msg.id)}>Like</button>
+      
+          </div>
                   </div>
                 </div>
               </div>
-            ))}
+            ))} */}
+            {messages.map((msg, index) => (
+  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+    <div className={css.chat}>
+      <img
+        src={msg.avatar}
+        alt={`${msg.sender}'s Avatar`}
+        className={css.chat_avatar}
+        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+      />
+      <div className={css.chat_div}>
+        <div className={css.chat_nicktime}>
+          <span className={css.chat_sender}>{msg.sender}</span>
+          <span className={css.time}>{msg.formattedDate}</span>
+        </div>
+        <p className={css.messageText}>{msg.message}</p>
+        <div className={css.actions}>
+          <button onClick={() => handleLikeClick(msg.id)}>Like</button>
+          <span>Likes: {msg.vote}</span> {/* Отображение количества лайков */}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
+
 
             {selectedUser && (
               <div className={css.userMenu}>

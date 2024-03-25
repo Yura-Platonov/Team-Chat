@@ -29,13 +29,22 @@ display: flex;
     @media screen and (min-width: 1024px) {
         font-size: 24px;
         margin-bottom: 8px;
-
-
-
       }
 
 }
 
+.linksContainer{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.forgotPass{
+    font-size: 18px;
+    font-weight: 500;
+    color: #024A7A;
+    text-decoration: underline;
+    cursor: pointer;
+}
 .title{
     text-align: center;
     margin: 0;
@@ -72,6 +81,8 @@ display: flex;
     border-radius: 20px;
     border: 2px solid #024A7A;
     background: #F5FBFF;
+    box-shadow: 2px 2px 8px 0px #024A7A4D;
+
 
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
