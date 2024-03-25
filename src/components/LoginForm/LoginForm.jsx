@@ -9,6 +9,7 @@ import css from './LoginForm.module.css';
 
 import { useAuth } from './AuthContext'; // Изменил импорт на использование useAuth хука
 import LoginErrorModal from '../Modal/LoginErrorModal';
+import PasswordRecoveryEmailModal from '../Modal/PasswordRecoveryEmailModal';
 
 const validationSchema = yup.object().shape({
   username: yup.string()
@@ -32,9 +33,19 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showLoginErrorModal, setShowLoginErrorModal] = useState(false);
+  const [showPasswordRecoveryEmailModal, setShowPasswordRecoveryEmailModal] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword(prevShowPassword => !prevShowPassword);
+  };
+
+     
+  const openPasswordRecoveryEmailModal = () => {
+    setShowPasswordRecoveryEmailModal(true);
+  };
+
+  const closePasswordRecoveryEmailModal = () => {
+    setShowPasswordRecoveryEmailModal(false);
   };
 
   return (
@@ -117,7 +128,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             <ErrorMessage name="password" component="div" />
           </div>
           <div  className={css.linksContainer}>
-            <a  className={css.forgotPass} href="/">Forgot password</a>
+            <p  className={css.forgotPass} onClick={openPasswordRecoveryEmailModal}>Forgot password</p>
           </div>
           <div className={css.buttonsContainer}>
             <button type="submit" className={css.button}>
@@ -128,6 +139,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
             </button>
           </div>
           {showLoginErrorModal && <LoginErrorModal isOpen={true} onClose={() => setShowLoginErrorModal(false)} />}
+          <PasswordRecoveryEmailModal isOpen={showPasswordRecoveryEmailModal} onClose={closePasswordRecoveryEmailModal}/>
         </Form>
       )}
     </Formik>

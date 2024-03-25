@@ -43,6 +43,7 @@ display: flex;
     font-weight: 500;
     color: #024A7A;
     text-decoration: underline;
+    cursor: pointer;
 }
 .title{
     text-align: center;
@@ -80,6 +81,8 @@ display: flex;
     border-radius: 20px;
     border: 2px solid #024A7A;
     background: #F5FBFF;
+    box-shadow: 2px 2px 8px 0px #024A7A4D;
+
 
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
