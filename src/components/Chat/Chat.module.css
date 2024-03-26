@@ -379,6 +379,7 @@ justify-content: space-between;
 .messageText {
     color:  #0F1E28;
     padding: 10px;
+    padding-right: 65px;
     word-wrap: break-word;
     max-width: 200px;
 
@@ -549,16 +550,16 @@ justify-content: space-between;
   .actions{
     position: absolute;
     bottom: 0%;
-    right: 0%;
+    right: 5%;
     display: flex;
 
 
   }
 
   .like{
-    fill: red;
+    fill:#024A7A;
     /* fill:#024A7A; */
     &:hover{
-        fill:aqua;
+    fill: red;
     }
   }

@@ -287,7 +287,7 @@ const Chat = () => {
                  {(msg.vote > 0 || hoveredMessageId === msg.id) && (
                     <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
                       <LikeSVG className={css.like} />
-                      <span>{msg.vote}</span>
+                      {msg.vote !== 0 && <span>{msg.vote}</span>}
                     </div>
                   )}
 
