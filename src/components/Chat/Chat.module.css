@@ -129,6 +129,7 @@
     }
 
     .chat_div{
+    position: relative;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -543,4 +544,21 @@ justify-content: space-between;
   
   .userMenu button:hover {
     background-color: #0056b3;
+  }
+
+  .actions{
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    display: flex;
+
+
+  }
+
+  .like{
+    fill: red;
+    /* fill:#024A7A; */
+    &:hover{
+        fill:aqua;
+    }
   }

@@ -8,6 +8,9 @@ import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import useLoginModal from '../Hooks/useLoginModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
+import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
+
+
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -23,6 +26,15 @@ const Chat = () => {
   const navigate = useNavigate();
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
+  const [hoveredMessageId, setHoveredMessageId] = useState(null);
+
+  const handleMouseEnter = (id) => {
+    setHoveredMessageId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMessageId(null);
+  };
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
@@ -255,54 +267,35 @@ const Chat = () => {
               <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
             </div>
           )}
-             {/* {messages.map((msg, index) => (
-              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-                <div className={css.chat}>
-                  <img
-                    src={msg.avatar}
-                    alt={`${msg.sender}'s Avatar`}
-                    className={css.chat_avatar}
-                    onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-                  />
-                  <div className={css.chat_div}>
-                    <div className={css.chat_nicktime}>
-                      <span className={css.chat_sender}>{msg.sender}</span>
-                      <span className={css.time}>{msg.formattedDate}</span>
+        {messages.map((msg, index) => (
+          <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+            <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+              <img
+                src={msg.avatar}
+                alt={`${msg.sender}'s Avatar`}
+                className={css.chat_avatar}
+                onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+              />
+              <div className={css.chat_div}>
+                <div className={css.chat_nicktime}>
+                  <span className={css.chat_sender}>{msg.sender}</span>
+                  <span className={css.time}>{msg.formattedDate}</span>
+                </div>
+                <p className={css.messageText}>{msg.message}</p>
+                <div className={css.actions}>
+                 
+                 {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+                    <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+                      <LikeSVG className={css.like} />
+                      <span>{msg.vote}</span>
                     </div>
-                    <p className={css.messageText}>{msg.message}</p>
-                    <div className={css.actions}>
-        <button onClick={() => handleLikeClick(msg.id)}>Like</button>
-      
-          </div>
-                  </div>
+                  )}
+
                 </div>
               </div>
-            ))} */}
-            {messages.map((msg, index) => (
-  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-    <div className={css.chat}>
-      <img
-        src={msg.avatar}
-        alt={`${msg.sender}'s Avatar`}
-        className={css.chat_avatar}
-        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-      />
-      <div className={css.chat_div}>
-        <div className={css.chat_nicktime}>
-          <span className={css.chat_sender}>{msg.sender}</span>
-          <span className={css.time}>{msg.formattedDate}</span>
-        </div>
-        <p className={css.messageText}>{msg.message}</p>
-        <div className={css.actions}>
-          <button onClick={() => handleLikeClick(msg.id)}>Like</button>
-          <span>Likes: {msg.vote}</span> {/* Отображение количества лайков */}
-        </div>
-      </div>
-    </div>
-  </div>
-))}
-
-
+            </div>
+          </div>
+        ))}
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
