@@ -563,3 +563,11 @@ justify-content: space-between;
     fill: red;
     }
   }
+
+  .imageContainer img {
+    max-width: 430px; 
+    max-height: 430px;
+    object-fit: contain;
+  }
+  
+

@@ -26,6 +26,8 @@ const Chat = () => {
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
 
   const handleMouseEnter = (id) => {
     setHoveredMessageId(id);
@@ -243,6 +245,37 @@ const Chat = () => {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
+
+  const handleImageChange = (event) => {
+    setSelectedImage(event.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+  
+      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+  
+      if (response && response.data && response.data.filename && response.data.public_url) {
+        const imageUrl = response.data.public_url;
+
+        const messageObject = {
+          message: `<img src="${imageUrl}" alt="Image" />`,
+        };
+  
+        const messageString = JSON.stringify(messageObject);
+        socketRef.current.send(messageString);
+  
+        setSelectedImage(null);
+      } else {
+        console.error('Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+  
   
 
   return (
@@ -295,6 +328,9 @@ const Chat = () => {
                   )}
 
                 </div>
+                {msg.message.includes('<img') && (
+                    <div dangerouslySetInnerHTML={{ __html: msg.message }} className={css.imageContainer} />
+                  )}
               </div>
             </div>
           </div>
@@ -309,10 +345,14 @@ const Chat = () => {
           </div>
           <div className={css.input_container}>
             <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
-            <button onClick={sendMessage} className={css.button_send}>Send</button>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <button className={css.button_send} onClick={() => {
+              sendMessage();
+              uploadImage();
+            }}>Send</button>
           </div>
         </div>
-      </div>
+      </div> 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
