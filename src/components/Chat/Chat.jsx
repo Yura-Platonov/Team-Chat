@@ -20,7 +20,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const { roomName } = useParams();
   const token = localStorage.getItem('access_token');
-  const userListRef = useRef(null);
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
@@ -99,14 +98,18 @@ const Chat = () => {
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
-       
+          console.log("Received message:", messageData);
+          
+          if (messageData.type === 'active_users') {
+            setUserList(messageData.data);
+            console.log("User list updated:", messageData.data);
+          } 
+          
           if (!messageData.id ) {
             return;
           }
           
-          if (messageData.type === 'active_users') {
-            setUserList(messageData.data);
-          } else {
+          else {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
             const formattedDate = formatTime(created_at);
       
@@ -153,9 +156,9 @@ const Chat = () => {
     }
   }, [roomName, token]);
 
-  useEffect(() => {
-    console.log('стейт', messages);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log('стейт', messages);
+  // }, [messages]);
 
   useEffect(() => {
     // setIsDataReady(true);
@@ -248,7 +251,7 @@ const Chat = () => {
       <div className={css.main_container}>
         <div className={css.members_container}>
           <h3 className={css.members_title}>Chat members</h3>
-          <ul ref={userListRef} className={css.userList}>
+          <ul className={css.userList}>
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}>
                 <div className={css.user_avatarBorder}>
