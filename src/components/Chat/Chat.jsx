@@ -20,13 +20,14 @@ const Chat = () => {
   const [messages, setMessages] = useState([]);
   const { roomName } = useParams();
   const token = localStorage.getItem('access_token');
-  const userListRef = useRef(null);
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+
 
   const handleMouseEnter = (id) => {
     setHoveredMessageId(id);
@@ -99,14 +100,18 @@ const Chat = () => {
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
-       
+          console.log("Received message:", messageData);
+          
+          if (messageData.type === 'active_users') {
+            setUserList(messageData.data);
+            console.log("User list updated:", messageData.data);
+          } 
+          
           if (!messageData.id ) {
             return;
           }
           
-          if (messageData.type === 'active_users') {
-            setUserList(messageData.data);
-          } else {
+          else {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
             const formattedDate = formatTime(created_at);
       
@@ -153,9 +158,9 @@ const Chat = () => {
     }
   }, [roomName, token]);
 
-  useEffect(() => {
-    console.log('стейт', messages);
-  }, [messages]);
+  // useEffect(() => {
+  //   console.log('стейт', messages);
+  // }, [messages]);
 
   useEffect(() => {
     // setIsDataReady(true);
@@ -240,6 +245,37 @@ const Chat = () => {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
+
+  const handleImageChange = (event) => {
+    setSelectedImage(event.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+  
+      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+  
+      if (response && response.data && response.data.filename && response.data.public_url) {
+        const imageUrl = response.data.public_url;
+
+        const messageObject = {
+          message: `<img src="${imageUrl}" alt="Image" />`,
+        };
+  
+        const messageString = JSON.stringify(messageObject);
+        socketRef.current.send(messageString);
+  
+        setSelectedImage(null);
+      } else {
+        console.error('Failed to upload image');
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+    }
+  };
+  
   
 
   return (
@@ -248,7 +284,7 @@ const Chat = () => {
       <div className={css.main_container}>
         <div className={css.members_container}>
           <h3 className={css.members_title}>Chat members</h3>
-          <ul ref={userListRef} className={css.userList}>
+          <ul className={css.userList}>
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}>
                 <div className={css.user_avatarBorder}>
@@ -292,6 +328,9 @@ const Chat = () => {
                   )}
 
                 </div>
+                {msg.message.includes('<img') && (
+                    <div dangerouslySetInnerHTML={{ __html: msg.message }} className={css.imageContainer} />
+                  )}
               </div>
             </div>
           </div>
@@ -306,10 +345,14 @@ const Chat = () => {
           </div>
           <div className={css.input_container}>
             <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
-            <button onClick={sendMessage} className={css.button_send}>Send</button>
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+            <button className={css.button_send} onClick={() => {
+              sendMessage();
+              uploadImage();
+            }}>Send</button>
           </div>
         </div>
-      </div>
+      </div> 
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
