@@ -275,6 +275,38 @@ const Chat = () => {
       console.error('Error uploading image:', error);
     }
   };
+
+  // const uploadImage = async () => {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('file', selectedImage);
+  
+  //     const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+  
+  //     if (response && response.data && response.data.filename && response.data.public_url) {
+  //       const imageUrl = response.data.public_url;
+  
+  //       // Создаем объект сообщения, включая текстовое сообщение и URL изображения
+  //       const messageObject = {
+  //         message: 'Текстовая информация',
+  //         imageUrl: imageUrl // Добавляем URL изображения в сообщение
+  //       };
+  
+  //       // Преобразуем объект сообщения в строку JSON
+  //       const messageString = JSON.stringify(messageObject);
+  
+  //       // Отправляем сообщение через веб-сокет
+  //       socketRef.current.send(messageString);
+  
+  //       // Обнуляем выбранное изображение после успешной отправки
+  //       setSelectedImage(null);
+  //     } else {
+  //       console.error('Failed to upload image');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error uploading image:', error);
+  //   }
+  // };
   
   
 
