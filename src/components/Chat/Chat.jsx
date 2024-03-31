@@ -112,7 +112,7 @@ const Chat = () => {
           }
           
           else {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
       
             const newMessage = {
@@ -123,6 +123,7 @@ const Chat = () => {
               vote,
               formattedDate,
               receiver_id,
+              fileUrl // Добавляем поле fileUrl
             };
       
             setMessages(prevMessages => {
@@ -179,25 +180,43 @@ const Chat = () => {
       openLoginModal();
       return;
     }
-
+  
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) {
+    if (!trimmedMessage && !selectedImage) {
       return;
     }
-
+  
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      const messageObject = {
-        message: message,
-      };
+      const messageObject = {};
+  
+      // Добавляем текстовое сообщение, если оно присутствует
+      if (trimmedMessage) {
+        messageObject.message = trimmedMessage;
+      }
+  
+      // Добавляем URL изображения, если оно выбрано
+      if (selectedImage) {
+        const imageUrl = URL.createObjectURL(selectedImage);
+        messageObject.fileUrl = imageUrl;
+  
+        // Если нет текстового сообщения, но есть изображение, используем его как сообщение
+        if (!trimmedMessage) {
+          // Здесь мы присваиваем сообщению тег img с src изображения
+          messageObject.message = `<img src="${imageUrl}" alt="Image" />`;
+        }
+      }
   
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
   
       setMessage('');
+      setSelectedImage(null); // Обнуляем выбранное изображение после отправки
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
+  
+ 
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -259,54 +278,18 @@ const Chat = () => {
   
       if (response && response.data && response.data.filename && response.data.public_url) {
         const imageUrl = response.data.public_url;
-
-        const messageObject = {
-          message: `<img src="${imageUrl}" alt="Image" />`,
-        };
+        setSelectedImage(null); // Сбрасываем выбранное изображение после успешной загрузки
   
-        const messageString = JSON.stringify(messageObject);
-        socketRef.current.send(messageString);
-  
-        setSelectedImage(null);
+        return imageUrl; // Возвращаем URL загруженной картинки
       } else {
         console.error('Failed to upload image');
+        return null;
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      return null;
     }
   };
-
-  // const uploadImage = async () => {
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append('file', selectedImage);
-  
-  //     const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-  
-  //     if (response && response.data && response.data.filename && response.data.public_url) {
-  //       const imageUrl = response.data.public_url;
-  
-  //       // Создаем объект сообщения, включая текстовое сообщение и URL изображения
-  //       const messageObject = {
-  //         message: 'Текстовая информация',
-  //         imageUrl: imageUrl // Добавляем URL изображения в сообщение
-  //       };
-  
-  //       // Преобразуем объект сообщения в строку JSON
-  //       const messageString = JSON.stringify(messageObject);
-  
-  //       // Отправляем сообщение через веб-сокет
-  //       socketRef.current.send(messageString);
-  
-  //       // Обнуляем выбранное изображение после успешной отправки
-  //       setSelectedImage(null);
-  //     } else {
-  //       console.error('Failed to upload image');
-  //     }
-  //   } catch (error) {
-  //     console.error('Error uploading image:', error);
-  //   }
-  // };
   
   
 
@@ -329,44 +312,45 @@ const Chat = () => {
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
-          { messages.length === 0 && (
-            <div className={css.no_messages}>
-              <img src={Bg} alt="No messages" className={css.no_messagesImg} />
-              <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+            { messages.length === 0 && (
+              <div className={css.no_messages}>
+                <img src={Bg} alt="No messages" className={css.no_messagesImg} />
+                <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+              </div>
+            )}
+          {messages.map((msg, index) => (
+  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+    <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+      <img
+        src={msg.avatar}
+        alt={`${msg.sender}'s Avatar`}
+        className={css.chat_avatar}
+        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+      />
+      <div className={css.chat_div}>
+        <div className={css.chat_nicktime}>
+          <span className={css.chat_sender}>{msg.sender}</span>
+          <span className={css.time}>{msg.formattedDate}</span>
+        </div>
+        {msg.message && ( // Проверяем, есть ли текстовое сообщение
+          <p className={css.messageText}>{msg.message}</p>
+        )}
+        {msg.fileUrl && ( // Проверяем, есть ли URL загруженной картинки
+          <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
+        )}
+        <div className={css.actions}>
+          {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+            <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+              <LikeSVG className={css.like} />
+              {msg.vote !== 0 && <span>{msg.vote}</span>}
             </div>
           )}
-        {messages.map((msg, index) => (
-          <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-            <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
-              <img
-                src={msg.avatar}
-                alt={`${msg.sender}'s Avatar`}
-                className={css.chat_avatar}
-                onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-              />
-              <div className={css.chat_div}>
-                <div className={css.chat_nicktime}>
-                  <span className={css.chat_sender}>{msg.sender}</span>
-                  <span className={css.time}>{msg.formattedDate}</span>
-                </div>
-                <p className={css.messageText}>{msg.message}</p>
-                <div className={css.actions}>
-                 
-                 {(msg.vote > 0 || hoveredMessageId === msg.id) && (
-                    <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
-                      <LikeSVG className={css.like} />
-                      {msg.vote !== 0 && <span>{msg.vote}</span>}
-                    </div>
-                  )}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
 
-                </div>
-                {msg.message.includes('<img') && (
-                    <div dangerouslySetInnerHTML={{ __html: msg.message }} className={css.imageContainer} />
-                  )}
-              </div>
-            </div>
-          </div>
-        ))}
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
@@ -384,11 +368,12 @@ const Chat = () => {
             }}>Send</button>
           </div>
         </div>
-      </div> 
+      </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
   );
+  
 };
 
 export default Chat;
