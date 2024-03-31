@@ -564,7 +564,7 @@ justify-content: space-between;
     }
   }
 
-  .imageContainer img {
+  .imageContainer {
     max-width: 430px; 
     max-height: 430px;
     object-fit: contain;

@@ -175,7 +175,7 @@ const Chat = () => {
     setMessage(e.target.value);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!token) {
       openLoginModal();
       return;
@@ -187,22 +187,27 @@ const Chat = () => {
     }
   
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      let imageUrl = null;
+  
+      if (selectedImage) {
+        imageUrl = await uploadImage();
+        if (!imageUrl) {
+          console.error('Failed to upload image');
+          return;
+        }
+      }
+  
       const messageObject = {};
   
-      // Добавляем текстовое сообщение, если оно присутствует
       if (trimmedMessage) {
         messageObject.message = trimmedMessage;
       }
   
-      // Добавляем URL изображения, если оно выбрано
-      if (selectedImage) {
-        const imageUrl = URL.createObjectURL(selectedImage);
+      if (imageUrl) {
         messageObject.fileUrl = imageUrl;
   
-        // Если нет текстового сообщения, но есть изображение, используем его как сообщение
-        if (!trimmedMessage) {
-          // Здесь мы присваиваем сообщению тег img с src изображения
-          messageObject.message = `<img src="${imageUrl}" alt="Image" />`;
+        if (trimmedMessage) {
+          messageObject.message = trimmedMessage;
         }
       }
   
@@ -318,7 +323,7 @@ const Chat = () => {
                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
               </div>
             )}
-          {messages.map((msg, index) => (
+{messages.map((msg, index) => (
   <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
     <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
       <img
@@ -332,10 +337,10 @@ const Chat = () => {
           <span className={css.chat_sender}>{msg.sender}</span>
           <span className={css.time}>{msg.formattedDate}</span>
         </div>
-        {msg.message && ( // Проверяем, есть ли текстовое сообщение
+        {msg.message && ( 
           <p className={css.messageText}>{msg.message}</p>
         )}
-        {msg.fileUrl && ( // Проверяем, есть ли URL загруженной картинки
+        {msg.fileUrl && ( 
           <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
         )}
         <div className={css.actions}>
@@ -350,7 +355,6 @@ const Chat = () => {
     </div>
   </div>
 ))}
-
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
@@ -362,10 +366,7 @@ const Chat = () => {
           <div className={css.input_container}>
             <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
             <input type="file" accept="image/*" onChange={handleImageChange} />
-            <button className={css.button_send} onClick={() => {
-              sendMessage();
-              uploadImage();
-            }}>Send</button>
+          <button className={css.button_send} onClick={sendMessage}>Send</button>
           </div>
         </div>
       </div>
