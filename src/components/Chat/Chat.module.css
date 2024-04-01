@@ -564,10 +564,32 @@ justify-content: space-between;
     }
   }
 
-  .imageContainer img {
+  .imageContainer {
     max-width: 430px; 
     max-height: 430px;
     object-fit: contain;
   }
   
+.input_label{
+position: relative;
+width: 100%;
+}
 
+.file_input_label{
+position: absolute;
+top: 50%;
+right: 2%;
+transform: translateY(-50%);
+}
+
+.file_input{
+display: none;
+}
+
+.add_file_icon{
+    fill:#0F1E28;
+    &:hover{
+        cursor: pointer;
+        fill: #0056b3;
+    }
+}

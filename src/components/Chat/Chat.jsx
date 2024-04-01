@@ -9,6 +9,7 @@ import useLoginModal from '../Hooks/useLoginModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
+import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 
 
 
@@ -27,6 +28,8 @@ const Chat = () => {
   const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFilesCount, setSelectedFilesCount] = useState(0);
+
 
 
   const handleMouseEnter = (id) => {
@@ -71,7 +74,7 @@ const Chat = () => {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
     
             return {
@@ -80,6 +83,7 @@ const Chat = () => {
               message,
               formattedDate,
               receiver_id,
+              fileUrl,
             };
           });
   
@@ -112,7 +116,7 @@ const Chat = () => {
           }
           
           else {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
       
             const newMessage = {
@@ -123,6 +127,7 @@ const Chat = () => {
               vote,
               formattedDate,
               receiver_id,
+              fileUrl
             };
       
             setMessages(prevMessages => {
@@ -174,30 +179,54 @@ const Chat = () => {
     setMessage(e.target.value);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!token) {
       openLoginModal();
       return;
     }
-
+  
     const trimmedMessage = message.trim();
-    if (!trimmedMessage) {
+    if (!trimmedMessage && !selectedImage) {
       return;
     }
-
+  
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-      const messageObject = {
-        message: message,
-      };
+      let imageUrl = null;
+  
+      if (selectedImage) {
+        imageUrl = await uploadImage();
+        if (!imageUrl) {
+          console.error('Failed to upload image');
+          return;
+        }
+      }
+  
+      const messageObject = {};
+  
+      if (trimmedMessage) {
+        messageObject.message = trimmedMessage;
+      }
+  
+      if (imageUrl) {
+        messageObject.fileUrl = imageUrl;
+  
+        if (trimmedMessage) {
+          messageObject.message = trimmedMessage;
+        }
+      }
   
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
   
       setMessage('');
+      setSelectedImage(null); 
+      setSelectedFilesCount(0);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
+  
+ 
 
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
@@ -247,7 +276,12 @@ const Chat = () => {
   };
 
   const handleImageChange = (event) => {
-    setSelectedImage(event.target.files[0]);
+    const files = event.target.files;
+    setSelectedFilesCount(files.length);
+    const file = files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
   };
 
   const uploadImage = async () => {
@@ -259,20 +293,16 @@ const Chat = () => {
   
       if (response && response.data && response.data.filename && response.data.public_url) {
         const imageUrl = response.data.public_url;
-
-        const messageObject = {
-          message: `<img src="${imageUrl}" alt="Image" />`,
-        };
+        setSelectedImage(null); // Сбрасываем выбранное изображение после успешной загрузки
   
-        const messageString = JSON.stringify(messageObject);
-        socketRef.current.send(messageString);
-  
-        setSelectedImage(null);
+        return imageUrl; // Возвращаем URL загруженной картинки
       } else {
         console.error('Failed to upload image');
+        return null;
       }
     } catch (error) {
       console.error('Error uploading image:', error);
+      return null;
     }
   };
   
@@ -297,44 +327,44 @@ const Chat = () => {
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
-          { messages.length === 0 && (
-            <div className={css.no_messages}>
-              <img src={Bg} alt="No messages" className={css.no_messagesImg} />
-              <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+            { messages.length === 0 && (
+              <div className={css.no_messages}>
+                <img src={Bg} alt="No messages" className={css.no_messagesImg} />
+                <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+              </div>
+            )}
+{messages.map((msg, index) => (
+  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+    <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+      <img
+        src={msg.avatar}
+        alt={`${msg.sender}'s Avatar`}
+        className={css.chat_avatar}
+        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+      />
+      <div className={css.chat_div}>
+        <div className={css.chat_nicktime}>
+          <span className={css.chat_sender}>{msg.sender}</span>
+          <span className={css.time}>{msg.formattedDate}</span>
+        </div>
+        {msg.message && ( 
+          <p className={css.messageText}>{msg.message}</p>
+        )}
+        {msg.fileUrl && ( 
+          <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
+        )}
+        <div className={css.actions}>
+          {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+            <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+              <LikeSVG className={css.like} />
+              {msg.vote !== 0 && <span>{msg.vote}</span>}
             </div>
           )}
-        {messages.map((msg, index) => (
-          <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-            <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
-              <img
-                src={msg.avatar}
-                alt={`${msg.sender}'s Avatar`}
-                className={css.chat_avatar}
-                onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-              />
-              <div className={css.chat_div}>
-                <div className={css.chat_nicktime}>
-                  <span className={css.chat_sender}>{msg.sender}</span>
-                  <span className={css.time}>{msg.formattedDate}</span>
-                </div>
-                <p className={css.messageText}>{msg.message}</p>
-                <div className={css.actions}>
-                 
-                 {(msg.vote > 0 || hoveredMessageId === msg.id) && (
-                    <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
-                      <LikeSVG className={css.like} />
-                      {msg.vote !== 0 && <span>{msg.vote}</span>}
-                    </div>
-                  )}
-
-                </div>
-                {msg.message.includes('<img') && (
-                    <div dangerouslySetInnerHTML={{ __html: msg.message }} className={css.imageContainer} />
-                  )}
-              </div>
-            </div>
-          </div>
-        ))}
+        </div>
+      </div>
+    </div>
+  </div>
+))}
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
@@ -344,19 +374,23 @@ const Chat = () => {
             )}
           </div>
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
-            <input type="file" accept="image/*" onChange={handleImageChange} />
-            <button className={css.button_send} onClick={() => {
-              sendMessage();
-              uploadImage();
-            }}>Send</button>
+          <label htmlFor="message" className={css.input_label}>
+          <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+          <label className={css.file_input_label}>
+            <AddFileSVG className={css.add_file_icon} />
+            {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
+            <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
+          </label>
+        </label>
+          <button className={css.button_send} onClick={sendMessage}>Send</button>
           </div>
         </div>
-      </div> 
+      </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
     </div>
   );
+  
 };
 
 export default Chat;
