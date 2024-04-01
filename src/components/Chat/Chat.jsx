@@ -9,6 +9,7 @@ import useLoginModal from '../Hooks/useLoginModal';
 import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
+import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 
 
 
@@ -27,6 +28,8 @@ const Chat = () => {
   const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFilesCount, setSelectedFilesCount] = useState(0);
+
 
 
   const handleMouseEnter = (id) => {
@@ -215,7 +218,8 @@ const Chat = () => {
       socketRef.current.send(messageString);
   
       setMessage('');
-      setSelectedImage(null); // Обнуляем выбранное изображение после отправки
+      setSelectedImage(null); 
+      setSelectedFilesCount(0);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
@@ -271,7 +275,12 @@ const Chat = () => {
   };
 
   const handleImageChange = (event) => {
-    setSelectedImage(event.target.files[0]);
+    const files = event.target.files;
+    setSelectedFilesCount(files.length);
+    const file = files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
   };
 
   const uploadImage = async () => {
@@ -364,8 +373,14 @@ const Chat = () => {
             )}
           </div>
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
-            <input type="file" accept="image/*" onChange={handleImageChange} />
+          <label htmlFor="message" className={css.input_label}>
+          <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+          <label className={css.file_input_label}>
+            <AddFileSVG className={css.add_file_icon} />
+            {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
+            <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
+          </label>
+        </label>
           <button className={css.button_send} onClick={sendMessage}>Send</button>
           </div>
         </div>
