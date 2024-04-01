@@ -74,7 +74,7 @@ const Chat = () => {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
     
             return {
@@ -83,6 +83,7 @@ const Chat = () => {
               message,
               formattedDate,
               receiver_id,
+              fileUrl,
             };
           });
   
@@ -126,7 +127,7 @@ const Chat = () => {
               vote,
               formattedDate,
               receiver_id,
-              fileUrl // Добавляем поле fileUrl
+              fileUrl
             };
       
             setMessages(prevMessages => {
