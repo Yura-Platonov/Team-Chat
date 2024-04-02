@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import css from './Chat.module.css';
 import axios from 'axios';
 import LoginModal from '../Modal/LoginModal';
@@ -31,15 +30,6 @@ const Chat = () => {
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
 
 
-
-  const handleMouseEnter = (id) => {
-    setHoveredMessageId(id);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredMessageId(null);
-  };
-
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   const handleDirectMessageClick = () => {
@@ -65,7 +55,7 @@ const Chat = () => {
     setSelectedUser(null);
   };
 
-   const prevReceiverIdRef = useRef(null);
+  const prevReceiverIdRef = useRef(null);
 
   const socketRef = useRef(null); 
 
@@ -149,8 +139,6 @@ const Chat = () => {
         }
       };
       
-    
-  
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
       };
@@ -163,10 +151,6 @@ const Chat = () => {
     }
   }, [roomName, token]);
 
-  // useEffect(() => {
-  //   console.log('стейт', messages);
-  // }, [messages]);
-
   useEffect(() => {
     // setIsDataReady(true);
 
@@ -175,9 +159,6 @@ const Chat = () => {
     }
   }, [messages]);
 
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
-  };
 
   const sendMessage = async () => {
     if (!token) {
@@ -225,13 +206,9 @@ const Chat = () => {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
-  
- 
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      sendMessage();
-    }
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
   };
 
   const formatTime = (created) => {
@@ -293,9 +270,9 @@ const Chat = () => {
   
       if (response && response.data && response.data.filename && response.data.public_url) {
         const imageUrl = response.data.public_url;
-        setSelectedImage(null); // Сбрасываем выбранное изображение после успешной загрузки
+        setSelectedImage(null); 
   
-        return imageUrl; // Возвращаем URL загруженной картинки
+        return imageUrl; 
       } else {
         console.error('Failed to upload image');
         return null;
@@ -306,6 +283,20 @@ const Chat = () => {
     }
   };
   
+  const handleMouseEnter = (id) => {
+    setHoveredMessageId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMessageId(null);
+  };
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      sendMessage();
+    }
+  };
+
   
 
   return (
@@ -333,38 +324,38 @@ const Chat = () => {
                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
               </div>
             )}
-{messages.map((msg, index) => (
-  <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-    <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
-      <img
-        src={msg.avatar}
-        alt={`${msg.sender}'s Avatar`}
-        className={css.chat_avatar}
-        onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-      />
-      <div className={css.chat_div}>
-        <div className={css.chat_nicktime}>
-          <span className={css.chat_sender}>{msg.sender}</span>
-          <span className={css.time}>{msg.formattedDate}</span>
-        </div>
-        {msg.message && ( 
-          <p className={css.messageText}>{msg.message}</p>
-        )}
-        {msg.fileUrl && ( 
-          <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
-        )}
-        <div className={css.actions}>
-          {(msg.vote > 0 || hoveredMessageId === msg.id) && (
-            <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
-              <LikeSVG className={css.like} />
-              {msg.vote !== 0 && <span>{msg.vote}</span>}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  </div>
-))}
+            {messages.map((msg, index) => (
+              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+                <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+                  <img
+                    src={msg.avatar}
+                    alt={`${msg.sender}'s Avatar`}
+                    className={css.chat_avatar}
+                    onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+                  />
+                  <div className={css.chat_div}>
+                    <div className={css.chat_nicktime}>
+                      <span className={css.chat_sender}>{msg.sender}</span>
+                      <span className={css.time}>{msg.formattedDate}</span>
+                    </div>
+                    {msg.message && ( 
+                      <p className={css.messageText}>{msg.message}</p>
+                    )}
+                    {msg.fileUrl && ( 
+                      <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
+                    )}
+                    <div className={css.actions}>
+                      {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+                        <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+                          <LikeSVG className={css.like} />
+                          {msg.vote !== 0 && <span>{msg.vote}</span>}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {userName}</p>
