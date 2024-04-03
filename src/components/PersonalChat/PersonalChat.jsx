@@ -75,6 +75,14 @@ const PersonalChat = () => {
   //   setIsDataReady(true);
   // }, []);
 
+  useEffect(() => {
+    // setIsDataReady(true);
+
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const formatTime = (created) => {
     const dateTime = new Date(created);
     const now = new Date();
