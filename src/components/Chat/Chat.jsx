@@ -9,12 +9,10 @@ import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
 import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
-
+import ReplyMessage from './ReplyMessage';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
-  // const [hasMessages, setHasMessages] = useState(false);
-  // const [isDataReady, setIsDataReady] = useState(false);
   const [userList, setUserList] = useState([]);
   const [messages, setMessages] = useState([]);
   const { roomName } = useParams();
@@ -22,13 +20,14 @@ const Chat = () => {
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
-  let userName = selectedUser ? selectedUser.user_name : '';
   const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
+  const [selectedReplyMessage, setSelectedReplyMessage] = useState(null);
+  const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
-  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+  let userName = selectedUser ? selectedUser.user_name : '';
 
   const handleDirectMessageClick = () => {
     if (!token) {
@@ -36,11 +35,8 @@ const Chat = () => {
       return;
     }
 
-    console.log(`Direct message to ${selectedUser.user_name}`);
-    console.log(selectedUser);
     let partnerId = selectedUser.receiver_id; 
     localStorage.setItem('currentPartnerId', partnerId);
-    console.log(partnerId);
 
     const socket = new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${token}`);
     socket.onopen = () => {
@@ -53,9 +49,7 @@ const Chat = () => {
     setSelectedUser(null);
   };
 
-  const prevReceiverIdRef = useRef(null);
-
-  const socketRef = useRef(null); 
+  const socketRef = useRef(null);
 
   useEffect(() => {
     if (!token) {
@@ -64,7 +58,7 @@ const Chat = () => {
           const formattedMessages = response.data.map(messageData => {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
-    
+
             return {
               sender,
               avatar,
@@ -74,9 +68,8 @@ const Chat = () => {
               fileUrl,
             };
           });
-  
+
           setMessages(prevMessages => [...prevMessages, ...formattedMessages]);
-          // setHasMessages(true);
         })
         .catch(error => {
           console.error('Error fetching messages:', error);
@@ -84,11 +77,11 @@ const Chat = () => {
     } else {
       const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
       socketRef.current = socket;
-  
+
       socket.onopen = () => {
         console.log('Connected to the server via WebSocket');
       };
-  
+
       socket.onmessage = (event) => {
         try {
           const messageData = JSON.parse(event.data);
@@ -96,17 +89,10 @@ const Chat = () => {
           
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
-            console.log("User list updated:", messageData.data);
-          } 
-          
-          if (!messageData.id ) {
-            return;
-          }
-          
-          else {
+          } else if (messageData.id) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
-      
+
             const newMessage = {
               sender,
               avatar,
@@ -117,30 +103,28 @@ const Chat = () => {
               receiver_id,
               fileUrl
             };
-      
+
             setMessages(prevMessages => {
               const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
-            
+
               if (existingMessageIndex !== -1) {
                 const updatedMessages = [...prevMessages];
                 updatedMessages[existingMessageIndex] = newMessage;
                 return updatedMessages;
               }
-            
+
               return [...prevMessages, newMessage];
             });
-            
-            prevReceiverIdRef.current = receiver_id;
           }
         } catch (error) {
           console.error('Error parsing JSON:', error);
         }
       };
-      
+
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
       };
-  
+
       return () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
           socketRef.current.close();
@@ -150,28 +134,25 @@ const Chat = () => {
   }, [roomName, token]);
 
   useEffect(() => {
-    // setIsDataReady(true);
-
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [messages]);
-
 
   const sendMessage = async () => {
     if (!token) {
       openLoginModal();
       return;
     }
-  
+
     const trimmedMessage = message.trim();
     if (!trimmedMessage && !selectedImage) {
       return;
     }
-  
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       let imageUrl = null;
-  
+
       if (selectedImage) {
         imageUrl = await uploadImage();
         if (!imageUrl) {
@@ -179,30 +160,28 @@ const Chat = () => {
           return;
         }
       }
-  
-      const messageObject = {};
-  
-      if (trimmedMessage) {
-        messageObject.message = trimmedMessage;
-      }
-  
+
+      const messageObject = {
+        message: trimmedMessage,
+      };
+
       if (imageUrl) {
         messageObject.fileUrl = imageUrl;
-  
-        if (trimmedMessage) {
-          messageObject.message = trimmedMessage;
-        }
       }
-  
+
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
-  
+
       setMessage('');
       setSelectedImage(null); 
       setSelectedFilesCount(0);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
+  };
+
+  const handleSelectReplyMessage = (messageId) => {
+    setSelectedReplyMessage(messageId);
   };
 
   const handleMessageChange = (e) => {
@@ -227,21 +206,18 @@ const Chat = () => {
     }
   };
 
-
   const handleAvatarClick = (userData) => {
     setSelectedUser(userData);
   };
   
   const handleLikeClick = (id) => {
-    console.log('Message ID:', id); 
-  
     const requestData = {
       "vote": {
         message_id: id,
         dir: 1
       }
     };
-  
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const messageString = JSON.stringify(requestData);
       socketRef.current.send(messageString);
@@ -263,13 +239,13 @@ const Chat = () => {
     try {
       const formData = new FormData();
       formData.append('file', selectedImage);
-  
+
       const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-  
+
       if (response && response.data && response.data.filename && response.data.public_url) {
         const imageUrl = response.data.public_url;
         setSelectedImage(null); 
-  
+
         return imageUrl; 
       } else {
         console.error('Failed to upload image');
@@ -280,7 +256,7 @@ const Chat = () => {
       return null;
     }
   };
-  
+
   const handleMouseEnter = (id) => {
     setHoveredMessageId(id);
   };
@@ -295,6 +271,37 @@ const Chat = () => {
     }
   };
 
+  const handleSendReply = async (replyMessage) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const replyData = {
+        reply: {
+          original_message_id: selectedReplyMessage,
+          message: replyMessage
+        }
+      };
+      console.log('Preparing to send reply:', replyData);
+
+      const messageString = JSON.stringify(replyData);
+      socketRef.current.send(messageString);
+      console.log('Reply successfully sent.');
+    } else {
+      console.error('WebSocket is not open. Reply message not sent.');
+    }
+  };
+
+  const handleChatMessageSend = () => {
+    if (selectedReplyMessage) {
+      // Передайте значение сообщения из текстового поля в функцию handleSendReply
+      handleSendReply(message);
+    } else {
+      sendMessage(); // Если нет активного реплая, отправляем сообщение как обычно
+    }
+  };
 
   return (
     <div className={css.container}>
@@ -348,6 +355,7 @@ const Chat = () => {
                           {msg.vote !== 0 && <span>{msg.vote}</span>}
                         </div>
                       )}
+                      <button onClick={() => handleSelectReplyMessage(msg.id)}>Reply</button>
                     </div>
                   </div>
                 </div>
@@ -355,30 +363,34 @@ const Chat = () => {
             ))}
             {selectedUser && (
               <div className={css.userMenu}>
-                <p>Write a direct message to {userName}</p>
+                <p>Write a direct message to {selectedUser.user_name}</p>
                 <button onClick={handleDirectMessageClick}>Write a direct message</button>
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
             )}
           </div>
           <div className={css.input_container}>
-          <label htmlFor="message" className={css.input_label}>
-          <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
-          <label className={css.file_input_label}>
-            <AddFileSVG className={css.add_file_icon} />
-            {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-            <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
-          </label>
-        </label>
-          <button className={css.button_send} onClick={sendMessage}>Send</button>
+            <label htmlFor="message" className={css.input_label}>
+              <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <label className={css.file_input_label}>
+                <AddFileSVG className={css.add_file_icon} />
+                {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
+                <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
+              </label>
+            </label>
+            {/* <button className={css.button_send} onClick={sendMessage}>Send</button> */}
+            <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
+
           </div>
         </div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      {selectedReplyMessage && (
+        <ReplyMessage onCancel={() => setSelectedReplyMessage(null)} onReply={handleSendReply} messageId={selectedReplyMessage} />
+      )}
     </div>
   );
-  
 };
 
 export default Chat;

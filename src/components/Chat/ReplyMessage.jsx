@@ -1,34 +1,20 @@
-import React, { useState } from 'react';
+import React from 'react';
 import css from './ReplyMessage.module.css';
 
-const ReplyMessage = ({ message, onCancel, onReply }) => {
-  const [reply, setReply] = useState('');
-
-  const handleReplyChange = (e) => {
-    setReply(e.target.value);
-  };
-
+const ReplyMessage = ({ onCancel, onReply, replyMessage }) => {
   const handleSendReply = () => {
-    onReply(reply);
-    setReply('');
-    onCancel();
+    onReply(replyMessage);
   };
 
   return (
-    <div className={css.replyMessage}>
+    <div className={css.container}>
       <div className={css.replyInfo}>
-        <p>Replying to: {message.sender}</p>
-        <p>{message.message}</p>
+        <p className={css.replyText}>Replying to:</p>
+        <p className={css.replyMessage}>{replyMessage}</p>
       </div>
-      <textarea
-        value={reply}
-        onChange={handleReplyChange}
-        placeholder="Write your reply here..."
-        className={css.replyInput}
-      />
       <div className={css.buttons}>
-        <button onClick={handleSendReply}>Send</button>
-        <button onClick={onCancel}>Cancel</button>
+        <button className={css.cancelButton} onClick={onCancel}>Cancel</button>
+        <button className={css.replyButton} onClick={handleSendReply}>Reply</button>
       </div>
     </div>
   );
