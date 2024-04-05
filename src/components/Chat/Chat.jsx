@@ -296,12 +296,16 @@ const Chat = () => {
 
   const handleChatMessageSend = () => {
     if (selectedReplyMessage) {
-      // Передайте значение сообщения из текстового поля в функцию handleSendReply
+    
       handleSendReply(message);
+      setSelectedReplyMessage(null); 
     } else {
-      sendMessage(); // Если нет активного реплая, отправляем сообщение как обычно
+      sendMessage(); 
     }
+    setMessage('');
   };
+  
+  
 
   return (
     <div className={css.container}>
