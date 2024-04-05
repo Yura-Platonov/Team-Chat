@@ -27,7 +27,6 @@ const Chat = () => {
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
-  const [replyToMessage, setReplyToMessage] = useState(null);
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
@@ -296,10 +295,6 @@ const Chat = () => {
     }
   };
 
-  const handleReplyToMessage = (msg) => {
-    setReplyToMessage(msg);
-    setMessage(`@${msg.sender} `);
-  };
 
   return (
     <div className={css.container}>
@@ -355,9 +350,6 @@ const Chat = () => {
                       )}
                     </div>
                   </div>
-                  <div className={css.replyContainer} onClick={() => handleReplyToMessage(msg)}>
-                <div className={css.reply}>123</div>
-              </div>
                 </div>
               </div>
             ))}
