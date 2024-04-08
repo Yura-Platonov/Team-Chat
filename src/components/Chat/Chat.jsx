@@ -10,6 +10,7 @@ import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
 import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import ReplyMessage from './ReplyMessage';
+import MessageMenu from './MessageMenu';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -20,11 +21,14 @@ const Chat = () => {
   const messageContainerRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
-  const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
+  const [currentUserId] = useState(localStorage.getItem('user_id'));
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
-  const [selectedReplyMessage, setSelectedReplyMessage] = useState(null);
+  const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
+  const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
+  // const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [isChatMenuOpen, setIsChatMenuOpen] = useState(null);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
   let userName = selectedUser ? selectedUser.user_name : '';
@@ -180,10 +184,6 @@ const Chat = () => {
     }
   };
 
-  const handleSelectReplyMessage = (messageId) => {
-    setSelectedReplyMessage(messageId);
-  };
-
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
   };
@@ -271,6 +271,11 @@ const Chat = () => {
     }
   };
 
+  const handleSelectReplyMessage = (messageId, messageText) => {
+    setSelectedReplyMessageId(messageId);
+    setSelectedReplyMessageText(messageText);
+  };
+
   const handleSendReply = async (replyMessage) => {
     if (!token) {
       openLoginModal();
@@ -280,7 +285,7 @@ const Chat = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
         reply: {
-          original_message_id: selectedReplyMessage,
+          original_message_id: selectedReplyMessageId,
           message: replyMessage
         }
       };
@@ -294,19 +299,21 @@ const Chat = () => {
     }
   };
 
-  const handleChatMessageSend = () => {
-    if (selectedReplyMessage) {
+  // const handleChatMessageSend = () => {
+  //   if (selectedReplyMessage) {
     
-      handleSendReply(message);
-      setSelectedReplyMessage(null); 
-    } else {
-      sendMessage(); 
-    }
-    setMessage('');
-  };
-  
-  
+  //     handleSendReply(message);
+  //     setSelectedReplyMessage(null); 
+  //   } else {
+  //     sendMessage(); 
+  //   }
+  //   setMessage('');
+  // };
 
+  // const handleMenuClick = (messageId) => {
+  //   setSelectedMessageId(messageId); 
+  // };
+  
   return (
     <div className={css.container}>
       <h2 className={css.title}>Topic: {roomName}</h2>
@@ -334,7 +341,7 @@ const Chat = () => {
             )}
             {messages.map((msg, index) => (
               <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-                <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+                 <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
                   <img
                     src={msg.avatar}
                     alt={`${msg.sender}'s Avatar`}
@@ -347,21 +354,28 @@ const Chat = () => {
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
                     {msg.message && ( 
-                      <p className={css.messageText}>{msg.message}</p>
+                      <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>{msg.message}</p>
                     )}
                     {msg.fileUrl && ( 
                       <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
                     )}
                     <div className={css.actions}>
-                      {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+                    {(msg.vote > 0 || hoveredMessageId === msg.id) && (
                         <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
                           <LikeSVG className={css.like} />
                           {msg.vote !== 0 && <span>{msg.vote}</span>}
                         </div>
                       )}
-                      <button onClick={() => handleSelectReplyMessage(msg.id)}>Reply</button>
+                      {/* <button onClick={() => handleSelectReplyMessage(msg.id)}>Reply</button> */}
                     </div>
                   </div>
+                  {isChatMenuOpen === msg.id && (
+                    <MessageMenu
+                    handleSelectReplyMessage={handleSelectReplyMessage}
+                    messageId={selectedReplyMessageId}
+                    onClose={() => setIsChatMenuOpen(null)}
+                    />
+                   )}
                 </div>
               </div>
             ))}
@@ -371,6 +385,18 @@ const Chat = () => {
                 <button onClick={handleDirectMessageClick}>Write a direct message</button>
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
+            )}
+          {selectedReplyMessageId && (
+                <ReplyMessage
+                message={selectedReplyMessageText}
+                onCancel={() => {
+                  setSelectedReplyMessageId(null);
+                  setSelectedReplyMessageText(null);
+                }}
+                onReply={() => {
+                  // Обработка отправки реплая
+                }}
+              />
             )}
           </div>
           <div className={css.input_container}>
@@ -382,22 +408,18 @@ const Chat = () => {
                 <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
               </label>
             </label>
-            {/* <button className={css.button_send} onClick={sendMessage}>Send</button> */}
-            <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
-
+            <button className={css.button_send} onClick={sendMessage}>Send</button>
           </div>
         </div>
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-      {selectedReplyMessage && (
-        <ReplyMessage onCancel={() => setSelectedReplyMessage(null)} onReply={handleSendReply} messageId={selectedReplyMessage} />
-      )}
-    </div>
+      </div>
   );
 };
 
 export default Chat;
+
 
 
 // import React, { useState, useEffect, useRef } from 'react';
