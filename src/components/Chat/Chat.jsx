@@ -299,16 +299,17 @@ const Chat = () => {
     }
   };
 
-  // const handleChatMessageSend = () => {
-  //   if (selectedReplyMessage) {
+  const handleChatMessageSend = () => {
+    if (selectedReplyMessageId) {
     
-  //     handleSendReply(message);
-  //     setSelectedReplyMessage(null); 
-  //   } else {
-  //     sendMessage(); 
-  //   }
-  //   setMessage('');
-  // };
+      handleSendReply(message);
+      setSelectedReplyMessageId(null); 
+      setSelectedReplyMessageText(null); 
+    } else {
+      sendMessage(); 
+    }
+    setMessage('');
+  };
 
   // const handleMenuClick = (messageId) => {
   //   setSelectedMessageId(messageId); 
@@ -375,7 +376,7 @@ const Chat = () => {
                     messageId={selectedReplyMessageId}
                     onClose={() => setIsChatMenuOpen(null)}
                     />
-                   )}
+                    )}
                 </div>
               </div>
             ))}
@@ -408,7 +409,7 @@ const Chat = () => {
                 <input type="file" accept="image/*" onChange={handleImageChange} className={css.file_input} />
               </label>
             </label>
-            <button className={css.button_send} onClick={sendMessage}>Send</button>
+            <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
-.userMenu {
+/* .userMenu {
     position: absolute;
-  top: calc(100% + 10px); /* Располагаем меню под картинкой аватара */
-  left: 20%; /* Выравниваем по горизонтали */
+  top: calc(100% + 10px); 
+  left: 20%; 
   transform: translateX(-20%);
     display: flex;
     width: 200px;
@@ -38,4 +38,4 @@
   .userMenu button:hover {
     background-color: #0056b3;
   }
-  
+   */
