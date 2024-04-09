@@ -379,7 +379,7 @@ const Chat = () => {
                     {/* {msg.message && ( 
                       <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>{msg.message}</p>
                     )} */}
-
+{/* 
               {(msg.id_return && msg.id_return !== 0) ? (
                 <div className={css.messageText}>
                   <p className={css.replyMessageText}>{msg.id_return}</p>
@@ -388,6 +388,28 @@ const Chat = () => {
                   </p>
                 </div>
               ) : (
+                <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                  {msg.message}
+                </p>
+              )} */}
+
+              {msg.id_return && msg.id_return !== 0 ?(
+                <div className={css.messageText}>
+                  {messages.map((message, index) => {
+                    if (message.id === msg.id_return) {
+                      return (
+                        <div key={index}>
+                          <p className={css.replyMessageText}>{message.message}</p>
+                          <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                            {msg.message}
+                          </p>
+                        </div>
+                      );
+                    }
+                    return null; 
+                  })}
+                </div>
+              ): (
                 <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
                   {msg.message}
                 </p>
