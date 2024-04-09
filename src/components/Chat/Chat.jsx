@@ -55,6 +55,10 @@ const Chat = () => {
     setIsChatMenuOpen(null);
   };
 
+  const handleCloseReply = () => {
+    setSelectedReplyMessageId(null);
+  };
+
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -62,7 +66,7 @@ const Chat = () => {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
 
             return {
@@ -71,6 +75,8 @@ const Chat = () => {
               message,
               formattedDate,
               receiver_id,
+              id, 
+              id_return,
               fileUrl,
             };
           });
@@ -96,7 +102,7 @@ const Chat = () => {
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else if (messageData.id) {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, vote, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl } = messageData;
             const formattedDate = formatTime(created_at);
 
             const newMessage = {
@@ -104,6 +110,7 @@ const Chat = () => {
               avatar,
               message,
               id,
+              id_return,
               vote,
               formattedDate,
               receiver_id,
@@ -314,9 +321,21 @@ const Chat = () => {
     setMessage('');
   };
 
-  // const handleMenuClick = (messageId) => {
-  //   setSelectedMessageId(messageId); 
-  // };
+  // useEffect(() => {
+  //   const handleOutsideClick = (event) => {
+  //     const menuContainer = document.getElementById('chat-menu-container');
+
+  //     if (menuContainer && !menuContainer.contains(event.target)) {
+  //       handleCloseChatMenu();
+  //     }
+  //   };
+
+  //   document.addEventListener('click1', handleOutsideClick);
+
+  //   return () => {
+  //     document.removeEventListener('click1', handleOutsideClick);
+  //   };
+  // }, []);
   
   return (
     <div className={css.container}>
@@ -357,9 +376,23 @@ const Chat = () => {
                       <span className={css.chat_sender}>{msg.sender}</span>
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
-                    {msg.message && ( 
+                    {/* {msg.message && ( 
                       <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>{msg.message}</p>
-                    )}
+                    )} */}
+
+              {(msg.id_return && msg.id_return !== 0) ? (
+                <div className={css.messageText}>
+                  <p className={css.replyMessageText}>{msg.id_return}</p>
+                  <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                    {msg.message}
+                  </p>
+                </div>
+              ) : (
+                <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                  {msg.message}
+                </p>
+              )}
+
                     {msg.fileUrl && ( 
                       <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
                     )}
@@ -374,9 +407,9 @@ const Chat = () => {
                     </div>
                   </div>
                   {isChatMenuOpen === msg.id && (
-                       <div className={css.chatMenuContainer}>
+                       <div  id='chat-menu-container' className={css.chatMenuContainer}>
                           <button onClick={() => handleSelectReplyMessage(msg.id, msg.message)}>Reply</button>
-                          <button onClick={handleCloseChatMenu}>Close</button>
+                          <button className={css.d} onClick={handleCloseChatMenu}>Close</button>
                         </div>
                     
                     )}
@@ -394,7 +427,8 @@ const Chat = () => {
                 <div className={css.chatMenu}>
                  <p className={css.message}>{selectedReplyMessageText}</p>
                   <div className={css.buttons}>
-                    <button>Cancel</button>
+                    <button onClick={handleCloseReply}>Cancel</button>
+                    
                   </div>
                 </div>
              

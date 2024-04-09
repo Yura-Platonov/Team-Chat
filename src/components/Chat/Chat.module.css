@@ -593,3 +593,8 @@ display: none;
         fill: #0056b3;
     }
 }
+
+.chatMenuContainer{
+    background: #0056b3;
+    height: 100px;
+}
