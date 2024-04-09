@@ -9,8 +9,6 @@ import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
 import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
-import ReplyMessage from './ReplyMessage';
-import MessageMenu from './MessageMenu';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -51,6 +49,10 @@ const Chat = () => {
 
   const handleCloseMenu = () => {
     setSelectedUser(null);
+  };
+
+  const handleCloseChatMenu = () => {
+    setIsChatMenuOpen(null);
   };
 
   const socketRef = useRef(null);
@@ -272,6 +274,7 @@ const Chat = () => {
   };
 
   const handleSelectReplyMessage = (messageId, messageText) => {
+    console.log(messageId, messageText);
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
   };
@@ -371,11 +374,11 @@ const Chat = () => {
                     </div>
                   </div>
                   {isChatMenuOpen === msg.id && (
-                    <MessageMenu
-                    handleSelectReplyMessage={handleSelectReplyMessage}
-                    messageId={selectedReplyMessageId}
-                    onClose={() => setIsChatMenuOpen(null)}
-                    />
+                       <div className={css.chatMenuContainer}>
+                          <button onClick={() => handleSelectReplyMessage(msg.id, msg.message)}>Reply</button>
+                          <button onClick={handleCloseChatMenu}>Close</button>
+                        </div>
+                    
                     )}
                 </div>
               </div>
@@ -388,16 +391,13 @@ const Chat = () => {
               </div>
             )}
           {selectedReplyMessageId && (
-                <ReplyMessage
-                message={selectedReplyMessageText}
-                onCancel={() => {
-                  setSelectedReplyMessageId(null);
-                  setSelectedReplyMessageText(null);
-                }}
-                onReply={() => {
-                  // Обработка отправки реплая
-                }}
-              />
+                <div className={css.chatMenu}>
+                 <p className={css.message}>{selectedReplyMessageText}</p>
+                  <div className={css.buttons}>
+                    <button>Cancel</button>
+                  </div>
+                </div>
+             
             )}
           </div>
           <div className={css.input_container}>
