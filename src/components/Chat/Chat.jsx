@@ -279,7 +279,7 @@ const Chat = () => {
   
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      sendMessage();
+      handleChatMessageSend();
     }
   };
 
