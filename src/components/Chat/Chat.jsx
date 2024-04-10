@@ -379,28 +379,15 @@ const Chat = () => {
                     {/* {msg.message && ( 
                       <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>{msg.message}</p>
                     )} */}
-{/* 
-              {(msg.id_return && msg.id_return !== 0) ? (
-                <div className={css.messageText}>
-                  <p className={css.replyMessageText}>{msg.id_return}</p>
-                  <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
-                    {msg.message}
-                  </p>
-                </div>
-              ) : (
-                <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
-                  {msg.message}
-                </p>
-              )} */}
-
               {msg.id_return && msg.id_return !== 0 ?(
-                <div className={css.messageText}>
+                <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`}>
                   {messages.map((message, index) => {
                     if (message.id === msg.id_return) {
                       return (
                         <div key={index}>
+                          <p className={css.replyMessageUsername}>{message.sender}</p>
                           <p className={css.replyMessageText}>{message.message}</p>
-                          <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                          <p className={css.messageTextReply} onClick={() => setIsChatMenuOpen(msg.id)}>
                             {msg.message}
                           </p>
                         </div>
@@ -410,7 +397,8 @@ const Chat = () => {
                   })}
                 </div>
               ): (
-                <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                // <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
+                <p className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
                   {msg.message}
                 </p>
               )}
