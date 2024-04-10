@@ -56,20 +56,6 @@ const MobileMenu = () => {
     };
   }, []);
 
-  // useEffect(() => {
-    
-  //   const menuButton = document.querySelector('.mobMenuButton');
-  //   if (menuButton) {
-  //     if (isMenuOpen) {
-  //       menuButton.classList.add('menu-opened');
-  //     } else {
-  //       menuButton.classList.remove('menu-opened');
-  //     }
-  //   }
-
-  // }, [isMenuOpen]);
-
-
   return (
     <div id="mobile-menu-container" className={`${isMenuOpen ? 'open' : ''}`}>
       <button onClick={toggleMenu} className={`${css.mobMenuButton}`}>
