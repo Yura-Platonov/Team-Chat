@@ -9,6 +9,8 @@ import { format, isToday, isYesterday } from 'date-fns';
 import Bg from '../Images/Bg_empty_chat.png';
 import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
 import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
+import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
+import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -25,8 +27,9 @@ const Chat = () => {
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
+  const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   // const [selectedMessageId, setSelectedMessageId] = useState(null);
-  const [isChatMenuOpen, setIsChatMenuOpen] = useState(null);
+  const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
   let userName = selectedUser ? selectedUser.user_name : '';
@@ -52,7 +55,7 @@ const Chat = () => {
   };
 
   const handleCloseChatMenu = () => {
-    setIsChatMenuOpen(null);
+    setIsChatMenuOpen(false);
   };
 
   const handleCloseReply = () => {
@@ -280,10 +283,11 @@ const Chat = () => {
     }
   };
 
-  const handleSelectReplyMessage = (messageId, messageText) => {
+  const handleSelectReplyMessage = (messageId, messageText, messageSender) => {
     console.log(messageId, messageText);
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
+    setSelectedReplyMessageSender(messageSender);
   };
 
   const handleSendReply = async (replyMessage) => {
@@ -309,6 +313,7 @@ const Chat = () => {
     }
   };
 
+
   const handleChatMessageSend = () => {
     if (selectedReplyMessageId) {
     
@@ -321,21 +326,21 @@ const Chat = () => {
     setMessage('');
   };
 
-  // useEffect(() => {
-  //   const handleOutsideClick = (event) => {
-  //     const menuContainer = document.getElementById('chat-menu-container');
+  useEffect(() => {
+    const handleOutsideClick2 = (event) => {
+      const menuContainer2 = document.getElementById('chat-menu-container');
 
-  //     if (menuContainer && !menuContainer.contains(event.target)) {
-  //       handleCloseChatMenu();
-  //     }
-  //   };
+      if (menuContainer2 && !menuContainer2.contains(event.target)) {
+        handleCloseChatMenu();
+      }
+    };
 
-  //   document.addEventListener('click1', handleOutsideClick);
+    document.addEventListener('click', handleOutsideClick2);
 
-  //   return () => {
-  //     document.removeEventListener('click1', handleOutsideClick);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener('click', handleOutsideClick2);
+    };
+  }, []);
   
   return (
     <div className={css.container}>
@@ -376,18 +381,15 @@ const Chat = () => {
                       <span className={css.chat_sender}>{msg.sender}</span>
                       <span className={css.time}>{msg.formattedDate}</span>
                     </div>
-                    {/* {msg.message && ( 
-                      <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>{msg.message}</p>
-                    )} */}
               {msg.id_return && msg.id_return !== 0 ?(
                 <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`}>
                   {messages.map((message, index) => {
                     if (message.id === msg.id_return) {
                       return (
-                        <div key={index}>
+                        <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                           <p className={css.replyMessageUsername}>{message.sender}</p>
                           <p className={css.replyMessageText}>{message.message}</p>
-                          <p className={css.messageTextReply} onClick={() => setIsChatMenuOpen(msg.id)}>
+                          <p className={css.messageTextReply}>
                             {msg.message}
                           </p>
                         </div>
@@ -397,7 +399,6 @@ const Chat = () => {
                   })}
                 </div>
               ): (
-                // <p className={css.messageText} onClick={() => setIsChatMenuOpen(msg.id)}>
                 <p className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
                   {msg.message}
                 </p>
@@ -413,13 +414,19 @@ const Chat = () => {
                           {msg.vote !== 0 && <span>{msg.vote}</span>}
                         </div>
                       )}
-                      {/* <button onClick={() => handleSelectReplyMessage(msg.id)}>Reply</button> */}
                     </div>
                   </div>
                   {isChatMenuOpen === msg.id && (
-                       <div  id='chat-menu-container' className={css.chatMenuContainer}>
-                          <button onClick={() => handleSelectReplyMessage(msg.id, msg.message)}>Reply</button>
-                          <button className={css.d} onClick={handleCloseChatMenu}>Close</button>
+                       <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+                          <button 
+                          className={css.menuReplyButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender);
+                            handleCloseChatMenu();
+                            }}>
+                          Reply to message
+                          </button>
+                          <button className={css.d} onClick={handleCloseChatMenu}>X</button>
                         </div>
                     
                     )}
@@ -433,12 +440,16 @@ const Chat = () => {
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
             )}
+
           {selectedReplyMessageId && (
-                <div className={css.chatMenu}>
-                 <p className={css.message}>{selectedReplyMessageText}</p>
+                <div className={css.replyContainer}>
+                  <IconReplySVG/>
+                  <div className={css.replyContainerFlex}>
+                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
+                  <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  </div>
                   <div className={css.buttons}>
-                    <button onClick={handleCloseReply}>Cancel</button>
-                    
+                    <ButtonReplyCloseSVG onClick={handleCloseReply}/>
                   </div>
                 </div>
              

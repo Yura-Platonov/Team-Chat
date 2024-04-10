@@ -215,12 +215,12 @@
 .chat_area{
     /* width:  100%; */
     height: 60vh;
-
     display: flex;
     flex-direction: column;
     padding: 15px;
     overflow: hidden;
     overflow-y: scroll;
+
     /* justify-content: center; */
 
 
@@ -595,8 +595,9 @@ display: none;
 }
 
 .chatMenuContainer{
-    background: #0056b3;
-    height: 100px;
+padding: 10px;
+border: 1px solid #024A7A;
+border-radius: 20px;
 }
 
 .replyMessageText{
@@ -653,32 +654,94 @@ line-height: 130%;
   }
 
   .replyMessageUsername{
-color: #024A7A;
-opacity: 60%;
-padding-left: 10px;
-padding-right: 65px;
-word-wrap: break-word;
-max-width: 200px;
+    color: #024A7A;
+    opacity: 60%;
+    padding-left: 10px;
+    padding-right: 65px;
+    word-wrap: break-word;
+    max-width: 200px;
 
-font-family: Manrope;
-font-size: 17px;
-font-weight: 400;
-line-height: 130%; 
-
-
-@media screen and (min-width: 768px) and (max-width: 1023px){
+    font-family: Manrope;
     font-size: 17px;
-    max-width: 400px;
-} 
-@media screen and (min-width: 1024px) {
-    min-width: 120px; 
-    max-width: 500px;
-   
-    font-size: 20px;
-  }
+    font-weight: 400;
+    line-height: 130%; 
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 17px;
+        max-width: 400px;
+    } 
+
+    @media screen and (min-width: 1024px) {
+        min-width: 120px; 
+        max-width: 500px;
+    
+        font-size: 20px;
+    }
 
 }
 
 .my_message_text{
 background: #A9DCFF;
+}
+
+.replyContainer{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    /* justify-content: space-between; */
+    background: #024A7A80;
+    position: absolute;
+    bottom: 22.5%;
+    left: 0%;
+
+
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    width: 100%;
+    height: 90px;
+    padding: 20px;
+    padding-right: 40px;
+
+}
+
+
+.replyContainerFlex{
+display: flex;
+flex-direction: column;
+width: 100%;
+}
+
+.chatTextReply{
+    color:  #0F1E28;
+    padding: 10px 10px 0 10px;
+    word-wrap: break-word;
+
+    font-family: Manrope;
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 130%; 
+    max-height: 35px;
+    overflow: hidden;
+
+
+    @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 17px;
+      
+    } 
+    @media screen and (min-width: 1024px) {
+
+        font-size: 20px;
+      }
+
+  }
+
+  .menuReplyButton{
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    font-size: 17px;
+    color: #0F1E28;
+    
 }
