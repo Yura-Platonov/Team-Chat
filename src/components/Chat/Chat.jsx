@@ -162,9 +162,9 @@ const Chat = () => {
     }
 
     const trimmedMessage = message.trim();
-    if (!trimmedMessage && !selectedImage) {
-      return;
-    }
+    // if (!trimmedMessage && !selectedImage) {
+    //   return;
+    // }
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       let imageUrl = null;
@@ -178,12 +178,19 @@ const Chat = () => {
       }
 
       const messageObject = {
-        message: trimmedMessage,
+        // message: trimmedMessage,
+        send: {
+          original_message_id: selectedReplyMessageId || null,
+          message: trimmedMessage || null, 
+          fileUrl: imageUrl || null,
+        },
       };
 
-      if (imageUrl) {
-        messageObject.fileUrl = imageUrl;
-      }
+      console.log(messageObject);
+
+      // if (imageUrl) {
+      //   messageObject.fileUrl = imageUrl;
+      // }
 
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
@@ -191,6 +198,7 @@ const Chat = () => {
       setMessage('');
       setSelectedImage(null); 
       setSelectedFilesCount(0);
+      // selectedReplyMessageId(null);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
