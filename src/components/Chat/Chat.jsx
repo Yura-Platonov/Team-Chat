@@ -256,12 +256,23 @@ const Chat = () => {
   // };
 
   
+  const MAX_TOTAL_FILE_SIZE_MB = 10;
+
   const handleImageChange = (event) => {
     const files = event.target.files;
     const imagesArray = Array.from(files);
   
-    setSelectedImage([...selectedImage, ...imagesArray]);
+    const totalFileSize = imagesArray.reduce((total, file) => total + file.size, 0);
+    const totalFileSizeMB = totalFileSize / (1024 * 1024);
+  
+    if (totalFileSizeMB > MAX_TOTAL_FILE_SIZE_MB) {
+      alert(`Total file size should not exceed ${MAX_TOTAL_FILE_SIZE_MB}MB`);
+      return;
+    }
+  
+    setSelectedImage(imagesArray);
   };
+  
 
   const handleImageSend = async () => {
     try {
