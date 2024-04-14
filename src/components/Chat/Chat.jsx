@@ -246,14 +246,49 @@ const Chat = () => {
     }
   };
 
+  // const handleImageChange = (event) => {
+  //   const files = event.target.files;
+  //   setSelectedFilesCount(files.length);
+  //   const file = files[0];
+  //   if (file) {
+  //     setSelectedImage(file);
+  //   }
+  // };
+
+  
   const handleImageChange = (event) => {
     const files = event.target.files;
-    setSelectedFilesCount(files.length);
-    const file = files[0];
-    if (file) {
-      setSelectedImage(file);
-    }
+    const imagesArray = Array.from(files);
+
+    setSelectedImage(imagesArray);
   };
+
+  const handleImageSend = async () =>{
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+
+      if (response && response.data && response.data.filename && response.data.public_url) {
+        const imageUrl = response.data.public_url;
+        setSelectedImage([]);
+
+        return imageUrl; 
+      } else {
+        console.error('Failed to upload image');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+    
+  };
+
+  const handleImageClose = () =>{
+    setSelectedImage([]);
+  }
 
   const uploadImage = async () => {
     try {
@@ -349,6 +384,7 @@ const Chat = () => {
       document.removeEventListener('click', handleOutsideClick2);
     };
   }, []);
+
   
   return (
     <div className={css.container}>
@@ -460,8 +496,17 @@ const Chat = () => {
                     <ButtonReplyCloseSVG onClick={handleCloseReply}/>
                   </div>
                 </div>
-             
             )}
+
+            {selectedImage && (
+                    <div>
+                      {selectedImage.map((image, index) => (
+                        <img key={index} src={URL.createObjectURL(image)} alt={`Preview ${index}`} />
+                      ))}
+                      <button onClick={handleImageSend}>Send Images</button>
+                      <button onClick={handleImageClose}>Close</button>
+                    </div>
+                  )}
           </div>
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
