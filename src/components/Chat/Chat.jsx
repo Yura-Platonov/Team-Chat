@@ -23,7 +23,7 @@ const Chat = () => {
   const navigate = useNavigate();
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [currentUserId] = useState(localStorage.getItem('user_id'));
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState([]);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
@@ -259,36 +259,42 @@ const Chat = () => {
   const handleImageChange = (event) => {
     const files = event.target.files;
     const imagesArray = Array.from(files);
-
-    setSelectedImage(imagesArray);
+  
+    setSelectedImage([...selectedImage, ...imagesArray]);
   };
 
-  const handleImageSend = async () =>{
+  const handleImageSend = async () => {
     try {
       const formData = new FormData();
-      formData.append('file', selectedImage);
-
+      selectedImage.forEach((image, index) => {
+        formData.append(`file${index}`, image);
+      });
+  
       const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-
-      if (response && response.data && response.data.filename && response.data.public_url) {
-        const imageUrl = response.data.public_url;
+  
+      if (response && response.data) {
+        console.log('Images successfully uploaded:', response.data);
+        // Очистите массив выбранных изображений после успешной отправки
         setSelectedImage([]);
-
-        return imageUrl; 
       } else {
-        console.error('Failed to upload image');
-        return null;
+        console.error('Failed to upload images');
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
-      return null;
+      console.error('Error uploading images:', error);
     }
-    
   };
+  
 
   const handleImageClose = () =>{
     setSelectedImage([]);
   }
+
+  const handleRemoveImage = (index) => {
+    const updatedImages = [...selectedImage];
+    updatedImages.splice(index, 1);
+    setSelectedImage(updatedImages);
+  };
+  
 
   const uploadImage = async () => {
     try {
@@ -498,7 +504,21 @@ const Chat = () => {
                 </div>
             )}
 
-            {selectedImage && (
+{selectedImage.length > 0 && (
+  <div>
+    {selectedImage.map((image, index) => (
+      <div key={index} className={css.imageContainer}>
+        <img src={URL.createObjectURL(image)} alt={`Preview ${index}`} />
+        <button onClick={() => handleRemoveImage(index)}>Remove</button>
+      </div>
+    ))}
+    <button onClick={handleImageSend}>Send Images</button>
+    <button onClick={handleImageClose}>Close</button>
+  </div>
+)}
+
+
+            {/* {selectedImage && (
                     <div>
                       {selectedImage.map((image, index) => (
                         <img key={index} src={URL.createObjectURL(image)} alt={`Preview ${index}`} />
@@ -506,7 +526,7 @@ const Chat = () => {
                       <button onClick={handleImageSend}>Send Images</button>
                       <button onClick={handleImageClose}>Close</button>
                     </div>
-                  )}
+                  )} */}
           </div>
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
