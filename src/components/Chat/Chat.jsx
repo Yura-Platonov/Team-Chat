@@ -589,6 +589,7 @@ const Chat = () => {
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
+  const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   // const [selectedMessageId, setSelectedMessageId] = useState(null);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
@@ -899,11 +900,18 @@ const Chat = () => {
     }
   };
 
-  const handleSelectReplyMessage = (messageId, messageText, messageSender) => {
-    console.log(messageId, messageText);
+  // const handleSelectReplyMessage = (messageId, messageText, messageSender) => {
+  //   console.log(messageId, messageText);
+  //   setSelectedReplyMessageId(messageId);
+  //   setSelectedReplyMessageText(messageText);
+  //   setSelectedReplyMessageSender(messageSender);
+  // };
+
+  const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
     setSelectedReplyMessageSender(messageSender);
+    setselectedReplyMessageImage(imageUrl); 
   };
 
   const handleSendReply = async (replyMessage) => {
@@ -916,7 +924,8 @@ const Chat = () => {
       const replyData = {
         reply: {
           original_message_id: selectedReplyMessageId,
-          message: replyMessage
+          message: replyMessage,
+          fileUrl: selectedReplyMessageImage
         }
       };
       console.log('Preparing to send reply:', replyData);
@@ -1006,8 +1015,15 @@ const Chat = () => {
                             return (
                               <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                                 <p className={css.replyMessageUsername}>{message.sender}</p>
-                                <p className={css.replyMessageText}>{message.message}</p>
+                                {msg.message  ? (
+                                    <p className={css.replyMessageText}>{message.message}</p>
+                                  ) : (
+                                    <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />
+                                  )}
+                                
+                                  
                                 <p className={css.messageTextReply}>{msg.message}</p>
+                                {/* <img className={css.ReplyMessageImage} alt='Reply'>{msg.fileUrl}</img> */}
                               </div>
                             );
                           }
@@ -1018,7 +1034,12 @@ const Chat = () => {
                       )}
                     </div>
                   ) : msg.fileUrl ? (
-                    <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
+                    <img 
+                    src={msg.fileUrl} 
+                    alt="Uploaded" 
+                    className={css.imageContainer}
+                    onClick={() => setIsChatMenuOpen(msg.id)}
+                    />
                   ) : null}
 
                   <div className={css.actions}>
@@ -1036,7 +1057,7 @@ const Chat = () => {
             <button 
               className={css.menuReplyButton}  
               onClick={() => {
-                handleSelectReplyMessage(msg.id, msg.message, msg.sender);
+                handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                 handleCloseChatMenu();
               }}>
               Reply to message
@@ -1056,7 +1077,7 @@ const Chat = () => {
               </div>
             )}
 
-          {selectedReplyMessageId && (
+          {/* {selectedReplyMessageId && (
                 <div className={css.replyContainer}>
                   <IconReplySVG/>
                   <div className={css.replyContainerFlex}>
@@ -1067,7 +1088,24 @@ const Chat = () => {
                     <ButtonReplyCloseSVG onClick={handleCloseReply}/>
                   </div>
                 </div>
+            )} */}
+            {selectedReplyMessageId && (
+              <div className={css.replyContainer}>
+                <IconReplySVG/>
+                <div className={css.replyContainerFlex}>
+                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
+                  {selectedReplyMessageText ? (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  ) : (
+                    <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                  )}
+                </div>
+                <div className={css.buttons}>
+                  <ButtonReplyCloseSVG onClick={handleCloseReply}/>
+                </div>
+              </div>
             )}
+
 
             {selectedImage && (
               <div className={css.imgContainerUpload}>

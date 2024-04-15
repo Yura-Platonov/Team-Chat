@@ -759,3 +759,13 @@ width: 100%;
 .imgUpload{
 height: 100px;
 }
+
+.replyImage{
+    height: 30px;
+    width: 30px;
+}
+
+.ReplyMessageImage{
+    height: 150px;
+    width: 150px;
+}
