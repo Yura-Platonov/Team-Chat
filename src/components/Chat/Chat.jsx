@@ -1015,13 +1015,11 @@ const Chat = () => {
                             return (
                               <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                                 <p className={css.replyMessageUsername}>{message.sender}</p>
-                                {msg.message  ? (
+                                {message.message  ? (
                                     <p className={css.replyMessageText}>{message.message}</p>
                                   ) : (
                                     <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />
                                   )}
-                                
-                                  
                                 <p className={css.messageTextReply}>{msg.message}</p>
                                 {/* <img className={css.ReplyMessageImage} alt='Reply'>{msg.fileUrl}</img> */}
                               </div>
