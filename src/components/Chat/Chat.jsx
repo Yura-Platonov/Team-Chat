@@ -796,6 +796,32 @@ const Chat = () => {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
+
+  const uploadImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      console.log(selectedImage);
+      console.log(formData);
+
+      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+
+      if (response && response.data && response.data.filename && response.data.public_url) {
+        const imageUrl = response.data.public_url;
+        setSelectedImage(imageUrl); 
+        console.log(imageUrl);
+
+        return imageUrl; 
+      } else {
+        console.error('Failed to upload image');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
   
   const handleImageSend = async () => {
     if (!selectedImage) {
@@ -805,6 +831,8 @@ const Chat = () => {
   
     try {
       const imageUrl = await uploadImage(selectedImage);
+
+      console.log(imageUrl);
   
       if (!imageUrl) {
         console.error('Failed to upload image.');
@@ -835,31 +863,7 @@ const Chat = () => {
     }
   };
   
-  const uploadImage = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('file', selectedImage);
-
-      console.log(selectedImage);
-      console.log(formData);
-
-      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-
-      if (response && response.data && response.data.filename && response.data.public_url) {
-        const imageUrl = response.data.public_url;
-        setSelectedImage(imageUrl); 
-        console.log(imageUrl);
-
-        return ; 
-      } else {
-        console.error('Failed to upload image');
-        return null;
-      }
-    } catch (error) {
-      console.error('Error uploading image:', error);
-      return null;
-    }
-  };
+ 
 
   const handleImageChange = (event) => {
     const files = event.target.files;
@@ -980,72 +984,70 @@ const Chat = () => {
                 <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
               </div>
             )}
-            {messages.map((msg, index) => (
-              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
-                 <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
+           {messages.map((msg, index) => (
+            <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+            <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
                   <img
-                    src={msg.avatar}
-                    alt={`${msg.sender}'s Avatar`}
-                    className={css.chat_avatar}
-                    onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
-                  />
-                  <div className={css.chat_div}>
-                    <div className={css.chat_nicktime}>
-                      <span className={css.chat_sender}>{msg.sender}</span>
-                      <span className={css.time}>{msg.formattedDate}</span>
-                    </div>
-              {msg.id_return && msg.id_return !== 0 ?(
-                <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`}>
-                  {messages.map((message, index) => {
-                    if (message.id === msg.id_return) {
-                      return (
-                        <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
-                          <p className={css.replyMessageUsername}>{message.sender}</p>
-                          <p className={css.replyMessageText}>{message.message}</p>
-                          <p className={css.messageTextReply}>
-                            {msg.message}
-                          </p>
-                        </div>
-                      );
-                    }
-                    return null; 
-                  })}
-                </div>
-              ): (
-                <p className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
-                  {msg.message}
-                </p>
-              )}
-
-                    {msg.fileUrl && ( 
-                      <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
-                    )}
-                    <div className={css.actions}>
-                    {(msg.vote > 0 || hoveredMessageId === msg.id) && (
-                        <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
-                          <LikeSVG className={css.like} />
-                          {msg.vote !== 0 && <span>{msg.vote}</span>}
-                        </div>
+                  src={msg.avatar}
+                  alt={`${msg.sender}'s Avatar`}
+                  className={css.chat_avatar}
+                  onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+                />
+                <div className={css.chat_div}>
+                  <div className={css.chat_nicktime}>
+                    <span className={css.chat_sender}>{msg.sender}</span>
+                    <span className={css.time}>{msg.formattedDate}</span>
+                  </div>
+              {msg.message && msg.message.trim() !== '' ? (
+                    <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                      {msg.id_return && msg.id_return !== 0 ? (
+                        messages.map((message, index) => {
+                          if (message.id === msg.id_return) {
+                            return (
+                              <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                                <p className={css.replyMessageUsername}>{message.sender}</p>
+                                <p className={css.replyMessageText}>{message.message}</p>
+                                <p className={css.messageTextReply}>{msg.message}</p>
+                              </div>
+                            );
+                          }
+                          return null;
+                        })
+                      ) : (
+                        <p>{msg.message}</p>
                       )}
                     </div>
-                  </div>
-                  {isChatMenuOpen === msg.id && (
-                       <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
-                          <button 
-                          className={css.menuReplyButton}  
-                          onClick={() => {
-                            handleSelectReplyMessage(msg.id, msg.message, msg.sender);
-                            handleCloseChatMenu();
-                            }}>
-                          Reply to message
-                          </button>
-                          <button className={css.d} onClick={handleCloseChatMenu}>X</button>
-                        </div>
-                    
+                  ) : msg.fileUrl ? (
+                    <img src={msg.fileUrl} alt="Uploaded" className={css.imageContainer} />
+                  ) : null}
+
+                  <div className={css.actions}>
+                    {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+                      <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+                        <LikeSVG className={css.like} />
+                        {msg.vote !== 0 && <span>{msg.vote}</span>}
+                      </div>
                     )}
+                  </div>
                 </div>
-              </div>
-            ))}
+
+      {isChatMenuOpen === msg.id && (
+          <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+            <button 
+              className={css.menuReplyButton}  
+              onClick={() => {
+                handleSelectReplyMessage(msg.id, msg.message, msg.sender);
+                handleCloseChatMenu();
+              }}>
+              Reply to message
+            </button>
+            <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+          </div>
+      )}
+            </div>
+          </div>
+        ))}
+
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {selectedUser.user_name}</p>
@@ -1067,18 +1069,16 @@ const Chat = () => {
                 </div>
             )}
 
-{selectedImage && (
-  <div className={css.imgContainerUpload}>
-    <div className={css.imgUploadDiv}>
-      <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
-      {/* <button onClick={handleRemoveImage}>Remove</button> */}
-    </div>
-    <button onClick={handleImageSend}>Send Image</button>
-    <button onClick={handleImageClose}>Close</button>
-  </div>
-)}
-
-
+            {selectedImage && (
+              <div className={css.imgContainerUpload}>
+                <div className={css.imgUploadDiv}>
+                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
+                  {/* <button onClick={handleRemoveImage}>Remove</button> */}
+                </div>
+                <button onClick={handleImageSend}>Send Image</button>
+                <button onClick={handleImageClose}>Close</button>
+              </div>
+            )}
           </div>
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
