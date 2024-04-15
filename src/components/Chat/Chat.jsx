@@ -826,6 +826,7 @@ const Chat = () => {
         socketRef.current.send(messageString);
   
         setSelectedImage(null); 
+        setSelectedFilesCount(0);
       } else {
         console.error('WebSocket is not open. Message not sent.');
       }
@@ -839,6 +840,9 @@ const Chat = () => {
       const formData = new FormData();
       formData.append('file', selectedImage);
 
+      console.log(selectedImage);
+      console.log(formData);
+
       const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
 
       if (response && response.data && response.data.filename && response.data.public_url) {
@@ -846,7 +850,7 @@ const Chat = () => {
         setSelectedImage(imageUrl); 
         console.log(imageUrl);
 
-        return imageUrl; 
+        return ; 
       } else {
         console.error('Failed to upload image');
         return null;
@@ -868,6 +872,8 @@ const Chat = () => {
 
     const handleImageClose = () =>{
     setSelectedImage(null);
+    setSelectedFilesCount(0);
+
   };
   
   // const handleRemoveImage = () => {
