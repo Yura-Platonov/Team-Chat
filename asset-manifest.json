@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.26542c61.css",
-    "main.js": "/Team-Chat/static/js/main.a67ee9e0.js",
+    "main.css": "/Team-Chat/static/css/main.581016ec.css",
+    "main.js": "/Team-Chat/static/js/main.c8ed169a.js",
     "static/media/BgPersonalChat.jpg": "/Team-Chat/static/media/BgPersonalChat.1756b8c1aa51dd3eea73.jpg",
     "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
     "static/media/UvU.png": "/Team-Chat/static/media/UvU.114fff4cf77801b75fd2.png",
@@ -26,8 +26,8 @@
     "index.html": "/Team-Chat/index.html",
     "static/media/10.svg": "/Team-Chat/static/media/10.f62c5feb60fe40968aef53f46ad8b1a2.svg",
     "static/media/5.svg": "/Team-Chat/static/media/5.3745317f69e7daa720c9e37afd77599e.svg",
-    "static/media/ButtonReplyClose.svg": "/Team-Chat/static/media/ButtonReplyClose.052f28b56247b480830d2210135f591b.svg",
     "static/media/Like.svg": "/Team-Chat/static/media/Like.63db69e72bf90391bee1ff0ad036af13.svg",
+    "static/media/ButtonReplyClose.svg": "/Team-Chat/static/media/ButtonReplyClose.388254049e491e642da4bca3f99abd95.svg",
     "static/media/8.svg": "/Team-Chat/static/media/8.f6d0ebe648a6c872787dedffb581118f.svg",
     "static/media/3.svg": "/Team-Chat/static/media/3.290c32479322eefaea62939be03c933d.svg",
     "static/media/IconReply.svg": "/Team-Chat/static/media/IconReply.ace0a487f18fcfc3e4fcd7807339bf33.svg",
@@ -38,11 +38,12 @@
     "static/media/mobileMenu.svg": "/Team-Chat/static/media/mobileMenu.7455f398db526ccd56ebc9412da8fb25.svg",
     "static/media/Heart.svg": "/Team-Chat/static/media/Heart.786346b3de81146a134160e08f16e328.svg",
     "static/media/2.svg": "/Team-Chat/static/media/2.c6bb4b5c025f54de590a4d3c7a5c9147.svg",
-    "main.26542c61.css.map": "/Team-Chat/static/css/main.26542c61.css.map",
-    "main.a67ee9e0.js.map": "/Team-Chat/static/js/main.a67ee9e0.js.map"
+    "static/media/SendImg.svg": "/Team-Chat/static/media/SendImg.d72d51dcf5feb7891b8514b997537cbc.svg",
+    "main.581016ec.css.map": "/Team-Chat/static/css/main.581016ec.css.map",
+    "main.c8ed169a.js.map": "/Team-Chat/static/js/main.c8ed169a.js.map"
   },
   "entrypoints": [
-    "static/css/main.26542c61.css",
-    "static/js/main.a67ee9e0.js"
+    "static/css/main.581016ec.css",
+    "static/js/main.c8ed169a.js"
   ]
 }
