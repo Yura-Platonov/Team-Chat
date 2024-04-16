@@ -542,8 +542,6 @@ const Chat = () => {
                 </div>
               </div>
             )}
-
-
             {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
@@ -562,7 +560,7 @@ const Chat = () => {
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-                <input type="file" accept="image/*" onClick={handleImageChange}  className={css.file_input} />
+                <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
               </label>
             </label>
             <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
