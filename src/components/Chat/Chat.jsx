@@ -513,19 +513,6 @@ const Chat = () => {
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
             )}
-
-          {/* {selectedReplyMessageId && (
-                <div className={css.replyContainer}>
-                  <IconReplySVG/>
-                  <div className={css.replyContainerFlex}>
-                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
-                  <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
-                  </div>
-                  <div className={css.buttons}>
-                    <ButtonReplyCloseSVG onClick={handleCloseReply}/>
-                  </div>
-                </div>
-            )} */}
             {selectedReplyMessageId && (
               <div className={css.replyContainer}>
                 <IconReplySVG/>
