@@ -30,7 +30,8 @@ const Chat = () => {
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
-  // const [selectedMessageId, setSelectedMessageId] = useState(null);
+const [editingMessage, setEditingMessage] = useState(null);
+const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -384,10 +385,83 @@ const Chat = () => {
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
       setSelectedReplyMessageText(null); 
-    } else {
+    }
+    if (editingMessage) {
+      // Отправка отредактированного сообщения
+      handleEditMessage(editedMessage, editingMessage);
+    }
+     else {
       sendMessage(); 
     }
     setMessage('');
+  };
+
+
+  // const handleChatMessageSend = () => {
+  //   if (editingMessage) {
+  //     // Отправка отредактированного сообщения
+  //     handleEditMessage(editedMessage, editingMessage);
+  //   } else {
+  //     // Обычная отправка сообщения
+  //     sendMessage();
+  //   }
+  // };
+  // const handleEditMessage = (editedMessage, messageId) => {
+  //   if (!token) {
+  //     openLoginModal();
+  //     return;
+  //   }
+  
+  //   const editMessageObject = {
+  //     change_message: {
+  //       id: messageId,
+  //       message: editedMessage
+  //     }
+  //   };
+  
+  //   if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+  //     const editMessageString = JSON.stringify(editMessageObject);
+  //     socketRef.current.send(editMessageString);
+  //   } else {
+  //     console.error('WebSocket is not open. Edit message not sent.');
+  //     return;
+  //   }
+  
+  //   setMessages(prevMessages => {
+  //     return prevMessages.map(msg => {
+  //       if (msg.id === messageId) {
+  //         return { ...msg, message: editedMessage }; // Обновляем текст сообщения
+  //       }
+  //       return msg;
+  //     });
+  //   });
+  // };
+  
+
+  const handleDeleteMessage = (messageId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+  
+    const deleteMessageObject = {
+      delete_message: {
+        id: messageId
+      }
+    };
+  
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const deleteMessageString = JSON.stringify(deleteMessageObject);
+      socketRef.current.send(deleteMessageString);
+    } else {
+      console.error('WebSocket is not open. Delete message not sent.');
+    }
+    setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+  };
+  
+  const handleEditMessage = (editedMessage, messageId) => {
+    setEditingMessage(messageId);
+    setEditedMessage(editedMessage);
   };
 
   // useEffect(() => {
@@ -500,6 +574,16 @@ const Chat = () => {
               Reply to message
             </button>
             <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+            <button className={css.editButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
+            <button 
+              className={css.menuDeleteButton}  
+              onClick={() => {
+                // При клике на удаление вызываем функцию handleDeleteMessage
+                handleDeleteMessage(msg.id);
+                handleCloseChatMenu();
+              }}>
+              Delete Message
+            </button>
           </div>
       )}
             </div>
@@ -550,7 +634,9 @@ const Chat = () => {
                 <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
               </label>
             </label>
-            <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
+            <button className={css.button_send} onClick={handleChatMessageSend}>
+              {editingMessage ? 'Edit' : 'Send'}
+            </button>
           </div>
         </div>
       </div>
