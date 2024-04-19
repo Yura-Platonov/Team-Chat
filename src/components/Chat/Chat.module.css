@@ -595,9 +595,15 @@ display: none;
 }
 
 .chatMenuContainer{
+position: relative;
 padding: 10px;
 border: 1px solid #024A7A;
 border-radius: 20px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+width: 160px;
+height: max-content;
 }
 
 .replyMessageText{
@@ -738,12 +744,19 @@ width: 100%;
 
   }
 
-  .menuReplyButton{
+  .chatMenuMsgButton{
     border: none;
     background-color: transparent;
-    cursor: pointer;
-    font-size: 17px;
+    font-size: 15px;
     color: #0F1E28;
+    text-align: start;
+    width: fit-content;
+
+    &:hover{
+        cursor: pointer;
+        color: #0056b3;
+
+    }
     
 }
 
@@ -812,4 +825,10 @@ height: 100px;
 display: flex;
 align-items: center;
 gap: 15px;
+}
+
+.d{
+position: absolute;
+top: 10%;
+right: 3%;
 }

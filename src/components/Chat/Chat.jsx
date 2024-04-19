@@ -380,16 +380,17 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
+    if (editingMessage) {
+      handleEditMessage(editedMessage, editingMessage);
+      setEditingMessage(null);    
+    }
     if (selectedReplyMessageId) {
     
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
       setSelectedReplyMessageText(null); 
     }
-    if (editingMessage) {
-      // Отправка отредактированного сообщения
-      handleEditMessage(editedMessage, editingMessage);
-    }
+    
      else {
       sendMessage(); 
     }
@@ -566,7 +567,7 @@ const [editedMessage, setEditedMessage] = useState('');
       {isChatMenuOpen === msg.id && (
           <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
             <button 
-              className={css.menuReplyButton}  
+              className={css.chatMenuMsgButton}  
               onClick={() => {
                 handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                 handleCloseChatMenu();
@@ -574,11 +575,10 @@ const [editedMessage, setEditedMessage] = useState('');
               Reply to message
             </button>
             <button className={css.d} onClick={handleCloseChatMenu}>X</button>
-            <button className={css.editButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
+            <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
             <button 
-              className={css.menuDeleteButton}  
+              className={css.chatMenuMsgButton}  
               onClick={() => {
-                // При клике на удаление вызываем функцию handleDeleteMessage
                 handleDeleteMessage(msg.id);
                 handleCloseChatMenu();
               }}>
