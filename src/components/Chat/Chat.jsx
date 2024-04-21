@@ -30,6 +30,7 @@ const Chat = () => {
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
+  const [imageText, setImageText] = useState('');
 const [editingMessage, setEditingMessage] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
@@ -613,18 +614,30 @@ const [editedMessage, setEditedMessage] = useState('');
                 </div>
               </div>
             )}
-            {selectedImage && (
+          </div>
+          {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
                   <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
                 </div>
+                <div className={css.imageInfo}>
+                  <p>{selectedImage.name}</p>
+                  <p>{(selectedImage.size / (1024 * 1024)).toFixed(2)} МБ</p>
+                  <input
+                    type="text"
+                    value={imageText}
+                    onChange={(e) => setImageText(e.target.value)}
+                    placeholder="Введите текст к изображению"
+                  />
+                </div>
                 <div className={css.buttons}>
-                <SendImgSVG className={css.sendImg} onClick={handleImageSend}/>
-                <ButtonReplyCloseSVG className={css.svgCloseReply} onClick={handleImageClose}/>
-              </div>
+                  <SendImgSVG className={css.sendImg} onClick={handleImageSend}/>
+                  <ButtonReplyCloseSVG className={css.svgCloseReply} onClick={handleImageClose}/>
+                </div>
               </div>
             )}
-          </div>
+
+
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
               <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />

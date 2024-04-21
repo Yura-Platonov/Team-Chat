@@ -762,24 +762,19 @@ width: 100%;
 
 .imgContainerUpload{
     border:1px solid black;
-    background: #024A7A80;
+    /* background: #024A7A80; */
     display: flex;
-    width: 100%;
     align-items: center;
     justify-content: space-between;
 
-    position: absolute;
-    bottom: 15.5%;
-    left: 0%;
-
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-radius: 20px;
+    border: 2px solid  #024A7A;
+    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    
     width: 100%;
     height: 150px;
     padding: 20px;
-    padding-right: 40px;
+    /* padding-right: 40px; */
 
 }
 
