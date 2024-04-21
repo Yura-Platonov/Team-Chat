@@ -739,7 +739,8 @@ width: 100%;
 
 .chatTextReply{
     color:  #0F1E28;
-    padding: 10px 10px 0 10px;
+    /* padding: 10px 10px 0 10px; */
+    padding-left: 10px;
     word-wrap: break-word;
 
     font-family: Manrope;
@@ -748,15 +749,23 @@ width: 100%;
     line-height: 130%; 
     max-height: 35px;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
+    @media screen and (max-width: 768px) {
+    max-width: 100px;
+    }
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
         font-size: 17px;
+        max-width: 400px;
+
       
     } 
     @media screen and (min-width: 1024px) {
 
         font-size: 20px;
+        max-width: 400px;
       }
 
   }
@@ -832,7 +841,7 @@ width: 100%;
     stroke: #024A7A;
     cursor: pointer;
     &:hover{
-        stroke: #fff;
+        stroke: #000;
     }
 }
 
@@ -841,7 +850,7 @@ width: 100%;
     fill:#024A7A;
 
     &:hover{
-        fill: #fff;
+        fill: #000;
     }
 }
 
@@ -904,4 +913,9 @@ right: 3%;
         max-width: 400px;
 
     } 
+  }
+
+  .replyContainerImgText{
+    display: flex;
+    margin-left: 10px;
   }

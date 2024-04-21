@@ -602,11 +602,16 @@ const [editedMessage, setEditedMessage] = useState('');
                 <IconReplySVG/>
                 <div className={css.replyContainerFlex}>
                   <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
-                  {selectedReplyMessageText ? (
-                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
-                  ) : (
-                    <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                  <div className={css.replyContainerImgText}>
+                  {selectedReplyMessageImage && (
+                    <div>
+                      <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                    </div>
                   )}
+                  {selectedReplyMessageText && (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  )}
+                  </div>
                 </div>
                 <div className={css.buttons}>
                   <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
