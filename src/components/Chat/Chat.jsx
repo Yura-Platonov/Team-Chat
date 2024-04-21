@@ -273,8 +273,6 @@ const [editedMessage, setEditedMessage] = useState('');
   
     try {
       const imageUrl = await uploadImage(selectedImage);
-
-      console.log(imageUrl);
   
       if (!imageUrl) {
         console.error('Failed to upload image.');
@@ -285,25 +283,24 @@ const [editedMessage, setEditedMessage] = useState('');
         const messageObject = {
           send: {
             original_message_id: null,
-            message: null, 
+            message: imageText || null,
             fileUrl: imageUrl,
           },
         };
   
-        console.log('Sending message:', messageObject);
-  
         const messageString = JSON.stringify(messageObject);
         socketRef.current.send(messageString);
   
-        setSelectedImage(null); 
-        setSelectedFilesCount(0);
+        setSelectedImage(null);
+        setImageText('');
       } else {
         console.error('WebSocket is not open. Message not sent.');
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error sending image:', error);
     }
   };
+  
   
  
 
