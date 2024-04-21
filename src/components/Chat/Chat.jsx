@@ -292,6 +292,7 @@ const [editedMessage, setEditedMessage] = useState('');
         socketRef.current.send(messageString);
   
         setSelectedImage(null);
+        setSelectedFilesCount(0);
         setImageText('');
       } else {
         console.error('WebSocket is not open. Message not sent.');
@@ -519,38 +520,39 @@ const [editedMessage, setEditedMessage] = useState('');
                     <span className={css.chat_sender}>{msg.sender}</span>
                     <span className={css.time}>{msg.formattedDate}</span>
                   </div>
-              {msg.message && msg.message.trim() !== '' ? (
-                    <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
-                      {msg.id_return && msg.id_return !== 0 ? (
-                        messages.map((message, index) => {
-                          if (message.id === msg.id_return) {
-                            return (
-                              <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
-                                <p className={css.replyMessageUsername}>{message.sender}</p>
-                                {message.message  ? (
-                                    <p className={css.replyMessageText}>{message.message}</p>
-                                  ) : (
-                                    <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />
-                                  )}
-                                <p className={css.messageTextReply}>{msg.message}</p>
-                                {/* <img className={css.ReplyMessageImage} alt='Reply'>{msg.fileUrl}</img> */}
-                              </div>
-                            );
-                          }
-                          return null;
-                        })
-                      ) : (
-                        <p>{msg.message}</p>
-                      )}
-                    </div>
-                  ) : msg.fileUrl ? (
-                    <img 
-                    src={msg.fileUrl} 
-                    alt="Uploaded" 
-                    className={css.imageContainer}
-                    onClick={() => setIsChatMenuOpen(msg.id)}
-                    />
-                  ) : null}
+                  {msg.message || msg.fileUrl ? (
+                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                       {msg.id_return && msg.id_return !== 0 ? (
+                          messages.map((message, index) => {
+                            if (message.id === msg.id_return) {
+                              return (
+                                <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                                  <p className={css.replyMessageUsername}>{message.sender}</p>
+                                  <div className={css.replyContent}>
+                                    {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                    {message.message && <p className={css.replyMessageText}>{message.message}</p>}
+                                  </div>
+                                  <p className={css.messageTextReply}>{msg.message}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })
+                        ) :(
+                          <div>
+                             {msg.fileUrl && (
+                              <img 
+                                src={msg.fileUrl} 
+                                alt="Uploaded" 
+                                className={css.imageInChat}
+                                onClick={() => setIsChatMenuOpen(msg.id)}
+                              />
+                            )}
+                             {msg.message && <p>{msg.message}</p>}
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
 
                   <div className={css.actions}>
                     {(msg.vote > 0 || hoveredMessageId === msg.id) && (
@@ -621,10 +623,11 @@ const [editedMessage, setEditedMessage] = useState('');
                   <p>{selectedImage.name}</p>
                   <p>{(selectedImage.size / (1024 * 1024)).toFixed(2)} МБ</p>
                   <input
+                    className={css.imgInput}
                     type="text"
                     value={imageText}
                     onChange={(e) => setImageText(e.target.value)}
-                    placeholder="Введите текст к изображению"
+                    placeholder="Write text to img"
                   />
                 </div>
                 <div className={css.buttons}>
