@@ -30,7 +30,9 @@ const Chat = () => {
   const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
-  // const [selectedMessageId, setSelectedMessageId] = useState(null);
+  const [imageText, setImageText] = useState('');
+const [editingMessage, setEditingMessage] = useState(null);
+const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -271,8 +273,6 @@ const Chat = () => {
   
     try {
       const imageUrl = await uploadImage(selectedImage);
-
-      console.log(imageUrl);
   
       if (!imageUrl) {
         console.error('Failed to upload image.');
@@ -283,25 +283,25 @@ const Chat = () => {
         const messageObject = {
           send: {
             original_message_id: null,
-            message: null, 
+            message: imageText || null,
             fileUrl: imageUrl,
           },
         };
   
-        console.log('Sending message:', messageObject);
-  
         const messageString = JSON.stringify(messageObject);
         socketRef.current.send(messageString);
   
-        setSelectedImage(null); 
+        setSelectedImage(null);
         setSelectedFilesCount(0);
+        setImageText('');
       } else {
         console.error('WebSocket is not open. Message not sent.');
       }
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error sending image:', error);
     }
   };
+  
   
  
 
@@ -379,15 +379,89 @@ const Chat = () => {
 
 
   const handleChatMessageSend = () => {
+    if (editingMessage) {
+      handleEditMessage(editedMessage, editingMessage);
+      setEditingMessage(null);    
+    }
     if (selectedReplyMessageId) {
     
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
       setSelectedReplyMessageText(null); 
-    } else {
+    }
+    
+     else {
       sendMessage(); 
     }
     setMessage('');
+  };
+
+
+  // const handleChatMessageSend = () => {
+  //   if (editingMessage) {
+  //     // Отправка отредактированного сообщения
+  //     handleEditMessage(editedMessage, editingMessage);
+  //   } else {
+  //     // Обычная отправка сообщения
+  //     sendMessage();
+  //   }
+  // };
+  // const handleEditMessage = (editedMessage, messageId) => {
+  //   if (!token) {
+  //     openLoginModal();
+  //     return;
+  //   }
+  
+  //   const editMessageObject = {
+  //     change_message: {
+  //       id: messageId,
+  //       message: editedMessage
+  //     }
+  //   };
+  
+  //   if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+  //     const editMessageString = JSON.stringify(editMessageObject);
+  //     socketRef.current.send(editMessageString);
+  //   } else {
+  //     console.error('WebSocket is not open. Edit message not sent.');
+  //     return;
+  //   }
+  
+  //   setMessages(prevMessages => {
+  //     return prevMessages.map(msg => {
+  //       if (msg.id === messageId) {
+  //         return { ...msg, message: editedMessage }; // Обновляем текст сообщения
+  //       }
+  //       return msg;
+  //     });
+  //   });
+  // };
+  
+
+  const handleDeleteMessage = (messageId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+  
+    const deleteMessageObject = {
+      delete_message: {
+        id: messageId
+      }
+    };
+  
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const deleteMessageString = JSON.stringify(deleteMessageObject);
+      socketRef.current.send(deleteMessageString);
+    } else {
+      console.error('WebSocket is not open. Delete message not sent.');
+    }
+    setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+  };
+  
+  const handleEditMessage = (editedMessage, messageId) => {
+    setEditingMessage(messageId);
+    setEditedMessage(editedMessage);
   };
 
   // useEffect(() => {
@@ -446,38 +520,39 @@ const Chat = () => {
                     <span className={css.chat_sender}>{msg.sender}</span>
                     <span className={css.time}>{msg.formattedDate}</span>
                   </div>
-              {msg.message && msg.message.trim() !== '' ? (
-                    <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
-                      {msg.id_return && msg.id_return !== 0 ? (
-                        messages.map((message, index) => {
-                          if (message.id === msg.id_return) {
-                            return (
-                              <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
-                                <p className={css.replyMessageUsername}>{message.sender}</p>
-                                {message.message  ? (
-                                    <p className={css.replyMessageText}>{message.message}</p>
-                                  ) : (
-                                    <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />
-                                  )}
-                                <p className={css.messageTextReply}>{msg.message}</p>
-                                {/* <img className={css.ReplyMessageImage} alt='Reply'>{msg.fileUrl}</img> */}
-                              </div>
-                            );
-                          }
-                          return null;
-                        })
-                      ) : (
-                        <p>{msg.message}</p>
-                      )}
-                    </div>
-                  ) : msg.fileUrl ? (
-                    <img 
-                    src={msg.fileUrl} 
-                    alt="Uploaded" 
-                    className={css.imageContainer}
-                    onClick={() => setIsChatMenuOpen(msg.id)}
-                    />
-                  ) : null}
+                  {msg.message || msg.fileUrl ? (
+                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                       {msg.id_return && msg.id_return !== 0 ? (
+                          messages.map((message, index) => {
+                            if (message.id === msg.id_return) {
+                              return (
+                                <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                                  <p className={css.replyMessageUsername}>{message.sender}</p>
+                                  <div className={css.replyContent}>
+                                    {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                    {message.message && <p className={css.replyMessageText}>{message.message}</p>}
+                                  </div>
+                                  <p className={css.messageTextReply}>{msg.message}</p>
+                                </div>
+                              );
+                            }
+                            return null;
+                          })
+                        ) :(
+                          <div>
+                             {msg.fileUrl && (
+                              <img 
+                                src={msg.fileUrl} 
+                                alt="Uploaded" 
+                                className={css.imageInChat}
+                                onClick={() => setIsChatMenuOpen(msg.id)}
+                              />
+                            )}
+                             {msg.message && <p>{msg.message}</p>}
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
 
                   <div className={css.actions}>
                     {(msg.vote > 0 || hoveredMessageId === msg.id) && (
@@ -492,7 +567,7 @@ const Chat = () => {
       {isChatMenuOpen === msg.id && (
           <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
             <button 
-              className={css.menuReplyButton}  
+              className={css.chatMenuMsgButton}  
               onClick={() => {
                 handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                 handleCloseChatMenu();
@@ -500,6 +575,15 @@ const Chat = () => {
               Reply to message
             </button>
             <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+            <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
+            <button 
+              className={css.chatMenuMsgButton}  
+              onClick={() => {
+                handleDeleteMessage(msg.id);
+                handleCloseChatMenu();
+              }}>
+              Delete Message
+            </button>
           </div>
       )}
             </div>
@@ -513,47 +597,52 @@ const Chat = () => {
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
             )}
-
-          {/* {selectedReplyMessageId && (
-                <div className={css.replyContainer}>
-                  <IconReplySVG/>
-                  <div className={css.replyContainerFlex}>
-                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
-                  <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
-                  </div>
-                  <div className={css.buttons}>
-                    <ButtonReplyCloseSVG onClick={handleCloseReply}/>
-                  </div>
-                </div>
-            )} */}
             {selectedReplyMessageId && (
               <div className={css.replyContainer}>
                 <IconReplySVG/>
                 <div className={css.replyContainerFlex}>
                   <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
-                  {selectedReplyMessageText ? (
-                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
-                  ) : (
-                    <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                  <div className={css.replyContainerImgText}>
+                  {selectedReplyMessageImage && (
+                    <div>
+                      <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                    </div>
                   )}
+                  {selectedReplyMessageText && (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  )}
+                  </div>
                 </div>
                 <div className={css.buttons}>
                   <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
                 </div>
               </div>
             )}
-            {selectedImage && (
+          </div>
+          {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
                   <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
                 </div>
+                <div className={css.imageInfo}>
+                  <p>{selectedImage.name}</p>
+                  <p>{(selectedImage.size / (1024 * 1024)).toFixed(2)} МБ</p>
+                  <input
+                    className={css.imgInput}
+                    type="text"
+                    value={imageText}
+                    onChange={(e) => setImageText(e.target.value)}
+                    placeholder="Write text to img"
+                  />
+                </div>
                 <div className={css.buttons}>
-                <SendImgSVG className={css.sendImg} onClick={handleImageSend}/>
-                <ButtonReplyCloseSVG className={css.svgCloseReply} onClick={handleImageClose}/>
-              </div>
+                  <SendImgSVG className={css.sendImg} onClick={handleImageSend}/>
+                  <ButtonReplyCloseSVG className={css.svgCloseReply} onClick={handleImageClose}/>
+                </div>
               </div>
             )}
-          </div>
+
+
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
               <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
@@ -563,7 +652,9 @@ const Chat = () => {
                 <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
               </label>
             </label>
-            <button className={css.button_send} onClick={handleChatMessageSend}>Send</button>
+            <button className={css.button_send} onClick={handleChatMessageSend}>
+              {editingMessage ? 'Edit' : 'Send'}
+            </button>
           </div>
         </div>
       </div>
