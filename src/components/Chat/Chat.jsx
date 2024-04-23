@@ -199,6 +199,7 @@ const [editedMessage, setEditedMessage] = useState('');
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
+    setEditedMessage(e.target.value);
   };
 
   const formatTime = (created) => {
@@ -359,6 +360,11 @@ const [editedMessage, setEditedMessage] = useState('');
       return;
     }
 
+    if (!replyMessage.trim() && !selectedReplyMessageImage) {
+      console.log('Reply message is empty. Not sending reply.');
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
         reply: {
@@ -384,7 +390,6 @@ const [editedMessage, setEditedMessage] = useState('');
       setEditingMessage(null);    
     }
     if (selectedReplyMessageId) {
-    
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
       setSelectedReplyMessageText(null); 
@@ -464,23 +469,7 @@ const [editedMessage, setEditedMessage] = useState('');
     setEditedMessage(editedMessage);
   };
 
-  // useEffect(() => {
-  //   const handleOutsideClick2 = (event) => {
-  //     const menuContainer2 = document.getElementById('chat-menu-container');
-
-  //     if (menuContainer2 && !menuContainer2.contains(event.target)) {
-  //       handleCloseChatMenu();
-  //     }
-  //   };
-
-  //   document.addEventListener('click', handleOutsideClick2);
-
-  //   return () => {
-  //     document.removeEventListener('click', handleOutsideClick2);
-  //   };
-  // }, []);
-
-  
+ 
   return (
     <div className={css.container}>
       <h2 className={css.title}>Topic: {roomName}</h2>
@@ -564,28 +553,44 @@ const [editedMessage, setEditedMessage] = useState('');
                   </div>
                 </div>
 
-      {isChatMenuOpen === msg.id && (
-          <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
-            <button 
-              className={css.chatMenuMsgButton}  
-              onClick={() => {
-                handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
-                handleCloseChatMenu();
-              }}>
-              Reply to message
-            </button>
-            <button className={css.d} onClick={handleCloseChatMenu}>X</button>
-            <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
-            <button 
-              className={css.chatMenuMsgButton}  
-              onClick={() => {
-                handleDeleteMessage(msg.id);
-                handleCloseChatMenu();
-              }}>
-              Delete Message
-            </button>
-          </div>
-      )}
+                {isChatMenuOpen === msg.id && (
+                  <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+                    {parseInt(currentUserId) === parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit message</button>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleDeleteMessage(msg.id);
+                            handleCloseChatMenu();
+                          }}>
+                          Delete Message
+                        </button>
+                      </div>
+                    )}
+                    {parseInt(currentUserId) !== parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                      </div>
+                    )}
+                    <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+                  </div>
+                )}
             </div>
           </div>
         ))}
@@ -645,7 +650,7 @@ const [editedMessage, setEditedMessage] = useState('');
 
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
-              <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <input type="text" id="message"  value={editingMessage ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
