@@ -463,11 +463,41 @@ const [editedMessage, setEditedMessage] = useState('');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
   };
-  
+
   const handleEditMessage = (editedMessage, messageId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+    
     setEditingMessage(messageId);
     setEditedMessage(editedMessage);
+
+    const editMessageObject = {
+      change_message: {
+        id: messageId,
+        message: editedMessage
+      }
+    };
+    
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const editMessageString = JSON.stringify(editMessageObject);
+      socketRef.current.send(editMessageString);
+    } else {
+      console.error('WebSocket is not open. Edit message not sent.');
+      return;
+    }
+    
+    setMessages(prevMessages => {
+      return prevMessages.map(msg => {
+        if (msg.id === messageId) {
+          return { ...msg, message: editedMessage };
+        }
+        return msg;
+      });
+    });
   };
+  
 
  
   return (
