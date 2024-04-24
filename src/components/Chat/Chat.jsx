@@ -32,6 +32,7 @@ const Chat = () => {
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
 const [editingMessage, setEditingMessage] = useState(null);
+const [editingMessageId, setEditingMessageId] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
@@ -385,10 +386,10 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
-    if (editingMessage) {
-      handleEditMessage(editedMessage, editingMessage);
-      setEditingMessage(null);    
-    }
+    // if (editingMessage) {
+    //   handleEditMessage(editedMessage, editingMessage);
+    //   setEditingMessage(null);    
+    // }
     if (selectedReplyMessageId) {
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
@@ -464,22 +465,26 @@ const [editedMessage, setEditedMessage] = useState('');
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
   };
 
-  const handleEditMessage = (editedMessage, messageId) => {
+  const handleEditMessageClick = (editedMessage,messageId) => {
+    console.log(editedMessage,messageId);
+    setEditingMessageId(messageId);
+    setEditingMessage(editedMessage);
+  }
+
+  const handleEditMessageSend = (editedMessage, messageId) => {
     if (!token) {
       openLoginModal();
       return;
     }
-    
-    setEditingMessage(messageId);
-    setEditedMessage(editedMessage);
 
     const editMessageObject = {
       change_message: {
-        id: messageId,
-        message: editedMessage
+        id: editingMessageId,
+        message: editingMessage
       }
     };
-    
+    console.log(editMessageObject);
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const editMessageString = JSON.stringify(editMessageObject);
       socketRef.current.send(editMessageString);
@@ -487,6 +492,9 @@ const [editedMessage, setEditedMessage] = useState('');
       console.error('WebSocket is not open. Edit message not sent.');
       return;
     }
+
+    setEditingMessage(null);
+
     
     setMessages(prevMessages => {
       return prevMessages.map(msg => {
@@ -595,7 +603,7 @@ const [editedMessage, setEditedMessage] = useState('');
                           }}>
                           Reply to message
                         </button>
-                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit message</button>
+                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessageClick(msg.message, msg.id)}>Edit message</button>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
@@ -687,9 +695,17 @@ const [editedMessage, setEditedMessage] = useState('');
                 <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
               </label>
             </label>
-            <button className={css.button_send} onClick={handleChatMessageSend}>
-              {editingMessage ? 'Edit' : 'Send'}
-            </button>
+            <div className={css.input_container}>
+                {editingMessage ? (
+                  <button className={css.button_send} onClick={handleEditMessageSend}>
+                    Edit
+                  </button>
+                ) : (
+                  <button className={css.button_send} onClick={handleChatMessageSend}>
+                    Send
+                  </button>
+                )}
+              </div>
           </div>
         </div>
       </div>
