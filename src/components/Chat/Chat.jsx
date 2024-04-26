@@ -386,10 +386,9 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
-    // if (editingMessage) {
-    //   handleEditMessage(editedMessage, editingMessage);
-    //   setEditingMessage(null);    
-    // }
+    if (editingMessageId) {
+      handleEditMessageSend(editedMessage, editingMessageId);
+    }
     if (selectedReplyMessageId) {
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
@@ -468,7 +467,7 @@ const [editedMessage, setEditedMessage] = useState('');
   const handleEditMessageClick = (editedMessage,messageId) => {
     console.log(editedMessage,messageId);
     setEditingMessageId(messageId);
-    setEditingMessage(editedMessage);
+    setEditedMessage(editedMessage);  
   }
 
   const handleEditMessageSend = (editedMessage, messageId) => {
@@ -476,15 +475,14 @@ const [editedMessage, setEditedMessage] = useState('');
       openLoginModal();
       return;
     }
-
+  
     const editMessageObject = {
       change_message: {
-        id: editingMessageId,
-        message: editingMessage
+        id: messageId, // Используйте messageId вместо editingMessageId
+        message: editedMessage
       }
     };
-    console.log(editMessageObject);
-
+    
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const editMessageString = JSON.stringify(editMessageObject);
       socketRef.current.send(editMessageString);
@@ -492,10 +490,10 @@ const [editedMessage, setEditedMessage] = useState('');
       console.error('WebSocket is not open. Edit message not sent.');
       return;
     }
-
-    setEditingMessage(null);
-
-    
+  
+    setEditingMessageId(null);
+    setEditedMessage('');
+  
     setMessages(prevMessages => {
       return prevMessages.map(msg => {
         if (msg.id === messageId) {
@@ -505,6 +503,7 @@ const [editedMessage, setEditedMessage] = useState('');
       });
     });
   };
+  
   
 
  
@@ -688,7 +687,7 @@ const [editedMessage, setEditedMessage] = useState('');
 
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
-              <input type="text" id="message"  value={editingMessage ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <input type="text" id="message" value={editingMessageId ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
