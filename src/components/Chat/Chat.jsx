@@ -31,7 +31,7 @@ const Chat = () => {
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
-const [editingMessage, setEditingMessage] = useState(null);
+const [editingMessage] = useState(null);
 const [editingMessageId, setEditingMessageId] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
