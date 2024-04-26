@@ -67,6 +67,15 @@ const RegistrationForm = (props) => {
     setActiveCardIndex(index);
   };
 
+  const [defaultAvatar] = imageOptions;
+
+  useEffect(() => {
+    if (imageOptions.length > 0) {
+      setSelectedAvatar(defaultAvatar);
+      setActiveCardIndex(0);
+    }
+  }, [defaultAvatar, imageOptions]);
+
   return (
     <Formik
       initialValues={{
@@ -74,6 +83,7 @@ const RegistrationForm = (props) => {
         email: '',
         password: '',
         confirmPassword: '',
+        avatar: defaultAvatar ? defaultAvatar.value : null,
       }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
