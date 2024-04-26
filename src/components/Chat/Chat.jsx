@@ -31,7 +31,8 @@ const Chat = () => {
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
-const [editingMessage, setEditingMessage] = useState(null);
+const [editingMessage] = useState(null);
+const [editingMessageId, setEditingMessageId] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
@@ -199,6 +200,7 @@ const [editedMessage, setEditedMessage] = useState('');
 
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
+    setEditedMessage(e.target.value);
   };
 
   const formatTime = (created) => {
@@ -359,6 +361,11 @@ const [editedMessage, setEditedMessage] = useState('');
       return;
     }
 
+    if (!replyMessage.trim() && !selectedReplyMessageImage) {
+      console.log('Reply message is empty. Not sending reply.');
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
         reply: {
@@ -379,12 +386,10 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
-    if (editingMessage) {
-      handleEditMessage(editedMessage, editingMessage);
-      setEditingMessage(null);    
+    if (editingMessageId) {
+      handleEditMessageSend(editedMessage, editingMessageId);
     }
     if (selectedReplyMessageId) {
-    
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
       setSelectedReplyMessageText(null); 
@@ -458,29 +463,50 @@ const [editedMessage, setEditedMessage] = useState('');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
   };
+
+  const handleEditMessageClick = (editedMessage,messageId) => {
+    console.log(editedMessage,messageId);
+    setEditingMessageId(messageId);
+    setEditedMessage(editedMessage);  
+  }
+
+  const handleEditMessageSend = (editedMessage, messageId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
   
-  const handleEditMessage = (editedMessage, messageId) => {
-    setEditingMessage(messageId);
-    setEditedMessage(editedMessage);
+    const editMessageObject = {
+      change_message: {
+        id: messageId, // Используйте messageId вместо editingMessageId
+        message: editedMessage
+      }
+    };
+    
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const editMessageString = JSON.stringify(editMessageObject);
+      socketRef.current.send(editMessageString);
+    } else {
+      console.error('WebSocket is not open. Edit message not sent.');
+      return;
+    }
+  
+    setEditingMessageId(null);
+    setEditedMessage('');
+  
+    setMessages(prevMessages => {
+      return prevMessages.map(msg => {
+        if (msg.id === messageId) {
+          return { ...msg, message: editedMessage };
+        }
+        return msg;
+      });
+    });
   };
-
-  // useEffect(() => {
-  //   const handleOutsideClick2 = (event) => {
-  //     const menuContainer2 = document.getElementById('chat-menu-container');
-
-  //     if (menuContainer2 && !menuContainer2.contains(event.target)) {
-  //       handleCloseChatMenu();
-  //     }
-  //   };
-
-  //   document.addEventListener('click', handleOutsideClick2);
-
-  //   return () => {
-  //     document.removeEventListener('click', handleOutsideClick2);
-  //   };
-  // }, []);
-
   
+  
+
+ 
   return (
     <div className={css.container}>
       <h2 className={css.title}>Topic: {roomName}</h2>
@@ -564,28 +590,44 @@ const [editedMessage, setEditedMessage] = useState('');
                   </div>
                 </div>
 
-      {isChatMenuOpen === msg.id && (
-          <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
-            <button 
-              className={css.chatMenuMsgButton}  
-              onClick={() => {
-                handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
-                handleCloseChatMenu();
-              }}>
-              Reply to message
-            </button>
-            <button className={css.d} onClick={handleCloseChatMenu}>X</button>
-            <button className={css.chatMenuMsgButton} onClick={() => handleEditMessage(msg.message, msg.id)}>Edit</button>
-            <button 
-              className={css.chatMenuMsgButton}  
-              onClick={() => {
-                handleDeleteMessage(msg.id);
-                handleCloseChatMenu();
-              }}>
-              Delete Message
-            </button>
-          </div>
-      )}
+                {isChatMenuOpen === msg.id && (
+                  <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+                    {parseInt(currentUserId) === parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessageClick(msg.message, msg.id)}>Edit message</button>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleDeleteMessage(msg.id);
+                            handleCloseChatMenu();
+                          }}>
+                          Delete Message
+                        </button>
+                      </div>
+                    )}
+                    {parseInt(currentUserId) !== parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                      </div>
+                    )}
+                    <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+                  </div>
+                )}
             </div>
           </div>
         ))}
@@ -645,16 +687,24 @@ const [editedMessage, setEditedMessage] = useState('');
 
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
-              <input type="text" id="message" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <input type="text" id="message" value={editingMessageId ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
                 <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
               </label>
             </label>
-            <button className={css.button_send} onClick={handleChatMessageSend}>
-              {editingMessage ? 'Edit' : 'Send'}
-            </button>
+            <div className={css.input_container}>
+                {editingMessage ? (
+                  <button className={css.button_send} onClick={handleEditMessageSend}>
+                    Edit
+                  </button>
+                ) : (
+                  <button className={css.button_send} onClick={handleChatMessageSend}>
+                    Send
+                  </button>
+                )}
+              </div>
           </div>
         </div>
       </div>
