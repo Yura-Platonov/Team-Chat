@@ -582,6 +582,7 @@ justify-content: space-between;
   }
 
   .imageInChat {
+    cursor: pointer;
     object-fit: contain;
     @media screen and (max-width: 768px) {
         max-width: 150px; 
@@ -832,6 +833,8 @@ width: 100%;
 } */
 
 .imgUpload{
+    cursor: pointer;
+
 @media screen and (max-width: 768px) {
     height: 70px;
 

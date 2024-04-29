@@ -637,7 +637,10 @@ const Chat = () => {
           {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
-                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
+                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`}  onClick={() => {
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(URL.createObjectURL(selectedImage));
+                    }} />
                 </div>
                 <div className={css.imageInfo}>
                   <p>{selectedImage.name}</p>
