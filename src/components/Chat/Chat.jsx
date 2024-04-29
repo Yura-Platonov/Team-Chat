@@ -553,7 +553,13 @@ const [editedMessage, setEditedMessage] = useState('');
                           }}>
                           Reply to message
                         </button>
-                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessageClick(msg.message, msg.id)}>Edit message</button>
+                        <button className={css.chatMenuMsgButton} 
+                           onClick={() => {
+                              handleEditMessageClick(msg.message, msg.id);
+                              handleCloseChatMenu();
+                          }}> 
+                          Edit message
+                        </button>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
