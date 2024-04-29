@@ -424,6 +424,12 @@ const [editedMessage, setEditedMessage] = useState('');
       openLoginModal();
       return;
     }
+
+    if (!editedMessage.trim()) {
+      console.log('Edited message is empty. Not sending edit.');
+      // Здесь вы можете показать пользователю предупреждение о том, что сообщение пустое
+      return;
+    }
   
     const editMessageObject = {
       change_message: {
