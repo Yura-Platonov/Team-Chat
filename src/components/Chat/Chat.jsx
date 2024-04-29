@@ -261,7 +261,7 @@ const Chat = () => {
         const imageUrl = response.data.public_url;
         setSelectedImage(imageUrl); 
         console.log(imageUrl);
-
+        document.getElementById('imageInput').value = '';
         return imageUrl; 
       } else {
         console.error('Failed to upload image');
@@ -681,7 +681,7 @@ const Chat = () => {
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-                <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
+                <input type="file" key={selectedFilesCount} id="imageInput" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
                 </label>
               </div>
             </label>
