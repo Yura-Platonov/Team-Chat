@@ -31,7 +31,6 @@ const Chat = () => {
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
-const [editingMessage] = useState(null);
 const [editingMessageId, setEditingMessageId] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
@@ -74,7 +73,7 @@ const [editedMessage, setEditedMessage] = useState('');
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
             return {
@@ -86,6 +85,7 @@ const [editedMessage, setEditedMessage] = useState('');
               id, 
               id_return,
               fileUrl,
+              edited,
             };
           });
 
@@ -110,7 +110,7 @@ const [editedMessage, setEditedMessage] = useState('');
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else if (messageData.id) {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
             const newMessage = {
@@ -122,7 +122,8 @@ const [editedMessage, setEditedMessage] = useState('');
               vote,
               formattedDate,
               receiver_id,
-              fileUrl
+              fileUrl,
+              edited,
             };
 
             setMessages(prevMessages => {
@@ -376,9 +377,9 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
-    if (editingMessageId) {
-      handleEditMessageSend(editedMessage, editingMessageId);
-    }
+    // if (editingMessageId) {
+    //   handleEditMessageSend(editedMessage, editingMessageId);
+    // }
     if (selectedReplyMessageId) {
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
@@ -412,13 +413,13 @@ const [editedMessage, setEditedMessage] = useState('');
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
   };
 
-  const handleEditMessageClick = (editedMessage,messageId) => {
+  const handleEditMessageClick = (editedMsg,messageId) => {
     console.log(editedMessage,messageId);
     setEditingMessageId(messageId);
-    setEditedMessage(editedMessage);  
+    setEditedMessage(editedMsg);  
   }
 
-  const handleEditMessageSend = (editedMessage, messageId) => {
+  const handleEditMessageSend = () => {
     if (!token) {
       openLoginModal();
       return;
@@ -426,10 +427,12 @@ const [editedMessage, setEditedMessage] = useState('');
   
     const editMessageObject = {
       change_message: {
-        id: messageId,
+        id: editingMessageId,
         message: editedMessage
       }
     };
+
+    console.log(editMessageObject);
     
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const editMessageString = JSON.stringify(editMessageObject);
@@ -441,17 +444,10 @@ const [editedMessage, setEditedMessage] = useState('');
   
     setEditingMessageId(null);
     setEditedMessage('');
-  
-    setMessages(prevMessages => {
-      return prevMessages.map(msg => {
-        if (msg.id === messageId) {
-          return { ...msg, message: editedMessage };
-        }
-        return msg;
-      });
-    });
+    setMessage('');
+
   };
-  
+
   
 
  
@@ -507,6 +503,7 @@ const [editedMessage, setEditedMessage] = useState('');
                                     {message.message && <p className={css.replyMessageText}>{message.message}</p>}
                                   </div>
                                   <p className={css.messageTextReply}>{msg.message}</p>
+                                  {msg.edited && <span className={css.editedText}>edited</span>}
                                 </div>
                               );
                             }
@@ -523,6 +520,7 @@ const [editedMessage, setEditedMessage] = useState('');
                               />
                             )}
                              {msg.message && <p>{msg.message}</p>}
+                             {msg.edited && <span className={css.editedText}>edited</span>}
                           </div>
                         )}
                       </div>
@@ -643,7 +641,7 @@ const [editedMessage, setEditedMessage] = useState('');
               </label>
             </label>
             <div className={css.input_container}>
-                {editingMessage ? (
+                {editingMessageId ? (
                   <button className={css.button_send} onClick={handleEditMessageSend}>
                     Edit
                   </button>
