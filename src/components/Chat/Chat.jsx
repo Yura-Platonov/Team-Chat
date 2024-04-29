@@ -448,6 +448,11 @@ const [editedMessage, setEditedMessage] = useState('');
 
   };
 
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditedMessage(''); 
+  };
+  
   
 
  
@@ -634,11 +639,16 @@ const [editedMessage, setEditedMessage] = useState('');
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
               <input type="text" id="message" value={editingMessageId ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <div className={css.containerFlex}>
+              {editingMessageId && (
+              <ButtonReplyCloseSVG className={css.svgCloseEdit} onClick={handleCancelEdit}/>
+              )}
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
                 <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
-              </label>
+                </label>
+              </div>
             </label>
             <div className={css.input_container}>
                 {editingMessageId ? (
