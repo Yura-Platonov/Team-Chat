@@ -12,6 +12,7 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -31,9 +32,11 @@ const Chat = () => {
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
-const [editingMessageId, setEditingMessageId] = useState(null);
-const [editedMessage, setEditedMessage] = useState('');  
-const [deletedMessages, setDeletedMessages] = useState([]);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editedMessage, setEditedMessage] = useState('');  
+  const [deletedMessages, setDeletedMessages] = useState([]);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -530,7 +533,11 @@ const [deletedMessages, setDeletedMessages] = useState([]);
                                 src={msg.fileUrl} 
                                 alt="Uploaded" 
                                 className={css.imageInChat}
-                                onClick={() => setIsChatMenuOpen(msg.id)}
+                                // onClick={() => setIsChatMenuOpen(msg.id)}
+                                onClick={() => {
+                                  setIsImageModalOpen(true);
+                                  setSelectedImageUrl(msg.fileUrl);
+                                }}
                               />
                             )}
                              {msg.message && <p>{msg.message}</p>}
@@ -681,6 +688,7 @@ const [deletedMessages, setDeletedMessages] = useState([]);
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      <ImageModal isOpen={isImageModalOpen} imageUrl={selectedImageUrl} onClose={() => setIsImageModalOpen(false)} />
       </div>
   );
 };
