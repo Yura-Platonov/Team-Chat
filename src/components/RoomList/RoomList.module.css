@@ -86,7 +86,6 @@
   }
 
   .room_item {
-    /* width: 170px; */
     width: 160px;
     height: 190px;
     margin: 10px;
@@ -98,6 +97,10 @@
     border: 2px solid  #024A7A;
     overflow: hidden;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+
+    @media screen and (max-width: 400px){
+      width:  calc(50% - 20px);
+  } 
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
       width: 230px;
@@ -195,24 +198,25 @@
 
 .room_description {
   display: flex;
-  justify-content: space-between;
   align-items: flex-start;
-
+gap: 15px;
   /* width: 170px; */
-  width: 100%;
+  width: 170px;
   height: 40px;
-  padding: 10px 15px;
+  padding: 10px 20px;
   box-sizing: border-box;
 
   background-color: #024A7A;
 
   @media screen and (min-width: 768px) and (max-width: 1023px){
-    /* width: 230px; */
+    justify-content: space-between;
+    width: 230px;
     height: 50px;
     padding: 14px;
 } 
 @media screen and (min-width: 1024px) {
-  /* width: 290px; */
+  justify-content: space-between;
+  width: 290px;
   height: 60px;
   padding: 18px;
   

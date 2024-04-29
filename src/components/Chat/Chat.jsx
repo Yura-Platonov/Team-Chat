@@ -365,7 +365,7 @@ const Chat = () => {
       return;
     }
 
-    if (!replyMessage.trim() && !selectedReplyMessageImage) {
+    if (!replyMessage.trim() || !selectedReplyMessageImage) {
       console.log('Reply message is empty. Not sending reply.');
       return;
     }
