@@ -12,6 +12,7 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
   const [message, setMessage] = useState('');
@@ -31,9 +32,12 @@ const Chat = () => {
   const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
   const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
   const [imageText, setImageText] = useState('');
-const [editingMessage] = useState(null);
-const [editingMessageId, setEditingMessageId] = useState(null);
-const [editedMessage, setEditedMessage] = useState('');  
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editedMessage, setEditedMessage] = useState('');  
+  const [deletedMessages, setDeletedMessages] = useState([]);
+  const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -74,7 +78,7 @@ const [editedMessage, setEditedMessage] = useState('');
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
             return {
@@ -86,6 +90,7 @@ const [editedMessage, setEditedMessage] = useState('');
               id, 
               id_return,
               fileUrl,
+              edited,
             };
           });
 
@@ -110,7 +115,7 @@ const [editedMessage, setEditedMessage] = useState('');
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
           } else if (messageData.id) {
-            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl } = messageData;
+            const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
             const newMessage = {
@@ -122,7 +127,8 @@ const [editedMessage, setEditedMessage] = useState('');
               vote,
               formattedDate,
               receiver_id,
-              fileUrl
+              fileUrl,
+              edited,
             };
 
             setMessages(prevMessages => {
@@ -255,7 +261,6 @@ const [editedMessage, setEditedMessage] = useState('');
         const imageUrl = response.data.public_url;
         setSelectedImage(imageUrl); 
         console.log(imageUrl);
-
         return imageUrl; 
       } else {
         console.error('Failed to upload image');
@@ -272,6 +277,12 @@ const [editedMessage, setEditedMessage] = useState('');
       console.error('No image selected.');
       return;
     }
+    if (isImageSending) {
+      console.log('Image is already being sent.');
+      return;
+    }
+
+    setIsImageSending(true);
   
     try {
       const imageUrl = await uploadImage(selectedImage);
@@ -302,12 +313,12 @@ const [editedMessage, setEditedMessage] = useState('');
     } catch (error) {
       console.error('Error sending image:', error);
     }
+   finally {
+    setIsImageSending(false);
+  }
   };
   
-  
- 
-
-  const handleImageChange = (event) => {
+    const handleImageChange = (event) => {
     const files = event.target.files;
     setSelectedFilesCount(files.length);
     const file = files[0];
@@ -341,14 +352,7 @@ const [editedMessage, setEditedMessage] = useState('');
     }
   };
 
-  // const handleSelectReplyMessage = (messageId, messageText, messageSender) => {
-  //   console.log(messageId, messageText);
-  //   setSelectedReplyMessageId(messageId);
-  //   setSelectedReplyMessageText(messageText);
-  //   setSelectedReplyMessageSender(messageSender);
-  // };
-
-  const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
+ const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
     setSelectedReplyMessageSender(messageSender);
@@ -386,9 +390,9 @@ const [editedMessage, setEditedMessage] = useState('');
 
 
   const handleChatMessageSend = () => {
-    if (editingMessageId) {
-      handleEditMessageSend(editedMessage, editingMessageId);
-    }
+    // if (editingMessageId) {
+    //   handleEditMessageSend(editedMessage, editingMessageId);
+    // }
     if (selectedReplyMessageId) {
       handleSendReply(message);
       setSelectedReplyMessageId(null); 
@@ -400,48 +404,6 @@ const [editedMessage, setEditedMessage] = useState('');
     }
     setMessage('');
   };
-
-
-  // const handleChatMessageSend = () => {
-  //   if (editingMessage) {
-  //     // Отправка отредактированного сообщения
-  //     handleEditMessage(editedMessage, editingMessage);
-  //   } else {
-  //     // Обычная отправка сообщения
-  //     sendMessage();
-  //   }
-  // };
-  // const handleEditMessage = (editedMessage, messageId) => {
-  //   if (!token) {
-  //     openLoginModal();
-  //     return;
-  //   }
-  
-  //   const editMessageObject = {
-  //     change_message: {
-  //       id: messageId,
-  //       message: editedMessage
-  //     }
-  //   };
-  
-  //   if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-  //     const editMessageString = JSON.stringify(editMessageObject);
-  //     socketRef.current.send(editMessageString);
-  //   } else {
-  //     console.error('WebSocket is not open. Edit message not sent.');
-  //     return;
-  //   }
-  
-  //   setMessages(prevMessages => {
-  //     return prevMessages.map(msg => {
-  //       if (msg.id === messageId) {
-  //         return { ...msg, message: editedMessage }; // Обновляем текст сообщения
-  //       }
-  //       return msg;
-  //     });
-  //   });
-  // };
-  
 
   const handleDeleteMessage = (messageId) => {
     if (!token) {
@@ -462,26 +424,36 @@ const [editedMessage, setEditedMessage] = useState('');
       console.error('WebSocket is not open. Delete message not sent.');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+      setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, messageId]);
+      console.log(deletedMessages);
+
   };
 
-  const handleEditMessageClick = (editedMessage,messageId) => {
+  const handleEditMessageClick = (editedMsg,messageId) => {
     console.log(editedMessage,messageId);
     setEditingMessageId(messageId);
-    setEditedMessage(editedMessage);  
+    setEditedMessage(editedMsg);  
   }
 
-  const handleEditMessageSend = (editedMessage, messageId) => {
+  const handleEditMessageSend = () => {
     if (!token) {
       openLoginModal();
+      return;
+    }
+
+    if (!editedMessage.trim()) {
+      console.log('Edited message is empty. Not sending edit.');
       return;
     }
   
     const editMessageObject = {
       change_message: {
-        id: messageId, // Используйте messageId вместо editingMessageId
+        id: editingMessageId,
         message: editedMessage
       }
     };
+
+    console.log(editMessageObject);
     
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const editMessageString = JSON.stringify(editMessageObject);
@@ -493,15 +465,13 @@ const [editedMessage, setEditedMessage] = useState('');
   
     setEditingMessageId(null);
     setEditedMessage('');
-  
-    setMessages(prevMessages => {
-      return prevMessages.map(msg => {
-        if (msg.id === messageId) {
-          return { ...msg, message: editedMessage };
-        }
-        return msg;
-      });
-    });
+    setMessage('');
+
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditedMessage(''); 
   };
   
   
@@ -559,6 +529,7 @@ const [editedMessage, setEditedMessage] = useState('');
                                     {message.message && <p className={css.replyMessageText}>{message.message}</p>}
                                   </div>
                                   <p className={css.messageTextReply}>{msg.message}</p>
+                                  {msg.edited && <span className={css.editedText}>edited</span>}
                                 </div>
                               );
                             }
@@ -571,10 +542,15 @@ const [editedMessage, setEditedMessage] = useState('');
                                 src={msg.fileUrl} 
                                 alt="Uploaded" 
                                 className={css.imageInChat}
-                                onClick={() => setIsChatMenuOpen(msg.id)}
+                                // onClick={() => setIsChatMenuOpen(msg.id)}
+                                onClick={() => {
+                                  setIsImageModalOpen(true);
+                                  setSelectedImageUrl(msg.fileUrl);
+                                }}
                               />
                             )}
                              {msg.message && <p>{msg.message}</p>}
+                             {msg.edited && <span className={css.editedText}>edited</span>}
                           </div>
                         )}
                       </div>
@@ -602,7 +578,13 @@ const [editedMessage, setEditedMessage] = useState('');
                           }}>
                           Reply to message
                         </button>
-                        <button className={css.chatMenuMsgButton} onClick={() => handleEditMessageClick(msg.message, msg.id)}>Edit message</button>
+                        <button className={css.chatMenuMsgButton} 
+                           onClick={() => {
+                              handleEditMessageClick(msg.message, msg.id);
+                              handleCloseChatMenu();
+                          }}> 
+                          Edit message
+                        </button>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
@@ -664,7 +646,10 @@ const [editedMessage, setEditedMessage] = useState('');
           {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
-                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`} />
+                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`}  onClick={() => {
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(URL.createObjectURL(selectedImage));
+                    }} />
                 </div>
                 <div className={css.imageInfo}>
                   <p>{selectedImage.name}</p>
@@ -688,14 +673,19 @@ const [editedMessage, setEditedMessage] = useState('');
           <div className={css.input_container}>
             <label htmlFor="message" className={css.input_label}>
               <input type="text" id="message" value={editingMessageId ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <div className={css.containerFlex}>
+              {editingMessageId && (
+              <ButtonReplyCloseSVG className={css.svgCloseEdit} onClick={handleCancelEdit}/>
+              )}
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-                <input type="file" accept="image/*" onChange={handleImageChange}  className={css.file_input} />
-              </label>
+                <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} />
+                </label>
+              </div>
             </label>
             <div className={css.input_container}>
-                {editingMessage ? (
+                {editingMessageId ? (
                   <button className={css.button_send} onClick={handleEditMessageSend}>
                     Edit
                   </button>
@@ -710,6 +700,7 @@ const [editedMessage, setEditedMessage] = useState('');
       </div>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      <ImageModal isOpen={isImageModalOpen} imageUrl={selectedImageUrl} onClose={() => setIsImageModalOpen(false)} />
       </div>
   );
 };
