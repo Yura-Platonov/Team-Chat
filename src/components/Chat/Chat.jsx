@@ -33,6 +33,7 @@ const Chat = () => {
   const [imageText, setImageText] = useState('');
 const [editingMessageId, setEditingMessageId] = useState(null);
 const [editedMessage, setEditedMessage] = useState('');  
+const [deletedMessages, setDeletedMessages] = useState([]);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -411,6 +412,9 @@ const [editedMessage, setEditedMessage] = useState('');
       console.error('WebSocket is not open. Delete message not sent.');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+      setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, messageId]);
+      console.log(deletedMessages);
+
   };
 
   const handleEditMessageClick = (editedMsg,messageId) => {
@@ -427,7 +431,6 @@ const [editedMessage, setEditedMessage] = useState('');
 
     if (!editedMessage.trim()) {
       console.log('Edited message is empty. Not sending edit.');
-      // Здесь вы можете показать пользователю предупреждение о том, что сообщение пустое
       return;
     }
   
