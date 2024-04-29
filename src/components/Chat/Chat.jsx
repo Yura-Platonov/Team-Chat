@@ -37,6 +37,7 @@ const Chat = () => {
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [editedMessage, setEditedMessage] = useState('');  
   const [deletedMessages, setDeletedMessages] = useState([]);
+  const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -277,6 +278,12 @@ const Chat = () => {
       console.error('No image selected.');
       return;
     }
+    if (isImageSending) {
+      console.log('Image is already being sent.');
+      return;
+    }
+
+    setIsImageSending(true);
   
     try {
       const imageUrl = await uploadImage(selectedImage);
@@ -307,6 +314,9 @@ const Chat = () => {
     } catch (error) {
       console.error('Error sending image:', error);
     }
+   finally {
+    setIsImageSending(false);
+  }
   };
   
     const handleImageChange = (event) => {
