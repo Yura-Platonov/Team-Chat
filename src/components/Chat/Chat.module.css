@@ -857,7 +857,7 @@ width: 100%;
 
 .ReplyMessageImage{
     height: 150px;
-    width: 150px;
+    max-width: 150px;
     padding-top: 10px;
     padding-bottom: 15px;
     /* border-bottom: 1.5px solid #024A7A; */
