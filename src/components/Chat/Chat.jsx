@@ -304,10 +304,7 @@ const [editedMessage, setEditedMessage] = useState('');
     }
   };
   
-  
- 
-
-  const handleImageChange = (event) => {
+    const handleImageChange = (event) => {
     const files = event.target.files;
     setSelectedFilesCount(files.length);
     const file = files[0];
@@ -341,14 +338,7 @@ const [editedMessage, setEditedMessage] = useState('');
     }
   };
 
-  // const handleSelectReplyMessage = (messageId, messageText, messageSender) => {
-  //   console.log(messageId, messageText);
-  //   setSelectedReplyMessageId(messageId);
-  //   setSelectedReplyMessageText(messageText);
-  //   setSelectedReplyMessageSender(messageSender);
-  // };
-
-  const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
+ const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
     setSelectedReplyMessageSender(messageSender);
@@ -401,48 +391,6 @@ const [editedMessage, setEditedMessage] = useState('');
     setMessage('');
   };
 
-
-  // const handleChatMessageSend = () => {
-  //   if (editingMessage) {
-  //     // Отправка отредактированного сообщения
-  //     handleEditMessage(editedMessage, editingMessage);
-  //   } else {
-  //     // Обычная отправка сообщения
-  //     sendMessage();
-  //   }
-  // };
-  // const handleEditMessage = (editedMessage, messageId) => {
-  //   if (!token) {
-  //     openLoginModal();
-  //     return;
-  //   }
-  
-  //   const editMessageObject = {
-  //     change_message: {
-  //       id: messageId,
-  //       message: editedMessage
-  //     }
-  //   };
-  
-  //   if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-  //     const editMessageString = JSON.stringify(editMessageObject);
-  //     socketRef.current.send(editMessageString);
-  //   } else {
-  //     console.error('WebSocket is not open. Edit message not sent.');
-  //     return;
-  //   }
-  
-  //   setMessages(prevMessages => {
-  //     return prevMessages.map(msg => {
-  //       if (msg.id === messageId) {
-  //         return { ...msg, message: editedMessage }; // Обновляем текст сообщения
-  //       }
-  //       return msg;
-  //     });
-  //   });
-  // };
-  
-
   const handleDeleteMessage = (messageId) => {
     if (!token) {
       openLoginModal();
@@ -478,7 +426,7 @@ const [editedMessage, setEditedMessage] = useState('');
   
     const editMessageObject = {
       change_message: {
-        id: messageId, // Используйте messageId вместо editingMessageId
+        id: messageId,
         message: editedMessage
       }
     };
