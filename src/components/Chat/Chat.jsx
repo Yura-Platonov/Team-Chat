@@ -333,10 +333,6 @@ const Chat = () => {
 
   };
   
-  // const handleRemoveImage = () => {
-  //   setSelectedImage(null);
-  // };
-
 
   const handleMouseEnter = (id) => {
     setHoveredMessageId(id);
@@ -542,8 +538,8 @@ const Chat = () => {
                                 src={msg.fileUrl} 
                                 alt="Uploaded" 
                                 className={css.imageInChat}
-                                // onClick={() => setIsChatMenuOpen(msg.id)}
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setIsImageModalOpen(true);
                                   setSelectedImageUrl(msg.fileUrl);
                                 }}
