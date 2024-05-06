@@ -1,14 +1,36 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { format, isToday, isYesterday } from 'date-fns';
+import { ReactComponent as LikeSVG } from 'components/Images/Like.svg';
+import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
+import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
+import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
+import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import ImageModal from 'components/Modal/ImageModal';
 import Bg from '../Images/Bg_empty_chat.png';
 import css from '../Chat/Chat.module.css';
+import axios from 'axios';
 
 const PersonalChat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-  
-  // const [hasMessages, setHasMessages] = useState(false);
-  // const [isDataReady, setIsDataReady] = useState(false);
+
+  const [userList, setUserList] = useState([]);
+  const [hoveredMessageId, setHoveredMessageId] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFilesCount, setSelectedFilesCount] = useState(0);
+  const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
+  const [selectedReplyMessageText, setSelectedReplyMessageText] = useState(null);
+  const [selectedReplyMessageImage, setselectedReplyMessageImage] = useState(null);
+  const [selectedReplyMessageSender, setSelectedReplyMessageSender] = useState(null);
+  const [imageText, setImageText] = useState('');
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedImageUrl, setSelectedImageUrl] = useState('');
+  const [editingMessageId, setEditingMessageId] = useState(null);
+  const [editedMessage, setEditedMessage] = useState('');  
+  const [deletedMessages, setDeletedMessages] = useState([]);
+  const [isImageSending, setIsImageSending] = useState(false);
+  const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+
   const [partnerId, setPartnerId] = useState(null);
   const currentUserId = localStorage.getItem('user_id');
 
@@ -37,23 +59,34 @@ const PersonalChat = () => {
         const messageData = JSON.parse(event.data);
         console.log('Received message:', messageData);
 
-        const { user_name: sender = 'Unknown Sender', created_at, sender_id, avatar, messages } = messageData;
+        const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
         const formattedDate = formatTime(created_at);
 
         const newMessage = {
           sender,
           avatar,
-          sender_id,
-          message: messages,
+          message,
+          id,
+          id_return,
+          vote,
           formattedDate,
+          receiver_id,
+          fileUrl,
+          edited,
         };
 
-        setMessages(prevMessages => [...prevMessages, newMessage]);
-        // setHasMessages(true);
+        setMessages(prevMessages => {
+              const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
 
-        if (messageContainerRef.current) {
-          messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-        }
+              if (existingMessageIndex !== -1) {
+                const updatedMessages = [...prevMessages];
+                updatedMessages[existingMessageIndex] = newMessage;
+                return updatedMessages;
+              }
+
+              return [...prevMessages, newMessage];
+            });
+          
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
@@ -71,13 +104,8 @@ const PersonalChat = () => {
 
   }, [partnerId, token]);
 
-  // useEffect(() => {
-  //   setIsDataReady(true);
-  // }, []);
-
+ 
   useEffect(() => {
-    // setIsDataReady(true);
-
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
@@ -104,18 +132,24 @@ const PersonalChat = () => {
 
   const sendMessage = () => {
     try {
-      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-        const messageObject = {
-          messages: message,
-        };
+      const trimmedMessage = message.trim();
+    if (!trimmedMessage) {
+      console.log('No message to send.');
+      console.log(trimmedMessage);
+      return;
+    }
 
-        const trimmedMessage = message.trim();
-        if (!trimmedMessage) {
-          return;
-        }
-    
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        const messageObject = {
+        send: {
+          original_message_id: selectedReplyMessageId || null,
+          message: trimmedMessage || null, 
+          fileUrl:  null,
+        },
+      };
+
+      console.log(messageObject);
         const messageString = JSON.stringify(messageObject);
-        console.log('Sending message:', messageObject);
         socketRef.current.send(messageString);
 
         setMessage('');
@@ -128,11 +162,243 @@ const PersonalChat = () => {
     }
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      sendMessage();
+
+  const handleCloseChatMenu = () => {
+    setIsChatMenuOpen(false);
+  };
+
+  const handleCloseReply = () => {
+    setSelectedReplyMessageId(null);
+  };
+
+  const handleLikeClick = (id) => {
+    const requestData = {
+      "vote": {
+        message_id: id,
+        dir: 1
+      }
+    };
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const messageString = JSON.stringify(requestData);
+      socketRef.current.send(messageString);
+    } else {
+      console.error('WebSocket is not open. Message not sent.');
     }
   };
+
+  const uploadImage = async () => {
+    try {
+      const formData = new FormData();
+      formData.append('file', selectedImage);
+
+      console.log(selectedImage);
+      console.log(formData);
+
+      // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+      const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
+
+      if (response && response.data) {
+        const imageUrl = response.data;
+        // const imageUrl = response.data.public_url;
+        setSelectedImage(imageUrl); 
+        console.log(imageUrl);
+        return imageUrl; 
+      } else {
+        console.error('Failed to upload image');
+        return null;
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      return null;
+    }
+  };
+  
+  const handleImageSend = async () => {
+    if (!selectedImage) {
+      console.error('No image selected.');
+      return;
+    }
+    if (isImageSending) {
+      console.log('Image is already being sent.');
+      return;
+    }
+
+    setIsImageSending(true);
+  
+    try {
+      const imageUrl = await uploadImage(selectedImage);
+  
+      if (!imageUrl) {
+        console.error('Failed to upload image.');
+        return;
+      }
+  
+      if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+        const messageObject = {
+          send: {
+            original_message_id: null,
+            message: imageText || null,
+            fileUrl: imageUrl,
+          },
+        };
+  
+        const messageString = JSON.stringify(messageObject);
+        socketRef.current.send(messageString);
+  
+        setSelectedImage(null);
+        setSelectedFilesCount(0);
+        setImageText('');
+      } else {
+        console.error('WebSocket is not open. Message not sent.');
+      }
+    } catch (error) {
+      console.error('Error sending image:', error);
+    }
+   finally {
+    setIsImageSending(false);
+  }
+  };
+  
+    const handleImageChange = (event) => {
+    const files = event.target.files;
+    setSelectedFilesCount(files.length);
+    const file = files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+
+    const handleImageClose = () =>{
+    setSelectedImage(null);
+    setSelectedFilesCount(0);
+
+  };
+  
+
+  const handleMouseEnter = (id) => {
+    setHoveredMessageId(id);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredMessageId(null);
+  };
+  
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      handleChatMessageSend();
+    }
+  };
+
+ const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
+    setSelectedReplyMessageId(messageId);
+    setSelectedReplyMessageText(messageText);
+    setSelectedReplyMessageSender(messageSender);
+    setselectedReplyMessageImage(imageUrl); 
+  };
+
+  const handleSendReply = async (replyMessage) => {
+      if (!replyMessage.trim() || !selectedReplyMessageImage) {
+      console.log('Reply message is empty. Not sending reply.');
+      return;
+    }
+
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const replyData = {
+        reply: {
+          original_message_id: selectedReplyMessageId,
+          message: replyMessage,
+          fileUrl: selectedReplyMessageImage
+        }
+      };
+      console.log('Preparing to send reply:', replyData);
+
+      const messageString = JSON.stringify(replyData);
+      socketRef.current.send(messageString);
+      console.log('Reply successfully sent.');
+    } else {
+      console.error('WebSocket is not open. Reply message not sent.');
+    }
+  };
+
+
+  const handleChatMessageSend = () => {
+    // if (editingMessageId) {
+    //   handleEditMessageSend(editedMessage, editingMessageId);
+    // }
+    if (selectedReplyMessageId) {
+      handleSendReply(message);
+      setSelectedReplyMessageId(null); 
+      setSelectedReplyMessageText(null); 
+    }
+    
+     else {
+      sendMessage(); 
+    }
+    setMessage('');
+  };
+
+  const handleDeleteMessage = (messageId) => {
+        const deleteMessageObject = {
+      delete_message: {
+        id: messageId
+      }
+    };
+  
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const deleteMessageString = JSON.stringify(deleteMessageObject);
+      socketRef.current.send(deleteMessageString);
+    } else {
+      console.error('WebSocket is not open. Delete message not sent.');
+    }
+    setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
+      setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, messageId]);
+      console.log(deletedMessages);
+
+  };
+
+  const handleEditMessageClick = (editedMsg,messageId) => {
+    console.log(editedMessage,messageId);
+    setEditingMessageId(messageId);
+    setEditedMessage(editedMsg);  
+  }
+
+  const handleEditMessageSend = () => {
+    if (!editedMessage.trim()) {
+      console.log('Edited message is empty. Not sending edit.');
+      return;
+    }
+  
+    const editMessageObject = {
+      change_message: {
+        id: editingMessageId,
+        message: editedMessage
+      }
+    };
+
+    console.log(editMessageObject);
+    
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      const editMessageString = JSON.stringify(editMessageObject);
+      socketRef.current.send(editMessageString);
+    } else {
+      console.error('WebSocket is not open. Edit message not sent.');
+      return;
+    }
+  
+    setEditingMessageId(null);
+    setEditedMessage('');
+    setMessage('');
+
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditedMessage(''); 
+  };
+  
+  
+
 
   return (
     <div className={css.container}>
