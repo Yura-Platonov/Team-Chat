@@ -13,8 +13,6 @@ import axios from 'axios';
 const PersonalChat = () => {
   const [message, setMessage] = useState('');
   const [messages, setMessages] = useState([]);
-
-  const [userList, setUserList] = useState([]);
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
@@ -404,41 +402,204 @@ const PersonalChat = () => {
     <div className={css.container}>
       <h2 className={css.title}>Direct chat: </h2>
       <div className={css.main_container}>
-        <div className={css.chat_container}>
+      <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
-          { messages.length === 0 && (
-            <div className={css.no_messages}>
-              <img src={Bg} alt="No messages" className={css.no_messagesImg} />
-              <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
-            </div>
-          )}
-            {messages.map((msg, index) => (
-              <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.sender_id) ? css.my_message : ''}`}>
-                <div className={css.chat}>
+            { messages.length === 0 && (
+              <div className={css.no_messages}>
+                <img src={Bg} alt="No messages" className={css.no_messagesImg} />
+                <p className={css.no_messages_text}>Oops... There are no messages here yet. Write first!</p>
+              </div>
+            )}
+           {messages.map((msg, index) => (
+            <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+            <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
                   <img
-                    src={msg.avatar}
-                    alt={`${msg.sender}'s Avatar`}
-                    className={css.chat_avatar}
-                  />
-                  <div className={css.chat_div}>
-                    <div className={css.chat_nicktime}>
-                      <span className={css.chat_sender}>{msg.sender}</span>
-                      <span className={css.time}>{msg.formattedDate}</span>
-                    </div>
-                    <p className={css.messageText}>{msg.message}</p>
+                  src={msg.avatar}
+                  alt={`${msg.sender}'s Avatar`}
+                  className={css.chat_avatar}
+                  // onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
+                />
+                <div className={css.chat_div}>
+                  <div className={css.chat_nicktime}>
+                    <span className={css.chat_sender}>{msg.sender}</span>
+                    <span className={css.time}>{msg.formattedDate}</span>
+                  </div>
+                  {msg.message || msg.fileUrl ? (
+                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                       {msg.id_return && msg.id_return !== 0 ? (
+                          messages.map((message, index) => {
+                            if (message.id === msg.id_return) {
+                              return (
+                                <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                                  <p className={css.replyMessageUsername}>{message.sender}</p>
+                                  <div className={css.replyContent}>
+                                    {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                    {message.message && <p className={css.replyMessageText}>{message.message}</p>}
+                                  </div>
+                                  <p className={css.messageTextReply}>{msg.message}</p>
+                                  {msg.edited && <span className={css.editedText}>edited</span>}
+                                </div>
+                              );
+                            }
+                            return null;
+                          })
+                        ) :(
+                          <div>
+                             {msg.fileUrl && (
+                              <img 
+                                src={msg.fileUrl} 
+                                alt="Uploaded" 
+                                className={css.imageInChat}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setIsImageModalOpen(true);
+                                  setSelectedImageUrl(msg.fileUrl);
+                                }}
+                              />
+                            )}
+                             {msg.message && <p>{msg.message}</p>}
+                             {msg.edited && <span className={css.editedText}>edited</span>}
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
+
+                  <div className={css.actions}>
+                    {(msg.vote > 0 || hoveredMessageId === msg.id) && (
+                      <div className={css.likeContainer} onClick={() => handleLikeClick(msg.id)}>
+                        <LikeSVG className={css.like} />
+                        {msg.vote !== 0 && <span>{msg.vote}</span>}
+                      </div>
+                    )}
                   </div>
                 </div>
-              </div>
-            ))}
+
+                {isChatMenuOpen === msg.id && (
+                  <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+                    {parseInt(currentUserId) === parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                        <button className={css.chatMenuMsgButton} 
+                           onClick={() => {
+                              handleEditMessageClick(msg.message, msg.id);
+                              handleCloseChatMenu();
+                          }}> 
+                          Edit message
+                        </button>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleDeleteMessage(msg.id);
+                            handleCloseChatMenu();
+                          }}>
+                          Delete Message
+                        </button>
+                      </div>
+                    )}
+                    {parseInt(currentUserId) !== parseInt(msg.receiver_id) && (
+                      <div>
+                        <button 
+                          className={css.chatMenuMsgButton}  
+                          onClick={() => {
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleCloseChatMenu();
+                          }}>
+                          Reply to message
+                        </button>
+                      </div>
+                    )}
+                    <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+                  </div>
+                )}
+            </div>
           </div>
+        ))}
+
+            {selectedReplyMessageId && (
+              <div className={css.replyContainer}>
+                <IconReplySVG/>
+                <div className={css.replyContainerFlex}>
+                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
+                  <div className={css.replyContainerImgText}>
+                  {selectedReplyMessageImage && (
+                    <div>
+                      <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                    </div>
+                  )}
+                  {selectedReplyMessageText && (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  )}
+                  </div>
+                </div>
+                <div className={css.buttons}>
+                  <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
+                </div>
+              </div>
+            )}
+          </div>
+          {selectedImage && (
+              <div className={css.imgContainerUpload}>
+                <div className={css.imgUploadDiv}>
+                  <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`}  onClick={() => {
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(URL.createObjectURL(selectedImage));
+                    }} />
+                </div>
+                <div className={css.imageInfo}>
+                  <p>{selectedImage.name}</p>
+                  <p>{(selectedImage.size / (1024 * 1024)).toFixed(2)} МБ</p>
+                  <input
+                    className={css.imgInput}
+                    type="text"
+                    value={imageText}
+                    onChange={(e) => setImageText(e.target.value)}
+                    placeholder="Write text to img"
+                  />
+                </div>
+                <div className={css.buttons}>
+                  <SendImgSVG className={css.sendImg} onClick={handleImageSend}/>
+                  <ButtonReplyCloseSVG className={css.svgCloseReply} onClick={handleImageClose}/>
+                </div>
+              </div>
+            )}
+
+
           <div className={css.input_container}>
-            <input type="text" value={message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text}/>
-            <button onClick={sendMessage} className={css.button_send}>
-              Send
-            </button>
+            <label htmlFor="message" className={css.input_label}>
+              <input type="text" id="message" value={editingMessageId ? editedMessage : message} onChange={handleMessageChange} onKeyDown={handleKeyDown} placeholder="Write message" className={css.input_text} />
+              <div className={css.containerFlex}>
+              {editingMessageId && (
+              <ButtonReplyCloseSVG className={css.svgCloseEdit} onClick={handleCancelEdit}/>
+              )}
+              <label className={css.file_input_label}>
+                <AddFileSVG className={css.add_file_icon} />
+                {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
+                <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} />
+                </label>
+              </div>
+            </label>
+            <div className={css.input_container}>
+                {editingMessageId ? (
+                  <button className={css.button_send} onClick={handleEditMessageSend}>
+                    Edit
+                  </button>
+                ) : (
+                  <button className={css.button_send} onClick={handleChatMessageSend}>
+                    Send
+                  </button>
+                )}
+              </div>
           </div>
         </div>
       </div>
+      <ImageModal isOpen={isImageModalOpen} imageUrl={selectedImageUrl} onClose={() => setIsImageModalOpen(false)} />
     </div>
   );
 };
