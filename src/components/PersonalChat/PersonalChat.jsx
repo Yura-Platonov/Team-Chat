@@ -128,9 +128,8 @@ const PersonalChat = () => {
     setMessage(e.target.value);
   };
 
-  const sendMessage = () => {
-    try {
-      const trimmedMessage = message.trim();
+  const sendMessage = async() => {
+    const trimmedMessage = message.trim();
     if (!trimmedMessage) {
       console.log('No message to send.');
       console.log(trimmedMessage);
@@ -147,6 +146,7 @@ const PersonalChat = () => {
       };
 
       console.log(messageObject);
+      
         const messageString = JSON.stringify(messageObject);
         socketRef.current.send(messageString);
 
@@ -155,9 +155,7 @@ const PersonalChat = () => {
         console.error('WebSocket is not open. Message not sent. Current readyState:', socketRef.current.readyState);
         throw new Error('WebSocket is not open. Message not sent.');
       }
-    } catch (error) {
-      console.error(error.message);
-    }
+    
   };
 
 
