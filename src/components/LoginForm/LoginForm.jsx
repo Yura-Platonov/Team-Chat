@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import css from './LoginForm.module.css';
 
-import { useAuth } from './AuthContext'; // Изменил импорт на использование useAuth хука
+import { useAuth } from './AuthContext';
 import LoginErrorModal from '../Modal/LoginErrorModal';
 import PasswordRecoveryEmailModal from '../Modal/PasswordRecoveryEmailModal';
 
@@ -74,9 +74,9 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
           if (response.status === 200) {
             const { access_token, refresh_token } = response.data;
             localStorage.setItem('access_token', access_token);
-            localStorage.setItem('refresh_token', refresh_token); // Сохраняем refresh token
+            localStorage.setItem('refresh_token', refresh_token); 
 
-            login(access_token, refresh_token, values.username); // Обновленный вызов функции login с передачей refresh token
+            login(access_token, refresh_token, values.username);
             onClose();
             console.log('User logged in');
           } else {
