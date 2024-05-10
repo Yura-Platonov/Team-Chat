@@ -129,7 +129,7 @@ const PersonalChat = () => {
         const messageObject = {
         send: {
           original_message_id: selectedReplyMessageId || null,
-          message: trimmedMessage || null, 
+          messages: trimmedMessage || null, 
           fileUrl:  null,
         },
       };
@@ -231,7 +231,7 @@ const PersonalChat = () => {
         const messageObject = {
           send: {
             original_message_id: null,
-            message: imageText || null,
+            messages: imageText || null,
             fileUrl: imageUrl,
           },
         };
@@ -310,7 +310,6 @@ const PersonalChat = () => {
 
       const messageString = JSON.stringify(replyData);
       socketRef.current.send(messageString);
-      console.log('Reply successfully sent.');
     } else {
       console.error('WebSocket is not open. Reply message not sent.');
     }
@@ -431,7 +430,7 @@ const PersonalChat = () => {
                                   <p className={css.replyMessageUsername}>{message.sender}</p>
                                   <div className={css.replyContent}>
                                     {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
-                                    {message.message && <p className={css.replyMessageText}>{messages.message}</p>}
+                                    {message.messages && <p className={css.replyMessageText}>{message.messages}</p>}
                                   </div>
                                   <p className={css.messageTextReply}>{msg.messages}</p>
                                   {msg.edited && <span className={css.editedText}>edited</span>}
@@ -541,6 +540,7 @@ const PersonalChat = () => {
               </div>
             )}
           </div>
+
           {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>

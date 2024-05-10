@@ -479,7 +479,7 @@ const Chat = () => {
  
   return (
     <div className={css.container}>
-      <h2 className={css.title}>Topic: {roomName}</h2>
+      <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
           <h3 className={css.members_title}>Chat members</h3>
