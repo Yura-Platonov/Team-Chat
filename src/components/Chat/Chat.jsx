@@ -255,10 +255,12 @@ const Chat = () => {
       console.log(selectedImage);
       console.log(formData);
 
-      const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+      // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
+      const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
 
-      if (response && response.data && response.data.filename && response.data.public_url) {
-        const imageUrl = response.data.public_url;
+      if (response && response.data) {
+        const imageUrl = response.data;
+        // const imageUrl = response.data.public_url;
         setSelectedImage(imageUrl); 
         console.log(imageUrl);
         return imageUrl; 
@@ -333,10 +335,6 @@ const Chat = () => {
 
   };
   
-  // const handleRemoveImage = () => {
-  //   setSelectedImage(null);
-  // };
-
 
   const handleMouseEnter = (id) => {
     setHoveredMessageId(id);
@@ -360,12 +358,14 @@ const Chat = () => {
   };
 
   const handleSendReply = async (replyMessage) => {
+    console.log(replyMessage);
+
     if (!token) {
       openLoginModal();
       return;
     }
 
-    if (!replyMessage.trim() || !selectedReplyMessageImage) {
+    if (!replyMessage.trim()) {
       console.log('Reply message is empty. Not sending reply.');
       return;
     }
@@ -542,8 +542,8 @@ const Chat = () => {
                                 src={msg.fileUrl} 
                                 alt="Uploaded" 
                                 className={css.imageInChat}
-                                // onClick={() => setIsChatMenuOpen(msg.id)}
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setIsImageModalOpen(true);
                                   setSelectedImageUrl(msg.fileUrl);
                                 }}
