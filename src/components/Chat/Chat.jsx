@@ -358,12 +358,14 @@ const Chat = () => {
   };
 
   const handleSendReply = async (replyMessage) => {
+    console.log(replyMessage);
+
     if (!token) {
       openLoginModal();
       return;
     }
 
-    if (!replyMessage.trim() || !selectedReplyMessageImage) {
+    if (!replyMessage.trim()) {
       console.log('Reply message is empty. Not sending reply.');
       return;
     }

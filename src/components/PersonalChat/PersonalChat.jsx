@@ -57,18 +57,18 @@ const PersonalChat = () => {
         const messageData = JSON.parse(event.data);
         console.log('Received message:', messageData);
 
-        const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
+        const { user_name: sender = 'Unknown Sender', sender_id, created_at, avatar, messages, id, id_return, vote, fileUrl,edited, } = messageData;
         const formattedDate = formatTime(created_at);
 
         const newMessage = {
           sender,
           avatar,
-          message,
+          messages,
           id,
           id_return,
           vote,
           formattedDate,
-          receiver_id,
+          sender_id,
           fileUrl,
           edited,
         };
@@ -109,23 +109,12 @@ const PersonalChat = () => {
     }
   }, [messages]);
 
-  const formatTime = (created) => {
-    const dateTime = new Date(created);
-    const now = new Date();
-    const yesterday = new Date(now);
-    yesterday.setDate(now.getDate() - 1);
-
-    if (isToday(dateTime)) {
-      return format(dateTime, 'HH:mm');
-    } else if (isYesterday(dateTime)) {
-      return `yesterday ${format(dateTime, 'HH:mm')}`;
-    } else {
-      return format(dateTime, 'dd MMM HH:mm');
-    }
+  const handleCloseChatMenu = () => {
+    setIsChatMenuOpen(false);
   };
-
-  const handleMessageChange = (e) => {
-    setMessage(e.target.value);
+  
+  const handleCloseReply = () => {
+    setSelectedReplyMessageId(null);
   };
 
   const sendMessage = async() => {
@@ -152,19 +141,27 @@ const PersonalChat = () => {
 
         setMessage('');
       } else {
-        console.error('WebSocket is not open. Message not sent. Current readyState:', socketRef.current.readyState);
-        throw new Error('WebSocket is not open. Message not sent.');
+        console.error('WebSocket is not open. Message not sent.');
       }
-    
   };
 
-
-  const handleCloseChatMenu = () => {
-    setIsChatMenuOpen(false);
+  const handleMessageChange = (e) => {
+    setMessage(e.target.value);
   };
 
-  const handleCloseReply = () => {
-    setSelectedReplyMessageId(null);
+  const formatTime = (created) => {
+    const dateTime = new Date(created);
+    const now = new Date();
+    const yesterday = new Date(now);
+    yesterday.setDate(now.getDate() - 1);
+
+    if (isToday(dateTime)) {
+      return format(dateTime, 'HH:mm');
+    } else if (isYesterday(dateTime)) {
+      return `yesterday ${format(dateTime, 'HH:mm')}`;
+    } else {
+      return format(dateTime, 'dd MMM HH:mm');
+    }
   };
 
   const handleLikeClick = (id) => {
@@ -294,7 +291,9 @@ const PersonalChat = () => {
   };
 
   const handleSendReply = async (replyMessage) => {
-      if (!replyMessage.trim() || !selectedReplyMessageImage) {
+    console.log(replyMessage);
+      // if (!replyMessage.trim() || !selectedReplyMessageImage) {
+        if (!replyMessage.trim()) {
       console.log('Reply message is empty. Not sending reply.');
       return;
     }
@@ -409,7 +408,7 @@ const PersonalChat = () => {
               </div>
             )}
            {messages.map((msg, index) => (
-            <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message : ''}`}>
+            <div key={index} className={`${css.chat_message} ${parseInt(currentUserId) === parseInt(msg.sender_id) ? css.my_message : ''}`}>
             <div className={css.chat} onMouseEnter={() => handleMouseEnter(msg.id)} onMouseLeave={handleMouseLeave}>
                   <img
                   src={msg.avatar}
@@ -422,8 +421,8 @@ const PersonalChat = () => {
                     <span className={css.chat_sender}>{msg.sender}</span>
                     <span className={css.time}>{msg.formattedDate}</span>
                   </div>
-                  {msg.message || msg.fileUrl ? (
-                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                  {msg.messages || msg.fileUrl ? (
+                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.sender_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
                        {msg.id_return && msg.id_return !== 0 ? (
                           messages.map((message, index) => {
                             if (message.id === msg.id_return) {
@@ -432,9 +431,9 @@ const PersonalChat = () => {
                                   <p className={css.replyMessageUsername}>{message.sender}</p>
                                   <div className={css.replyContent}>
                                     {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
-                                    {message.message && <p className={css.replyMessageText}>{message.message}</p>}
+                                    {message.message && <p className={css.replyMessageText}>{messages.message}</p>}
                                   </div>
-                                  <p className={css.messageTextReply}>{msg.message}</p>
+                                  <p className={css.messageTextReply}>{msg.messages}</p>
                                   {msg.edited && <span className={css.editedText}>edited</span>}
                                 </div>
                               );
@@ -455,7 +454,7 @@ const PersonalChat = () => {
                                 }}
                               />
                             )}
-                             {msg.message && <p>{msg.message}</p>}
+                             {msg.messages && <p>{msg.messages}</p>}
                              {msg.edited && <span className={css.editedText}>edited</span>}
                           </div>
                         )}
@@ -474,19 +473,19 @@ const PersonalChat = () => {
 
                 {isChatMenuOpen === msg.id && (
                   <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
-                    {parseInt(currentUserId) === parseInt(msg.receiver_id) && (
+                    {parseInt(currentUserId) === parseInt(msg.sender_id) && (
                       <div>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
-                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleSelectReplyMessage(msg.id, msg.messages, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
                           Reply to message
                         </button>
                         <button className={css.chatMenuMsgButton} 
                            onClick={() => {
-                              handleEditMessageClick(msg.message, msg.id);
+                              handleEditMessageClick(msg.messages, msg.id);
                               handleCloseChatMenu();
                           }}> 
                           Edit message
@@ -501,12 +500,12 @@ const PersonalChat = () => {
                         </button>
                       </div>
                     )}
-                    {parseInt(currentUserId) !== parseInt(msg.receiver_id) && (
+                    {parseInt(currentUserId) !== parseInt(msg.sender_id) && (
                       <div>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
-                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
+                            handleSelectReplyMessage(msg.id, msg.messages, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
                           Reply to message
