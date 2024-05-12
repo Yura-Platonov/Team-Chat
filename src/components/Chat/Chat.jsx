@@ -36,7 +36,6 @@ const Chat = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [editedMessage, setEditedMessage] = useState('');  
-  const [deletedMessages, setDeletedMessages] = useState([]);
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
@@ -424,9 +423,6 @@ const Chat = () => {
       console.error('WebSocket is not open. Delete message not sent.');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
-      setDeletedMessages(prevDeletedMessages => [...prevDeletedMessages, messageId]);
-      console.log(deletedMessages);
-
   };
 
   const handleEditMessageClick = (editedMsg,messageId) => {
