@@ -10,10 +10,24 @@ function RoomList() {
   const [rooms, setRooms] = useState([]);
   
 
+  // const loadRooms = () => {
+  //   axios.get('https://cool-chat.club/api/rooms/')
+  //     .then((response) => {
+  //       setRooms(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error('Ошибка при загрузке списка комнат:', error);
+  //     });
+  // };
+
   const loadRooms = () => {
     axios.get('https://cool-chat.club/api/rooms/')
       .then((response) => {
-        setRooms(response.data);
+        const roomsWithFavorites = response.data.map(room => ({
+          ...room,
+          favorite: Boolean(room.favorite)
+        }));
+        setRooms(roomsWithFavorites);
       })
       .catch((error) => {
         console.error('Ошибка при загрузке списка комнат:', error);
@@ -30,12 +44,19 @@ function RoomList() {
 
   const toggleFavorite = (event, roomId) => {
     event.preventDefault();
-    setRooms(prevRooms =>
-      prevRooms.map(room =>
-        room.id === roomId ? { ...room, favorite: !room.favorite } : room
-      )
-    );
+    axios.put(`https://cool-chat.club/api/rooms/${roomId}`, { favorite: !rooms.find(room => room.id === roomId).favorite })
+      .then(() => {
+        setRooms(prevRooms =>
+          prevRooms.map(room =>
+            room.id === roomId ? { ...room, favorite: !room.favorite } : room
+          )
+        );
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении поля favorite:', error);
+      });
   };
+  
 
   return (
     <div className={css.room_section}>
