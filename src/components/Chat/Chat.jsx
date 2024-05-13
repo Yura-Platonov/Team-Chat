@@ -513,8 +513,11 @@ const Chat = () => {
                     <span className={css.time}>{msg.formattedDate}</span>
                   </div>
                   {msg.message || msg.fileUrl ? (
-                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
-                       {msg.id_return && msg.id_return !== 0 ? (
+                    <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                      {msg.id_return && msg.id_return !== 0 ? (
+                        // Проверяем наличие сообщения с соответствующим id в массиве messages
+                        messages.find(message => message.id === msg.id_return) ? (
+                          // Код отображения сообщения
                           messages.map((message, index) => {
                             if (message.id === msg.id_return) {
                               return (
@@ -531,26 +534,29 @@ const Chat = () => {
                             }
                             return null;
                           })
-                        ) :(
-                          <div>
-                             {msg.fileUrl && (
-                              <img 
-                                src={msg.fileUrl} 
-                                alt="Uploaded" 
-                                className={css.imageInChat}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setIsImageModalOpen(true);
-                                  setSelectedImageUrl(msg.fileUrl);
-                                }}
-                              />
-                            )}
-                             {msg.message && <p>{msg.message}</p>}
-                             {msg.edited && <span className={css.editedText}>edited</span>}
-                          </div>
-                        )}
-                      </div>
-                    ) : null}
+                        ) : (
+                          <p className={css.deletedMessageText}>Сообщение удалено</p>
+                        )
+                      ) : (
+                        <div>
+                          {msg.fileUrl && (
+                            <img 
+                              src={msg.fileUrl} 
+                              alt="Uploaded" 
+                              className={css.imageInChat}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsImageModalOpen(true);
+                                setSelectedImageUrl(msg.fileUrl);
+                              }}
+                            />
+                          )}
+                          {msg.message && <p>{msg.message}</p>}
+                          {msg.edited && <span className={css.editedText}>edited</span>}
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
 
                   <div className={css.actions}>
                     {(msg.vote > 0 || hoveredMessageId === msg.id) && (
