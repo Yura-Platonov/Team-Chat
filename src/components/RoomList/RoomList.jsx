@@ -30,12 +30,19 @@ function RoomList() {
 
   const toggleFavorite = (event, roomId) => {
     event.preventDefault();
-    setRooms(prevRooms =>
-      prevRooms.map(room =>
-        room.id === roomId ? { ...room, favorite: !room.favorite } : room
-      )
-    );
+    axios.put(`https://cool-chat.club/api/rooms/${roomId}`, { favorite: !rooms.find(room => room.id === roomId).favorite })
+      .then((response) => {
+        setRooms(prevRooms =>
+          prevRooms.map(room =>
+            room.id === roomId ? { ...room, favorite: !room.favorite } : room
+          )
+        );
+      })
+      .catch((error) => {
+        console.error('Ошибка при обновлении поля favorite:', error);
+      });
   };
+  
 
   return (
     <div className={css.room_section}>

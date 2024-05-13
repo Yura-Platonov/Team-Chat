@@ -54,7 +54,11 @@ export const AuthProvider = ({ children }) => {
 
   const refreshAccessToken = useCallback(async () => {
     try {
-      const response = await axios.post('https://cool-chat.club/api/post/refresh', { refresh_token: refreshToken });
+      const response = await axios.post('https://cool-chat.club/api/refresh', null, {
+      params: {
+        refresh_token: refreshToken
+      }
+      });
       const { access_token } = response.data;
       setAuthToken(access_token);
       localStorage.setItem('access_token', access_token);
