@@ -535,7 +535,19 @@ const Chat = () => {
                             return null;
                           })
                         ) : (
-                          <p className={css.deletedMessageText}>Сообщение удалено</p>
+                          <>
+                          
+                            <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                              <p className={css.replyMessageUsername}>{message.sender}</p>
+                              <div className={css.replyContent}>
+                                {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                <p className={css.deletedMessageText}>Deleted Message</p>
+                              </div>
+                              <p className={css.messageTextReply}>{msg.message}</p>
+                              {msg.edited && <span className={css.editedText}>edited</span>}
+                            </div>
+                         
+                          </>
                         )
                       ) : (
                         <div>
