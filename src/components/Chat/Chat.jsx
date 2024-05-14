@@ -483,7 +483,66 @@ const Chat = () => {
   };
   
   
+  const getFileType = (fileUrl) => {
+    const extension = getFileExtension(fileUrl).toLowerCase();
 
+  
+    if (isImageExtension(extension)) {
+      return 'image';
+    } else if (isVideoExtension(extension)) {
+      return 'video';
+    } else if (isDocumentExtension(extension)) {
+      return 'document';
+    } else {
+      return 'unknown';
+    }
+  };
+  
+  const getFileExtension = (fileUrl) => {
+    const urlWithoutLastCharacter = fileUrl.slice(0, -1);
+    return urlWithoutLastCharacter.split('.').pop();
+  };
+  
+  const isImageExtension = (extension) => {
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    return imageExtensions.includes(extension);
+  };
+  
+  const isVideoExtension = (extension) => {
+    const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv'];
+    return videoExtensions.includes(extension);
+  };
+  
+  const isDocumentExtension = (extension) => {
+    const documentExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
+    return documentExtensions.includes(extension);
+  };
+  
+  const renderFile = (fileUrl) => {
+    const fileType = getFileType(fileUrl);
+
+  
+    switch (fileType) {
+      case 'image':
+        return <img
+        src={fileUrl} 
+        alt="Uploaded" 
+        className={css.imageInChat}
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsImageModalOpen(true);
+          setSelectedImageUrl(fileUrl);
+        }}
+      />;
+      case 'video':
+        return <video controls><source src={fileUrl} type={`video/${getFileExtension(fileUrl)}`} /></video>;
+      case 'document':
+        return <a href={fileUrl} target="_blank" rel="noopener noreferrer">Open Document</a>;
+      default:
+        return <p>Unsupported File Type</p>;
+    }
+  };
+  
  
   return (
     <div className={css.container}>
@@ -561,7 +620,8 @@ const Chat = () => {
                         )
                       ) : (
                         <div>
-                          {msg.fileUrl && (
+                          {msg.fileUrl && renderFile(msg.fileUrl)}
+                          {/* {msg.fileUrl && (
                             <img 
                               src={msg.fileUrl} 
                               alt="Uploaded" 
@@ -572,7 +632,7 @@ const Chat = () => {
                                 setSelectedImageUrl(msg.fileUrl);
                               }}
                             />
-                          )}
+                          )} */}
                           {msg.message && <p>{msg.message}</p>}
                           {msg.edited && <span className={css.editedText}>edited</span>}
                         </div>
@@ -704,7 +764,8 @@ const Chat = () => {
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-                <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} />
+                {/* <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} /> */}
+                <input type="file" key={selectedFilesCount}  onChange={handleImageChange}  className={css.file_input} />
                 </label>
               </div>
             </label>
