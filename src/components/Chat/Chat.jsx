@@ -349,11 +349,11 @@ const Chat = () => {
     }
   };
 
- const handleSelectReplyMessage = (messageId, messageText, messageSender, imageUrl) => {
+ const handleSelectReplyMessage = (messageId, messageText, messageSender, fileUrl) => {
     setSelectedReplyMessageId(messageId);
     setSelectedReplyMessageText(messageText);
     setSelectedReplyMessageSender(messageSender);
-    setselectedReplyMessageImage(imageUrl); 
+    setselectedReplyMessageImage(fileUrl); 
   };
 
   const handleSendReply = async (replyMessage) => {
@@ -369,12 +369,23 @@ const Chat = () => {
       return;
     }
 
+    let fileUrl = null;
+
+    if (selectedImage) {
+      fileUrl = await uploadImage(selectedImage);
+      console.log(fileUrl);
+      if (!fileUrl) {
+        console.error('Failed to upload image.');
+        return;
+      }
+    }
+    
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
         reply: {
           original_message_id: selectedReplyMessageId,
           message: replyMessage,
-          fileUrl: selectedReplyMessageImage
+          fileUrl: fileUrl 
         }
       };
       console.log('Preparing to send reply:', replyData);
@@ -382,6 +393,7 @@ const Chat = () => {
       const messageString = JSON.stringify(replyData);
       socketRef.current.send(messageString);
       console.log('Reply successfully sent.');
+      setSelectedImage(null);
     } else {
       console.error('WebSocket is not open. Reply message not sent.');
     }
@@ -515,9 +527,7 @@ const Chat = () => {
                   {msg.message || msg.fileUrl ? (
                     <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
                       {msg.id_return && msg.id_return !== 0 ? (
-                        // Проверяем наличие сообщения с соответствующим id в массиве messages
                         messages.find(message => message.id === msg.id_return) ? (
-                          // Код отображения сообщения
                           messages.map((message, index) => {
                             if (message.id === msg.id_return) {
                               return (
