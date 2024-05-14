@@ -23,13 +23,16 @@
 
   .countList{
     display: flex;
-    gap: 10px;
+    /* gap: 10px; */
+    justify-content: space-between;
+    width: 100%;
+    padding: 0 10px;
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
-      gap: 15px;
+      /* gap: 15px; */
     } 
   @media screen and (min-width: 1024px) {
-    gap: 20px;
+    /* gap: 20px; */
   }
   
   }
