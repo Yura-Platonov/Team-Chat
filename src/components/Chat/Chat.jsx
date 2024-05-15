@@ -24,7 +24,7 @@ const Chat = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
-  const [currentUserId] = useState(localStorage.getItem('user_id'));
+  const currentUserId = localStorage.getItem('user_id');
   const [selectedImage, setSelectedImage] = useState(null);
   const [selectedFilesCount, setSelectedFilesCount] = useState(0);
   const [selectedReplyMessageId, setSelectedReplyMessageId] = useState(null);
@@ -56,18 +56,6 @@ const Chat = () => {
       console.log('WebSocket connection opened');
       navigate(`/Personalchat/${userName}`);
     };
-  };
-
-  const handleCloseMenu = () => {
-    setSelectedUser(null);
-  };
-
-  const handleCloseChatMenu = () => {
-    setIsChatMenuOpen(false);
-  };
-
-  const handleCloseReply = () => {
-    setSelectedReplyMessageId(null);
   };
 
   const socketRef = useRef(null);
@@ -246,6 +234,18 @@ const Chat = () => {
     }
   };
 
+  const handleCloseMenu = () => {
+    setSelectedUser(null);
+  };
+
+  const handleCloseChatMenu = () => {
+    setIsChatMenuOpen(false);
+  };
+
+  const handleCloseReply = () => {
+    setSelectedReplyMessageId(null);
+  };
+
   const uploadImage = async () => {
     try {
       const formData = new FormData();
@@ -375,10 +375,10 @@ const Chat = () => {
       }
     }
     
-    if (!replyMessage.trim() ) {
-      console.log('Reply message is empty. Not sending reply.');
+    if (!replyMessage.trim() && !fileUrl) {
+      console.log('Both reply message and file are empty. Not sending reply.');
       return;
-    }
+  }
 
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
@@ -394,6 +394,8 @@ const Chat = () => {
       socketRef.current.send(messageString);
       console.log('Reply successfully sent.');
       setSelectedImage(null);
+      setSelectedFilesCount(0);
+      setImageText('');
     } else {
       console.error('WebSocket is not open. Reply message not sent.');
     }
