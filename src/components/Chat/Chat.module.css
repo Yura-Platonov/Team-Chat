@@ -1,16 +1,20 @@
 .container{
-    padding:  0 15px 15px 15px;
+    max-width: 1440px;
+    margin-left: auto;
+    margin-right: auto;
+
+    padding:  15px;
    
     @media screen and (min-width: 768px) and (max-width: 1023px){
-        padding:  0 25px 25px 25px;
+        padding:  25px;
     } 
 
     @media screen and (min-width: 1024px) {
-        padding: 0 40px 40px 40px;
+        padding: 40px;
 
     }
     @media screen and (min-width: 1439px) {
-        padding: 0 100px 50px 100px;
+        padding: 30px 100px 50px 100px;
 
     }
 }
@@ -598,6 +602,14 @@ justify-content: space-between;
             max-height: 430px;
         } 
   }
+
+  .docInChat{
+    fill:#024A7A;
+    cursor: pointer;
+    &:hover{
+        fill:#000;
+    }
+}
   
 .input_label{
 position: relative;
@@ -649,7 +661,7 @@ height: max-content;
 opacity: 60%;
 /* border-bottom: 1.5px solid #024A7A; */
 /* padding-left: 10px; */
-padding-bottom: 10px;
+/* padding-bottom: 10px; */
 padding-right: 65px;
 word-wrap: break-word;
 max-width: 200px;
@@ -675,7 +687,8 @@ line-height: 130%;
 
 .messageTextReply {
     color:  #0F1E28;
-    padding: 10px 65px 0 0px;
+    padding-right: 65px;
+    /* padding: 10px 65px 0 0px; */
     word-wrap: break-word;
     max-width: 200px;
 
@@ -683,7 +696,6 @@ line-height: 130%;
     font-size: 17px;
     font-weight: 400;
     line-height: 130%; 
-    border-top: 1.5px solid #024A7A;
 
 
 
@@ -737,11 +749,11 @@ background: #A9DCFF;
     align-items: center;
     /* justify-content: space-between; */
     background: #024A7A80;
-    position: absolute;
-    /* bottom: 22.5%; */
+    /* position: absolute;
     bottom: 15.5%;
-    left: 0%;
+    left: 0%; */
 
+    /* bottom: 22.5%; */
 
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -754,6 +766,14 @@ background: #A9DCFF;
 
 }
 
+.replyContentUp{
+    padding: 10px 0;
+}
+
+.replyContentDown{
+    padding-top: 10px;
+    border-top: 1.5px solid #024A7A;
+}
 
 .replyContainerFlex{
 display: flex;
@@ -856,11 +876,15 @@ width: 100%;
 }
 
 .ReplyMessageImage{
-    height: 150px;
+    max-height: 150px;
     max-width: 150px;
     padding-top: 10px;
-    padding-bottom: 15px;
+    /* padding-bottom: 15px; */
     /* border-bottom: 1.5px solid #024A7A; */
+    @media screen and (min-width: 768px){
+        max-width: 250px;
+
+    } 
 }
 
 .sendImg{

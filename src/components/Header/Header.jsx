@@ -140,7 +140,7 @@ const Header = () => {
   };
 
   return (
-    <header>
+    <header className={css.sticky_header}>
         <div className={css.mobLogo}>
         <MobileMenu/>
         <Logo darkTheme={darkTheme}/>
