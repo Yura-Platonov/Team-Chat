@@ -713,7 +713,29 @@ const Chat = () => {
                 <button onClick={handleCloseMenu}>Close</button>
               </div>
             )}
-            {selectedReplyMessageId && (
+            {/* {selectedReplyMessageId && (
+              <div className={css.replyContainer}>
+                <IconReplySVG/>
+                <div className={css.replyContainerFlex}>
+                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
+                  <div className={css.replyContainerImgText}>
+                  {selectedReplyMessageImage && (
+                    <div>
+                      <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                    </div>
+                  )}
+                  {selectedReplyMessageText && (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  )}
+                  </div>
+                </div>
+                <div className={css.buttons}>
+                  <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
+                </div>
+              </div>
+            )} */}
+          </div>
+          {selectedReplyMessageId && (
               <div className={css.replyContainer}>
                 <IconReplySVG/>
                 <div className={css.replyContainerFlex}>
@@ -734,7 +756,6 @@ const Chat = () => {
                 </div>
               </div>
             )}
-          </div>
           {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
