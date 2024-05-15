@@ -613,12 +613,15 @@ const Chat = () => {
                           
                             <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                               <p className={css.replyMessageUsername}>{message.sender}</p>
-                              <div className={css.replyContent}>
+                              <div className={css.replyContentUp}>
                                 {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
-                                <p className={css.deletedMessageText}>Deleted Message</p>
+                                <p className={css.replyMessageText}>Deleted Message</p>
                               </div>
+                              <div className={css.replyContentDown}>
+                              {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
                               <p className={css.messageTextReply}>{msg.message}</p>
                               {msg.edited && <span className={css.editedText}>edited</span>}
+                            </div>
                             </div>
                          
                           </>
