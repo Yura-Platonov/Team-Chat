@@ -876,11 +876,15 @@ width: 100%;
 }
 
 .ReplyMessageImage{
-    height: 150px;
-    max-width: 250px;
+    max-height: 150px;
+    max-width: 150px;
     padding-top: 10px;
     /* padding-bottom: 15px; */
     /* border-bottom: 1.5px solid #024A7A; */
+    @media screen and (min-width: 768px){
+        max-width: 250px;
+
+    } 
 }
 
 .sendImg{
