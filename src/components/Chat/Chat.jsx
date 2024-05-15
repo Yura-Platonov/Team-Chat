@@ -364,25 +364,25 @@ const Chat = () => {
       return;
     }
 
-    if (!replyMessage.trim()) {
-      console.log('Reply message is empty. Not sending reply.');
-      return;
-    }
-
     let fileUrl = null;
 
     if (selectedImage) {
       fileUrl = await uploadImage(selectedImage);
       console.log(fileUrl);
       if (!fileUrl) {
-        console.error('Failed to upload image.');
+        console.error('Failed to upload file.');
         return;
       }
     }
     
+    if (!replyMessage.trim() ) {
+      console.log('Reply message is empty. Not sending reply.');
+      return;
+    }
+
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const replyData = {
-        reply: {
+        send: {
           original_message_id: selectedReplyMessageId,
           message: replyMessage,
           fileUrl: fileUrl 
@@ -592,12 +592,15 @@ const Chat = () => {
                               return (
                                 <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                                   <p className={css.replyMessageUsername}>{message.sender}</p>
-                                  <div className={css.replyContent}>
+                                  <div className={css.replyContentUp}>
                                     {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
                                     {message.message && <p className={css.replyMessageText}>{message.message}</p>}
                                   </div>
+                                  <div className={css.replyContentDown}>
+                                  {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
                                   <p className={css.messageTextReply}>{msg.message}</p>
                                   {msg.edited && <span className={css.editedText}>edited</span>}
+                                  </div>
                                 </div>
                               );
                             }
