@@ -613,7 +613,13 @@ const Chat = () => {
                                   <p className={css.replyMessageUsername}>{message.sender}</p>
                                   <div className={css.replyContentUp}>
                                   {message.fileUrl && getFileType(message.fileUrl) === 'image' && (
-                                      <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />
+                                      <img src={message.fileUrl} alt='Reply' 
+                                      className={css.ReplyMessageImage} 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsImageModalOpen(true);
+                                        setSelectedImageUrl(message.fileUrl);
+                                      }} />
                                     )}
                                     {message.fileUrl && getFileType(message.fileUrl) === 'document' && (
                                       <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
@@ -631,7 +637,12 @@ const Chat = () => {
                                     {message.message && <p className={css.replyMessageText}>{message.message}</p>}
                                   </div>
                                   <div className={css.replyContentDown}>
-                                  {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                  {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage}
+                                  onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsImageModalOpen(true);
+                                        setSelectedImageUrl(msg.fileUrl);
+                                      }}  />}
                                   <p className={css.messageTextReply}>{msg.message}</p>
                                   {msg.edited && <span className={css.editedText}>edited</span>}
                                   </div>
@@ -648,7 +659,13 @@ const Chat = () => {
                                 <p className={css.replyMessageText}>Deleted Message</p>
                               </div>
                               <div className={css.replyContentDown}>
-                              {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                              {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} 
+                              // onClick={(e) => {
+                              //   e.stopPropagation();
+                              //   setIsImageModalOpen(true);
+                              //   setSelectedImageUrl(msg.fileUrl);
+                              // }} 
+                              />}
                               <p className={css.messageTextReply}>{msg.message}</p>
                               {msg.edited && <span className={css.editedText}>edited</span>}
                             </div>
