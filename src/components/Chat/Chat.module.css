@@ -602,6 +602,14 @@ justify-content: space-between;
             max-height: 430px;
         } 
   }
+
+  .docInChat{
+    fill:#024A7A;
+    cursor: pointer;
+    &:hover{
+        fill:#000;
+    }
+}
   
 .input_label{
 position: relative;
