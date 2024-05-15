@@ -1,7 +1,7 @@
 .sticky_header {
     position: sticky;
     top: 0;
-    z-index: 1000;
+    z-index: 10;
     background-color:#F5FBFF;
   }
 
@@ -10,6 +10,8 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 15px;
+
+    border-bottom: 1px solid #D0D0D0;
 
     /* @media screen and (max-width: 767px){
         
