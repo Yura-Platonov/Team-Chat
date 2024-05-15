@@ -1,3 +1,10 @@
+.sticky_header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color:#F5FBFF;
+  }
+
 header {
     display: flex;
     justify-content: space-between;
