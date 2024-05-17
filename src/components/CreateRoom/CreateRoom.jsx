@@ -41,12 +41,6 @@ function CreateRoom({ onRoomCreated }) {
       });
   }, []);
 
-  // useEffect(() => {
-  //   if (!authToken && isCreateRoomModalOpen) {
-  //     openLoginModal(); 
-  //   }
-  // }, [authToken, isCreateRoomModalOpen, openLoginModal]);
-
   const handleCreateRoom = () => {
     if (!authToken) {
       openLoginModal(); 

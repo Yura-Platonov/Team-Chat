@@ -686,6 +686,7 @@ const Chat = () => {
                               }}
                             />
                           )} */}
+                          
                           {msg.message && <p>{msg.message}</p>}
                           {msg.edited && <span className={css.editedText}>edited</span>}
                         </div>
