@@ -13,9 +13,6 @@ header {
 
     border-bottom: 1px solid #D0D0D0;
 
-    /* @media screen and (max-width: 767px){
-        
-    } */
     @media screen and (min-width: 768px) and (max-width: 1023px){
         padding: 25px;
     } 

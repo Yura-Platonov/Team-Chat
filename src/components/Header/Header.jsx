@@ -191,8 +191,6 @@ const Header = () => {
             offColor="#F5FBFF" // выключен - задний фон
             offHandleColor="#0F1E28" // выключен -шарик
             uncheckedIcon={false}
-            // uncheckedHandleIcon={<IconSun/>}
-            // checkedHandleIcon={<IconMoon />}
             checkedIcon={false}
           />     
       </div>

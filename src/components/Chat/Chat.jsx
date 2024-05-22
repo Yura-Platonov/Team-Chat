@@ -246,13 +246,41 @@ const Chat = () => {
     setSelectedReplyMessageId(null);
   };
 
+  const transliterateAndSanitize = (fileName) => {
+    const transliterationMap = {
+        'А': 'A', 'Б': 'B', 'В': 'V', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'E', 'Ж': 'Zh', 'З': 'Z',
+        'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'N', 'О': 'O', 'П': 'P', 'Р': 'R',
+        'С': 'S', 'Т': 'T', 'У': 'U', 'Ф': 'F', 'Х': 'Kh', 'Ц': 'Ts', 'Ч': 'Ch', 'Ш': 'Sh', 'Щ': 'Shch',
+        'Ы': 'Y', 'Э': 'E', 'Ю': 'Yu', 'Я': 'Ya', 'Ї': 'Yi', 'І': 'I', 'Є': 'Ye', 'Ґ': 'G', 'а': 'a',
+        'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'e', 'ж': 'zh', 'з': 'z', 'и': 'i',
+        'й': 'y', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's',
+        'т': 't', 'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch',
+        'ы': 'y', 'э': 'e', 'ю': 'yu', 'я': 'ya', 'ї': 'yi', 'і': 'i', 'є': 'ye', 'ґ': 'g'
+    };
+
+    let transliteratedFileName = fileName.split('').map(char => {
+        if (transliterationMap[char]) {
+            return transliterationMap[char];
+        } else if (char === ' ') {
+            return '_';
+        } else if (/^[a-zA-Z0-9\-_.]$/.test(char)) {
+            return char;
+        } else {
+            return '';
+        }
+    }).join('');
+
+    return transliteratedFileName;
+};
+
   const uploadImage = async () => {
     try {
       const formData = new FormData();
-      formData.append('file', selectedImage);
+      const sanitizedFileName = transliterateAndSanitize(selectedImage.name);
+      const file = new File([selectedImage], sanitizedFileName, { type: selectedImage.type });
+      formData.append('file', file);
 
-      console.log(selectedImage);
-      console.log(formData);
+      console.log(file);
 
       // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
       const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
@@ -489,10 +517,9 @@ const Chat = () => {
     setEditedMessage(''); 
   };
   
-  
   const getFileType = (fileUrl) => {
     const extension = getFileExtension(fileUrl).toLowerCase();
-
+    // console.log('File extension:', extension);
   
     if (isImageExtension(extension)) {
       return 'image';
@@ -501,12 +528,12 @@ const Chat = () => {
     } else if (isDocumentExtension(extension)) {
       return 'document';
     } else {
-      return 'unknown';
+      return {extension};
     }
   };
   
   const getFileExtension = (fileUrl) => {
-    const urlWithoutLastCharacter = fileUrl.slice(0, -1);
+    const urlWithoutLastCharacter = fileUrl.endsWith('?') ? fileUrl.slice(0, -1) : fileUrl;
     return urlWithoutLastCharacter.split('.').pop();
   };
   
@@ -524,9 +551,18 @@ const Chat = () => {
     const documentExtensions = ['pdf', 'doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx'];
     return documentExtensions.includes(extension);
   };
+
+  const extractFileNameFromUrl = (fileUrl) => {
+    let fileName = fileUrl.split('/').pop();
+    if (fileName.endsWith('?')) {
+      fileName = fileName.slice(0, -1);
+    }
+    return fileName.split('?')[0];
+  };
   
   const renderFile = (fileUrl) => {
     const fileType = getFileType(fileUrl);
+    // console.log(fileType);
 
   
     switch (fileType) {
@@ -549,16 +585,18 @@ const Chat = () => {
         }} 
         controls><source src={fileUrl} type={`video/${getFileExtension(fileUrl)}`} /></video>;
       case 'document':
+        const fileName = extractFileNameFromUrl(fileUrl);
         return (
           <a href={fileUrl} target="_blank" rel="noopener noreferrer">
            <svg width="36" height="48" className={css.docInChat} viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M21 12.75V0H2.25C1.00312 0 0 1.00312 0 2.25V45.75C0 46.9969 1.00312 48 2.25 48H33.75C34.9969 48 36 46.9969 36 45.75V15H23.25C22.0125 15 21 13.9875 21 12.75ZM28.1672 32.565L19.1278 41.5369C18.5044 42.1566 17.4975 42.1566 16.8741 41.5369L7.83469 32.565C6.88313 31.6209 7.55062 30 8.88937 30H15V22.5C15 21.6712 15.6712 21 16.5 21H19.5C20.3288 21 21 21.6712 21 22.5V30H27.1106C28.4494 30 29.1169 31.6209 28.1672 32.565ZM35.3438 9.84375L26.1656 0.65625C25.7438 0.234375 25.1719 0 24.5719 0H24V12H36V11.4281C36 10.8375 35.7656 10.2656 35.3438 9.84375Z"/>
             </svg>
-            <p>Document</p>
+            <p>{fileName}</p>
           </a>
         );
       default:
-        return <p>Unsupported File Type</p>;
+        // return <p>Unsupported File Type</p>;
+        return <p>{fileUrl}</p>;
     }
   };
   
@@ -686,6 +724,7 @@ const Chat = () => {
                               }}
                             />
                           )} */}
+                          
                           {msg.message && <p>{msg.message}</p>}
                           {msg.edited && <span className={css.editedText}>edited</span>}
                         </div>
