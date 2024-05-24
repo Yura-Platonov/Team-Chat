@@ -21,6 +21,7 @@ const Chat = () => {
   const { roomName } = useParams();
   const token = localStorage.getItem('access_token');
   const messageContainerRef = useRef(null);
+  const lastLikedMessageIdRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
@@ -38,6 +39,7 @@ const Chat = () => {
   const [editedMessage, setEditedMessage] = useState('');  
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
   let userName = selectedUser ? selectedUser.user_name : '';
@@ -99,9 +101,14 @@ const Chat = () => {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
           
+          if (messageData.type) {
+            console.log("Name:", messageData.type);
+          }
+
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
-          } else if (messageData.id) {
+          }
+         else if (messageData.id) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
@@ -147,12 +154,19 @@ const Chat = () => {
     }
   }, [roomName, token]);
 
+  // useEffect(() => {
+  //   if (messageContainerRef.current) {
+  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+  //   }
+  // }, [messages]);
+
   useEffect(() => {
-    if (messageContainerRef.current) {
+    if (shouldScrollToBottom && messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [shouldScrollToBottom, messages]);
 
+  
   const sendMessage = async () => {
     if (!token) {
       openLoginModal();
@@ -219,6 +233,12 @@ const Chat = () => {
   };
   
   const handleLikeClick = (id) => {
+
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
     const requestData = {
       "vote": {
         message_id: id,
@@ -229,7 +249,16 @@ const Chat = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const messageString = JSON.stringify(requestData);
       socketRef.current.send(messageString);
-    } else {
+      lastLikedMessageIdRef.current = id;
+      console.log("Liked message ID:", lastLikedMessageIdRef.current);
+
+      setShouldScrollToBottom(false);
+
+      // Восстанавливаем прокрутку через некоторое время (например, 1 секунду)
+      setTimeout(() => {
+        setShouldScrollToBottom(true);
+      }, 2000);
+      } else {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
@@ -283,7 +312,8 @@ const Chat = () => {
       console.log(file);
 
       // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-      const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
+      // const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
+      const response = await axios.post('https://cool-chat.club/api/upload-to-backblaze/chat?bucket_name=chatall', formData);
 
       if (response && response.data) {
         const imageUrl = response.data;
@@ -599,8 +629,46 @@ const Chat = () => {
         return <p>{fileUrl}</p>;
     }
   };
+
+  // useEffect(() => {
+  //   console.log("messages updated, checking scroll...", lastLikedMessageIdRef.current);
   
- 
+  //   if (messageContainerRef.current && lastLikedMessageIdRef.current) {
+  //     // Используем setTimeout для дополнительной задержки перед проверкой элемента
+  //     setTimeout(() => {
+  //       const likedMessageElement = document.getElementById(lastLikedMessageIdRef.current);
+  //       if (likedMessageElement) {
+  //         console.log("Scrolling to message:", lastLikedMessageIdRef.current);
+  //         likedMessageElement.scrollIntoView({ behavior: 'smooth' });
+  //         lastLikedMessageIdRef.current = null;
+  //       } else {
+  //         console.log("Message element not found:", lastLikedMessageIdRef.current);
+  //       }
+  //     }, 100); // Увеличьте значение задержки по вашему усмотрению, если это необходимо
+  //   }
+  // }, [messages]);
+
+  // useEffect(() => {
+  //   console.log("messages updated, checking scroll...", lastLikedMessageIdRef.current);
+  
+  //   if ( lastLikedMessageIdRef.current) {
+  //     const checkScroll = () => {
+  //       const likedMessageElement = document.getElementById(lastLikedMessageIdRef.current);
+  //       if (likedMessageElement) {
+  //         console.log("Scrolling to message:", lastLikedMessageIdRef.current);
+  //         likedMessageElement.scrollIntoView({ behavior: 'smooth' });
+  //         lastLikedMessageIdRef.current = null;
+  //       } else {
+  //         console.log("Message element not found:", lastLikedMessageIdRef.current);
+  //         requestAnimationFrame(checkScroll);
+  //       }
+  //     };
+  
+  //     requestAnimationFrame(checkScroll);
+  //   }
+  // }, [messages]);
+  
+  
   return (
     <div className={css.container}>
       <h2 className={css.title}>{roomName}</h2>
