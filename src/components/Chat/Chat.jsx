@@ -160,9 +160,19 @@ const Chat = () => {
   //   }
   // }, [messages]);
 
+  // useEffect(() => {
+  //   if (shouldScrollToBottom && messageContainerRef.current) {
+  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+  //   }
+  // }, [shouldScrollToBottom, messages]);
+
   useEffect(() => {
     if (shouldScrollToBottom && messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      const timeoutId = setTimeout(() => {
+        setShouldScrollToBottom(true);
+      }, 1000);
+      return () => clearTimeout(timeoutId);
     }
   }, [shouldScrollToBottom, messages]);
 
@@ -197,7 +207,7 @@ const Chat = () => {
 
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
-
+      setShouldScrollToBottom(true);
       setMessage('');
       // setSelectedFilesCount(0);
     } else {
@@ -254,10 +264,6 @@ const Chat = () => {
 
       setShouldScrollToBottom(false);
 
-      // Восстанавливаем прокрутку через некоторое время (например, 1 секунду)
-      setTimeout(() => {
-        setShouldScrollToBottom(true);
-      }, 2000);
       } else {
       console.error('WebSocket is not open. Message not sent.');
     }
@@ -630,44 +636,6 @@ const Chat = () => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("messages updated, checking scroll...", lastLikedMessageIdRef.current);
-  
-  //   if (messageContainerRef.current && lastLikedMessageIdRef.current) {
-  //     // Используем setTimeout для дополнительной задержки перед проверкой элемента
-  //     setTimeout(() => {
-  //       const likedMessageElement = document.getElementById(lastLikedMessageIdRef.current);
-  //       if (likedMessageElement) {
-  //         console.log("Scrolling to message:", lastLikedMessageIdRef.current);
-  //         likedMessageElement.scrollIntoView({ behavior: 'smooth' });
-  //         lastLikedMessageIdRef.current = null;
-  //       } else {
-  //         console.log("Message element not found:", lastLikedMessageIdRef.current);
-  //       }
-  //     }, 100); // Увеличьте значение задержки по вашему усмотрению, если это необходимо
-  //   }
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   console.log("messages updated, checking scroll...", lastLikedMessageIdRef.current);
-  
-  //   if ( lastLikedMessageIdRef.current) {
-  //     const checkScroll = () => {
-  //       const likedMessageElement = document.getElementById(lastLikedMessageIdRef.current);
-  //       if (likedMessageElement) {
-  //         console.log("Scrolling to message:", lastLikedMessageIdRef.current);
-  //         likedMessageElement.scrollIntoView({ behavior: 'smooth' });
-  //         lastLikedMessageIdRef.current = null;
-  //       } else {
-  //         console.log("Message element not found:", lastLikedMessageIdRef.current);
-  //         requestAnimationFrame(checkScroll);
-  //       }
-  //     };
-  
-  //     requestAnimationFrame(checkScroll);
-  //   }
-  // }, [messages]);
-  
   
   return (
     <div className={css.container}>
