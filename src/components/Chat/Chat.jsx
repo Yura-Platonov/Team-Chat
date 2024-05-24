@@ -21,6 +21,7 @@ const Chat = () => {
   const { roomName } = useParams();
   const token = localStorage.getItem('access_token');
   const messageContainerRef = useRef(null);
+  const lastLikedMessageIdRef = useRef(null);
   const [selectedUser, setSelectedUser] = useState(null);
   const navigate = useNavigate();
   const [hoveredMessageId, setHoveredMessageId] = useState(null);
@@ -38,6 +39,7 @@ const Chat = () => {
   const [editedMessage, setEditedMessage] = useState('');  
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
   let userName = selectedUser ? selectedUser.user_name : '';
@@ -99,9 +101,14 @@ const Chat = () => {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
           
+          if (messageData.type) {
+            console.log("Name:", messageData.type);
+          }
+
           if (messageData.type === 'active_users') {
             setUserList(messageData.data);
-          } else if (messageData.id) {
+          }
+         else if (messageData.id) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
@@ -147,12 +154,29 @@ const Chat = () => {
     }
   }, [roomName, token]);
 
-  useEffect(() => {
-    if (messageContainerRef.current) {
-      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-    }
-  }, [messages]);
+  // useEffect(() => {
+  //   if (messageContainerRef.current) {
+  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+  //   }
+  // }, [messages]);
 
+  // useEffect(() => {
+  //   if (shouldScrollToBottom && messageContainerRef.current) {
+  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+  //   }
+  // }, [shouldScrollToBottom, messages]);
+
+  useEffect(() => {
+    if (shouldScrollToBottom && messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      const timeoutId = setTimeout(() => {
+        setShouldScrollToBottom(true);
+      }, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [shouldScrollToBottom, messages]);
+
+  
   const sendMessage = async () => {
     if (!token) {
       openLoginModal();
@@ -183,7 +207,7 @@ const Chat = () => {
 
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
-
+      setShouldScrollToBottom(true);
       setMessage('');
       // setSelectedFilesCount(0);
     } else {
@@ -219,6 +243,12 @@ const Chat = () => {
   };
   
   const handleLikeClick = (id) => {
+
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+
     const requestData = {
       "vote": {
         message_id: id,
@@ -229,7 +259,12 @@ const Chat = () => {
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
       const messageString = JSON.stringify(requestData);
       socketRef.current.send(messageString);
-    } else {
+      lastLikedMessageIdRef.current = id;
+      console.log("Liked message ID:", lastLikedMessageIdRef.current);
+
+      setShouldScrollToBottom(false);
+
+      } else {
       console.error('WebSocket is not open. Message not sent.');
     }
   };
@@ -283,7 +318,8 @@ const Chat = () => {
       console.log(file);
 
       // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-      const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
+      // const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
+      const response = await axios.post('https://cool-chat.club/api/upload-to-backblaze/chat?bucket_name=chatall', formData);
 
       if (response && response.data) {
         const imageUrl = response.data;
@@ -599,8 +635,8 @@ const Chat = () => {
         return <p>{fileUrl}</p>;
     }
   };
+
   
- 
   return (
     <div className={css.container}>
       <h2 className={css.title}>{roomName}</h2>
