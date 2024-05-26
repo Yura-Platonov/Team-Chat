@@ -6,6 +6,7 @@ import IconAdd from 'components/Images/IconAdd.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import VerificationUserModal from 'components/Modal/VerificationUserModal';
 import useLoginModal from '../Hooks/useLoginModal';
 
 import { useAuth } from '../LoginForm/AuthContext';

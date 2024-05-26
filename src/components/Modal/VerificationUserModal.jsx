@@ -4,7 +4,7 @@ import css from './VerificationUserModal.module.css';
 
 
 const VerificationUserModal = ({ isOpen, onClose }) => {
-  const email = localStorage.getItem('email');
+  const email = localStorage.getItem('user.username');
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
@@ -14,7 +14,7 @@ const VerificationUserModal = ({ isOpen, onClose }) => {
         
           <p className={css.text}>The instruction was send to {email} immediatly after registration in the app</p>
           <button className={css.button} onClick={onClose}>OK</button>
-          <a>Benefits of a verified user</a>
+          <a href='*'>Benefits of a verified user</a>
         </div>
       
     </CustomModal>
