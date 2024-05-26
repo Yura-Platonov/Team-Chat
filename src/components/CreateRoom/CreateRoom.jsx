@@ -21,8 +21,14 @@ function CreateRoom({ onRoomCreated }) {
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
+  const [isVerificationUserModalOpen ,setIsVerificationUserModalOpen] = useState(false);
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+
+
+  const openVerificationUserModal = () => {
+    setIsVerificationUserModalOpen(true);
+  };
 
   useEffect(() => {
     axios.get('https://cool-chat.club/api/images/Home')
@@ -47,35 +53,52 @@ function CreateRoom({ onRoomCreated }) {
       openLoginModal(); 
       return;
     }
-
+  
     if (!roomName || roomName.trim() === '') {
       alert('Please provide the room name.');
       return;
     }
-
+  
     if (!selectedOption) {
       alert('Please select an image for the room.');
       return;
     }
-
+  
     const headers = {
       Authorization: `Bearer ${authToken}`,
     };
-
+  
+    // Проверка верификации пользователя
     axios
-      .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+      .get('https://cool-chat.club/api/users/me/', { headers })
       .then((response) => {
-        console.log('Комната создана:', response.data);
-        setRoomName('');
-        setRoomImage('');
-        setSelectedOption(null);
-        setIsCreateRoomModalOpen(false);
-        onRoomCreated(response.data);
+        const isVerified = response.data.verified;
+  
+        if (isVerified) {
+          // Пользователь верифицирован, продолжаем создание комнаты
+          axios
+            .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+            .then((response) => {
+              console.log('Комната создана:', response.data);
+              setRoomName('');
+              setRoomImage('');
+              setSelectedOption(null);
+              setIsCreateRoomModalOpen(false);
+              onRoomCreated(response.data);
+            })
+            .catch((error) => {
+              console.error('Ошибка при создании комнаты:', error);
+            });
+        } else {
+          // Пользователь не верифицирован, открываем модальное окно
+          openVerificationUserModal();
+        }
       })
       .catch((error) => {
-        console.error('Ошибка при создании комнаты:', error);
+        console.error('Ошибка при проверке верификации пользователя:', error);
       });
   };
+  
 
   const openCreateRoomModal = () => {
     setIsCreateRoomModalOpen(true);
