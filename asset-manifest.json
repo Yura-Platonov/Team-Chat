@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/Team-Chat/static/css/main.776524ff.css",
-    "main.js": "/Team-Chat/static/js/main.fa38775c.js",
+    "main.css": "/Team-Chat/static/css/main.c2e528eb.css",
+    "main.js": "/Team-Chat/static/js/main.e296c721.js",
     "static/media/BgPersonalChat.jpg": "/Team-Chat/static/media/BgPersonalChat.1756b8c1aa51dd3eea73.jpg",
     "static/media/MainFotoBg.jpg": "/Team-Chat/static/media/MainFotoBg.40c61eaefedc9fc224fa.jpg",
     "static/media/UvU.png": "/Team-Chat/static/media/UvU.114fff4cf77801b75fd2.png",
@@ -23,6 +23,7 @@
     "static/media/AppStore.svg": "/Team-Chat/static/media/AppStore.76b224e98cacffb1ea821e0f807b65dd.svg",
     "static/media/IconPeopleOnline.svg": "/Team-Chat/static/media/IconPeopleOnline.281f7c66f4bbb6270d4d7e9733e519a3.svg",
     "static/media/defaultAvatar.svg": "/Team-Chat/static/media/defaultAvatar.8b025487985270a71f7cf749d13af944.svg",
+    "static/media/VerifyModal.svg": "/Team-Chat/static/media/VerifyModal.e450609298c007b77f4c2cdcaf23dd7f.svg",
     "index.html": "/Team-Chat/index.html",
     "static/media/10.svg": "/Team-Chat/static/media/10.f62c5feb60fe40968aef53f46ad8b1a2.svg",
     "static/media/5.svg": "/Team-Chat/static/media/5.3745317f69e7daa720c9e37afd77599e.svg",
@@ -38,11 +39,11 @@
     "static/media/mobileMenu.svg": "/Team-Chat/static/media/mobileMenu.7455f398db526ccd56ebc9412da8fb25.svg",
     "static/media/2.svg": "/Team-Chat/static/media/2.c6bb4b5c025f54de590a4d3c7a5c9147.svg",
     "static/media/SendImg.svg": "/Team-Chat/static/media/SendImg.d72d51dcf5feb7891b8514b997537cbc.svg",
-    "main.776524ff.css.map": "/Team-Chat/static/css/main.776524ff.css.map",
-    "main.fa38775c.js.map": "/Team-Chat/static/js/main.fa38775c.js.map"
+    "main.c2e528eb.css.map": "/Team-Chat/static/css/main.c2e528eb.css.map",
+    "main.e296c721.js.map": "/Team-Chat/static/js/main.e296c721.js.map"
   },
   "entrypoints": [
-    "static/css/main.776524ff.css",
-    "static/js/main.fa38775c.js"
+    "static/css/main.c2e528eb.css",
+    "static/js/main.e296c721.js"
   ]
 }
