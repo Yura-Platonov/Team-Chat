@@ -6,6 +6,7 @@ import IconAdd from 'components/Images/IconAdd.svg';
 import CreateRoomImg from 'components/Images/CreateRoomImg.png';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import VerificationUserModal from 'components/Modal/VerificationUserModal';
 import useLoginModal from '../Hooks/useLoginModal';
 
 import { useAuth } from '../LoginForm/AuthContext';
@@ -20,8 +21,18 @@ function CreateRoom({ onRoomCreated }) {
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
+  const [isVerificationUserModalOpen ,setIsVerificationUserModalOpen] = useState(false);
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+
+
+  const openVerificationUserModal = () => {
+    setIsVerificationUserModalOpen(true);
+  };
+  const closeVerificationUserModal = (e) => {
+    e.stopPropagation()
+    setIsVerificationUserModalOpen(false);
+  };
 
   useEffect(() => {
     axios.get('https://cool-chat.club/api/images/Home')
@@ -46,35 +57,49 @@ function CreateRoom({ onRoomCreated }) {
       openLoginModal(); 
       return;
     }
-
+  
     if (!roomName || roomName.trim() === '') {
       alert('Please provide the room name.');
       return;
     }
-
+  
     if (!selectedOption) {
       alert('Please select an image for the room.');
       return;
     }
-
+  
     const headers = {
       Authorization: `Bearer ${authToken}`,
     };
-
+  
     axios
-      .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+      .get('https://cool-chat.club/api/users/me/', { headers })
       .then((response) => {
-        console.log('Комната создана:', response.data);
-        setRoomName('');
-        setRoomImage('');
-        setSelectedOption(null);
-        setIsCreateRoomModalOpen(false);
-        onRoomCreated(response.data);
+        const isVerified = response.data.verified;
+  
+        if (isVerified) {
+          axios
+            .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+            .then((response) => {
+              console.log('Комната создана:', response.data);
+              setRoomName('');
+              setRoomImage('');
+              setSelectedOption(null);
+              setIsCreateRoomModalOpen(false);
+              onRoomCreated(response.data);
+            })
+            .catch((error) => {
+              console.error('Ошибка при создании комнаты:', error);
+            });
+        } else {
+          openVerificationUserModal();
+        }
       })
       .catch((error) => {
-        console.error('Ошибка при создании комнаты:', error);
+        console.error('Ошибка при проверке верификации пользователя:', error);
       });
   };
+  
 
   const openCreateRoomModal = () => {
     setIsCreateRoomModalOpen(true);
@@ -124,6 +149,7 @@ function CreateRoom({ onRoomCreated }) {
       />
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      <VerificationUserModal isOpen={isVerificationUserModalOpen} onClose={closeVerificationUserModal} />
     </>
   );
 }
