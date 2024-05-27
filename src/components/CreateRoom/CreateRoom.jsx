@@ -29,6 +29,10 @@ function CreateRoom({ onRoomCreated }) {
   const openVerificationUserModal = () => {
     setIsVerificationUserModalOpen(true);
   };
+  const closeVerificationUserModal = (e) => {
+    e.stopPropagation()
+    setIsVerificationUserModalOpen(false);
+  };
 
   useEffect(() => {
     axios.get('https://cool-chat.club/api/images/Home')
@@ -68,14 +72,12 @@ function CreateRoom({ onRoomCreated }) {
       Authorization: `Bearer ${authToken}`,
     };
   
-    // Проверка верификации пользователя
     axios
       .get('https://cool-chat.club/api/users/me/', { headers })
       .then((response) => {
         const isVerified = response.data.verified;
   
         if (isVerified) {
-          // Пользователь верифицирован, продолжаем создание комнаты
           axios
             .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
             .then((response) => {
@@ -90,7 +92,6 @@ function CreateRoom({ onRoomCreated }) {
               console.error('Ошибка при создании комнаты:', error);
             });
         } else {
-          // Пользователь не верифицирован, открываем модальное окно
           openVerificationUserModal();
         }
       })
@@ -148,6 +149,7 @@ function CreateRoom({ onRoomCreated }) {
       />
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      <VerificationUserModal isOpen={isVerificationUserModalOpen} onClose={closeVerificationUserModal} />
     </>
   );
 }

@@ -4,7 +4,8 @@ import css from './VerificationUserModal.module.css';
 
 
 const VerificationUserModal = ({ isOpen, onClose }) => {
-  const email = localStorage.getItem('user.username');
+  const user = JSON.parse(localStorage.getItem('user'));
+  const email = user ? (user.username) : null;
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
