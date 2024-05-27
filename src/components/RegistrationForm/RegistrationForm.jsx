@@ -12,7 +12,18 @@ const validationSchema = yup.object().shape({
   user_name: yup.string().required('Username is required').matches(
     /^[a-zA-Z\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0491\u0490\u0454\u0404\u04E7\u04E6 ()_.]+$/,
     'Please input correct Username'
-  ),
+  ).test('checkUsernameUnique', 'Username already exists', async (value) => {
+    if (!value) return true;
+    try {
+      const response = await axios.get('https://cool-chat.club/api/users/');
+      const users = response.data;
+      const isUsernameTaken = users.some(user => user.user_name === value);
+      return !isUsernameTaken;
+    } catch (error) {
+      console.error('Error checking username:', error);
+      return false; 
+    }
+  }),
 
   email: yup.string()
     .test('is-valid-email', 'Please input correct email', value => (
