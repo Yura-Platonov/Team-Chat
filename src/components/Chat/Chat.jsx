@@ -111,7 +111,7 @@ const Chat = () => {
 
             setTimeout(() => {
               setShowSVG(false);
-            }, 1000);
+            }, 3000);
             // setShowSVG(true);
 
             // setIsAnimating(true);
@@ -850,17 +850,18 @@ const Chat = () => {
                     <button className={css.d} onClick={handleCloseChatMenu}>X</button>
                   </div>
                 )}
-            </div>
-          </div>
-        ))}
-
-          {showSVG && (
+                 {showSVG && (
             <div className={css.svg_container}>
               <AnimatesTypingSVG className={css.wave}/>
               <ShowTypingSVG/>
             </div>
           )}
 
+            </div>
+          </div>
+        ))}
+
+         
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {selectedUser.user_name}</p>

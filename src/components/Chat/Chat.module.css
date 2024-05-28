@@ -1007,6 +1007,9 @@ right: 3%;
 }
 
 .svg_container{
+    position: absolute;
+    bottom: 120px;
+    right: 100px;
 display: flex;
 justify-content: flex-end;
 align-items: baseline;
