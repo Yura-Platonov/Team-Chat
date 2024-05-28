@@ -64,7 +64,6 @@ const Chat = () => {
       navigate(`/Personalchat/${userName}`);
     };
   };
-
   const socketRef = useRef(null);
 
   useEffect(() => {
@@ -101,17 +100,28 @@ const Chat = () => {
         console.log('Connected to the server via WebSocket');
       };
 
+      
+      let isAnimating = false;
+
       socket.onmessage = (event) => {
+        
         try {
+          
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
           
-          if (messageData.type) {
+          if (messageData.type && !isAnimating) {
+            
             console.log("1234:", messageData.type);
+            isAnimating = true;
 
+            setShowSVG(true);
+            
             setTimeout(() => {
-              setShowSVG(false);
+                setShowSVG(false);
+                isAnimating = false;
             }, 3000);
+        
             // setShowSVG(true);
 
             // setIsAnimating(true);
