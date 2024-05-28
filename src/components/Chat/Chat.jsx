@@ -12,6 +12,8 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import { ReactComponent as ShowTypingSVG } from 'components/Images/userWrite.svg';
+import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedWrite.svg';
 import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
@@ -39,6 +41,9 @@ const Chat = () => {
   const [editedMessage, setEditedMessage] = useState('');  
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+  const [showSVG, setShowSVG] = useState(false);
+  // const [ setIsAnimating] = useState(false);
+  // const animationTimeoutRef = useRef(null);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -102,7 +107,19 @@ const Chat = () => {
           console.log("Received message:", messageData);
           
           if (messageData.type) {
-            console.log("Name:", messageData.type);
+            console.log("1234:", messageData.type);
+            
+            setTimeout(() => {
+              setShowSVG(false);
+            }, 1000);
+            // setShowSVG(true);
+
+            // setIsAnimating(true);
+
+          // animationTimeoutRef.current = setTimeout(() => {
+          //   setShowSVG(false);
+          //   setIsAnimating(false);
+          // }, 3000);
           }
 
           if (messageData.type === 'active_users') {
@@ -825,6 +842,13 @@ const Chat = () => {
             </div>
           </div>
         ))}
+
+          {showSVG && (
+            <div className={css.svg_container}>
+              <AnimatesTypingSVG className={css.wave}/>
+              <ShowTypingSVG/>
+            </div>
+          )}
 
             {selectedUser && (
               <div className={css.userMenu}>

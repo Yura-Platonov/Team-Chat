@@ -1005,3 +1005,26 @@ right: 3%;
     
         } 
 }
+
+.svg_container{
+display: flex;
+justify-content: flex-end;
+align-items: baseline;
+margin-top: 30px;
+}
+
+@keyframes wave-animation {
+    0% {
+      stroke-dashoffset: 0;
+    }
+    100% {
+      stroke-dashoffset: 1000;
+    }
+  }
+  
+  .wave {
+        stroke-dasharray: 100;
+        stroke-dashoffset: 100;
+    animation: wave-animation 10s linear infinite;
+  }
+  
