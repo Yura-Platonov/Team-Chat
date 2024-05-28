@@ -108,7 +108,7 @@ const Chat = () => {
           
           if (messageData.type) {
             console.log("1234:", messageData.type);
-            
+
             setTimeout(() => {
               setShowSVG(false);
             }, 1000);
@@ -163,6 +163,17 @@ const Chat = () => {
         console.error('WebSocket Error:', error);
       };
 
+  //     return () => {
+  //       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+  //         socketRef.current.close();
+  //       }
+  //       if (animationTimeoutRef.current) {
+  //         clearTimeout(animationTimeoutRef.current);
+  //       }
+  //     };
+  //   }
+  // }, [roomName, token, isAnimating]);
+  
       return () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
           socketRef.current.close();
