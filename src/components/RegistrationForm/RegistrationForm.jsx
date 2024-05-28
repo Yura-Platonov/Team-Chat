@@ -12,24 +12,38 @@ const validationSchema = yup.object().shape({
   user_name: yup.string().required('Username is required').matches(
     /^[a-zA-Z\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0491\u0490\u0454\u0404\u04E7\u04E6 ()_.]+$/,
     'Please input correct Username'
-  ).test('checkUsernameUnique', 'Username already exists', async (value) => {
+  ).test('checkUsernameUnique', 'Username already exists', async function (value) {
     if (!value) return true;
     try {
-      const response = await axios.get('https://cool-chat.club/api/users/');
-      const users = response.data;
-      const isUsernameTaken = users.some(user => user.user_name === value);
-      return !isUsernameTaken;
-    } catch (error) {
-      console.error('Error checking username:', error);
+      await axios.get(`https://cool-chat.club/api/users/audit/${value}`);
       return false; 
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        return true; 
+      } else {
+        return false; 
+      }
     }
   }),
 
   email: yup.string()
-    .test('is-valid-email', 'Please input correct email', value => (
-      value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
-    ))
-    .required('Email is required'),
+  .test('is-valid-email', 'Please input correct email', value => (
+    value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
+  ))
+  .required('Email is required')
+  .test('checkEmailUnique', 'Email already exists', async function (value) {
+    if (!value) return true;
+    try {
+      await axios.get(`https://cool-chat.club/api/users/${value}`);
+      return false; 
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        return true; 
+      } else {
+        return false;
+      }
+    }
+  }),
 
   password: yup.string()
     .required('Password is required')
@@ -99,12 +113,12 @@ const RegistrationForm = (props) => {
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         try {
-          const existingUsers = await axios.get('https://cool-chat.club/api/users/');
+          // const existingUsers = await axios.get('https://cool-chat.club/api/users/');
 
-          if (existingUsers.data.some((user) => user.email === values.email)) {
-            alert('Email is already in use. Please choose another email.');
-            return;
-          }
+          // if (existingUsers.data.some((user) => user.email === values.email)) {
+          //   alert('Email is already in use. Please choose another email.');
+          //   return;
+          // }
 
           const avatar = selectedAvatar.value;
           const response = await axios.post('https://cool-chat.club/api/users/', {

@@ -12,6 +12,8 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import { ReactComponent as ShowTypingSVG } from 'components/Images/userWrite.svg';
+import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedWrite.svg';
 import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
@@ -39,6 +41,9 @@ const Chat = () => {
   const [editedMessage, setEditedMessage] = useState('');  
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+  const [showSVG, setShowSVG] = useState(false);
+  // const [ setIsAnimating] = useState(false);
+  // const animationTimeoutRef = useRef(null);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -59,10 +64,118 @@ const Chat = () => {
       navigate(`/Personalchat/${userName}`);
     };
   };
-
   const socketRef = useRef(null);
 
+  // useEffect(() => {
+  //   if (!token) {
+  //     axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
+  //       .then(response => {
+  //         const formattedMessages = response.data.map(messageData => {
+  //           const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
+  //           const formattedDate = formatTime(created_at);
+
+  //           return {
+  //             sender,
+  //             avatar,
+  //             message,
+  //             formattedDate,
+  //             receiver_id,
+  //             id, 
+  //             id_return,
+  //             fileUrl,
+  //             edited,
+  //           };
+  //         });
+
+  //         setMessages(prevMessages => [...prevMessages, ...formattedMessages]);
+  //       })
+  //       .catch(error => {
+  //         console.error('Error fetching messages:', error);
+  //       });
+  //   } else {
+  //     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+  //     socketRef.current = socket;
+
+  //     socket.onopen = () => {
+  //       console.log('Connected to the server via WebSocket');
+  //     };
+
+      
+  //     let isAnimating = false;
+
+  //     socket.onmessage = (event) => {
+        
+  //       try {
+          
+  //         const messageData = JSON.parse(event.data);
+  //         console.log("Received message:", messageData);
+          
+  //         if (messageData.type && !isAnimating) {
+            
+  //           console.log("1234:", messageData.type);
+  //           isAnimating = true;
+
+  //           setShowSVG(true);
+            
+  //           setTimeout(() => {
+  //               setShowSVG(false);
+  //               isAnimating = false;
+  //           }, 3000);
+  //         }
+
+  //         if (messageData.type === 'active_users') {
+  //           setUserList(messageData.data);
+  //         }
+  //        else if (messageData.id) {
+  //           const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
+  //           const formattedDate = formatTime(created_at);
+
+  //           const newMessage = {
+  //             sender,
+  //             avatar,
+  //             message,
+  //             id,
+  //             id_return,
+  //             vote,
+  //             formattedDate,
+  //             receiver_id,
+  //             fileUrl,
+  //             edited,
+  //           };
+
+  //           setMessages(prevMessages => {
+  //             const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
+
+  //             if (existingMessageIndex !== -1) {
+  //               const updatedMessages = [...prevMessages];
+  //               updatedMessages[existingMessageIndex] = newMessage;
+  //               return updatedMessages;
+  //             }
+
+  //             return [...prevMessages, newMessage];
+  //           });
+  //         }
+  //       } catch (error) {
+  //         console.error('Error parsing JSON:', error);
+  //       }
+  //     };
+
+  //     socket.onerror = (error) => {
+  //       console.error('WebSocket Error:', error);
+  //     };
+ 
+  //     return () => {
+  //       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+  //         socketRef.current.close();
+  //       }
+  //     };
+  //   }
+  // }, [roomName, token]);
+
   useEffect(() => {
+    let isAnimating = false;
+    let skipAnimation = true;
+
     if (!token) {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
         .then(response => {
@@ -101,8 +214,15 @@ const Chat = () => {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
           
-          if (messageData.type) {
-            console.log("Name:", messageData.type);
+          if (messageData.type && !skipAnimation && !isAnimating) {            
+            console.log("1234:", messageData.type);
+            isAnimating = true;
+            setShowSVG(true);
+            
+            setTimeout(() => {
+                setShowSVG(false);
+                isAnimating = false;
+            }, 3000);
           }
 
           if (messageData.type === 'active_users') {
@@ -145,6 +265,8 @@ const Chat = () => {
       socket.onerror = (error) => {
         console.error('WebSocket Error:', error);
       };
+ 
+      skipAnimation = false;
 
       return () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -153,6 +275,7 @@ const Chat = () => {
       };
     }
   }, [roomName, token]);
+  
 
   // useEffect(() => {
   //   if (messageContainerRef.current) {
@@ -822,10 +945,18 @@ const Chat = () => {
                     <button className={css.d} onClick={handleCloseChatMenu}>X</button>
                   </div>
                 )}
+                 {showSVG && (
+            <div className={css.svg_container}>
+              <AnimatesTypingSVG className={css.wave}/>
+              <ShowTypingSVG/>
+            </div>
+          )}
+
             </div>
           </div>
         ))}
 
+         
             {selectedUser && (
               <div className={css.userMenu}>
                 <p>Write a direct message to {selectedUser.user_name}</p>
