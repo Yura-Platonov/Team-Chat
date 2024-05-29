@@ -15,13 +15,20 @@ const validationSchema = yup.object().shape({
   ).test('checkUsernameUnique', 'Username already exists', async function (value) {
     if (!value) return true;
     try {
-      await axios.get(`https://cool-chat.club/api/users/audit/${value}`);
-      return false; 
+      const response = await axios.get(`https://cool-chat.club/api/users/audit/${value}`);
+      if (response.status === 200) {
+        return false;
+      }
+      if (response.status === 204) {
+        return true;
+      }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        return true; 
+      if (error.response) {
+        console.error('Server error:', error.response.status);
+        return false;
       } else {
-        return false; 
+        console.error('Network or other error:', error);
+        return false;
       }
     }
   }),
@@ -34,12 +41,20 @@ const validationSchema = yup.object().shape({
   .test('checkEmailUnique', 'Email already exists', async function (value) {
     if (!value) return true;
     try {
-      await axios.get(`https://cool-chat.club/api/users/${value}`);
-      return false; 
+      const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
+      
+      if (response.status === 200) {
+        return false;
+      }
+      if (response.status === 204) {
+        return true;
+      }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        return true; 
+      if (error.response) {
+        console.error('Server error:', error.response.status);
+        return false;
       } else {
+        console.error('Network or other error:', error);
         return false;
       }
     }
@@ -113,14 +128,7 @@ const RegistrationForm = (props) => {
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         try {
-          // const existingUsers = await axios.get('https://cool-chat.club/api/users/');
-
-          // if (existingUsers.data.some((user) => user.email === values.email)) {
-          //   alert('Email is already in use. Please choose another email.');
-          //   return;
-          // }
-
-          const avatar = selectedAvatar.value;
+           const avatar = selectedAvatar.value;
           const response = await axios.post('https://cool-chat.club/api/users/', {
             user_name: values.user_name,
             email: values.email,
