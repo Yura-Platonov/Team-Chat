@@ -1,0 +1,208 @@
+.createRoomContainer {
+    width: 320px;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 560px;
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      width: 640px;
+  
+  
+      }
+    @media screen and (min-width:1440px){
+       width: 1020px;
+  
+    }
+    }
+    
+    .title {
+      text-align: center;
+      margin: 0;
+      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 124%;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        margin-bottom: 24px;
+        font-size: 28px;
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      /* margin-bottom: 32px; */
+      font-size: 32px;
+  
+      }
+    @media screen and (min-width:1440px){
+      /* margin-bottom: 32px; */
+      font-size: 44px;
+  
+    }
+    }
+    
+    .text {
+      display: block;
+      font-size: 16px;
+      font-weight: 400;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 20px;
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      /* margin-bottom: 32px; */
+      font-size: 24px;
+  
+      }
+  
+    }
+    .text1 {
+      display: block;
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 10px;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        font-size: 20px;
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      /* margin-bottom: 32px; */
+      font-size: 24px;
+  
+      }
+    }
+    
+    
+    .roomImgContainer {
+      display: flex;
+      flex-wrap: wrap;
+      margin: -5px;
+      overflow-y: auto;
+      height: 350px;
+   
+      @media screen and (min-width: 1024px) {
+        margin: -10px;
+    
+        }
+     
+    }
+    
+    .roomImgCard {
+      padding: 0;
+      margin: 5px;
+      height: 150px;
+      width: 150px;
+      border-radius: 20px;
+      border: 2px solid #024A7A;
+      cursor: pointer;
+      overflow: hidden;
+      box-sizing: border-box;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        height: 180px;
+        width: 180px;
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      margin: 10px;
+      height: 200px;
+        width: 200px;
+  
+      }
+    @media screen and (min-width:1440px){
+      height: 230px;
+      width: 230px;
+  
+    }
+    }
+    
+    .roomImgCard:hover {
+      border: 4px solid green;
+    }
+    
+    .roomImgCard.active {
+      border: 4px solid greenyellow;
+    }
+    
+    .roomImg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .button {
+      width: 200px;
+      height: 60px;
+      padding: 0;
+      margin: 0;
+      margin-top: 25px;
+      cursor: pointer;
+      box-sizing: border-box;
+      font-size: 24px;
+      font-weight: 500;
+      line-height: 124%;
+      border: none;
+      border-radius: 14px;
+      background: #024A7A;
+      color: #F5FBFF;
+      transition: background-color 0.3s;
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+        width: 300px;
+        height: 70px;
+       
+  
+      } 
+      @media screen and (min-width: 1024px) {
+        width: 300px;
+        height: 75px;
+        margin-top: 35px;
+        font-size: 30px;
+        border-radius: 20px;
+  
+        }
+      @media screen and (min-width:1440px){
+        width: 300px;
+        height: 80px;
+        margin-top: 40px;
+        font-size: 32px;
+  
+      }
+    }
+    
+    .button:hover {
+      color: #0F1E28;
+      background-color: #F5FBFF;
+      border: 2px solid #024A7A;
+      box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    }
+    
+    .center {
+      display: flex;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+    }
+    
+    .input {
+      position: relative;
+      width: 100%;
+      margin: 0;
+      margin-bottom: 16px;
+      height: 60px;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: 400;
+      line-height: 130%;
+      box-sizing: border-box;
+      border-radius: 20px;
+      border: 2px solid #024A7A;
+      background: #F5FBFF;
+  
+      @media screen and (min-width: 768px) and (max-width: 1023px){
+       
+  
+    } 
+    @media screen and (min-width: 1024px) {
+      height: 80px;
+      padding: 20px;
+  
+      }
+    }
+    

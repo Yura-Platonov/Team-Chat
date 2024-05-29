@@ -42,8 +42,6 @@ const Chat = () => {
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
   const [showSVG, setShowSVG] = useState(false);
-  // const [ setIsAnimating] = useState(false);
-  // const animationTimeoutRef = useRef(null);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -174,7 +172,6 @@ const Chat = () => {
 
   useEffect(() => {
     let isAnimating = false;
-    let skipAnimation = true;
 
     if (!token) {
       axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
@@ -214,7 +211,7 @@ const Chat = () => {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
           
-          if (messageData.type === 'Test' && !skipAnimation && !isAnimating) {            
+          if (messageData.type === 'Test'  && !isAnimating) {            
             console.log("1234:", messageData.type);
             isAnimating = true;
             setShowSVG(true);
@@ -266,7 +263,6 @@ const Chat = () => {
         console.error('WebSocket Error:', error);
       };
  
-      skipAnimation = false;
 
       return () => {
         if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
@@ -341,6 +337,9 @@ const Chat = () => {
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
     setEditedMessage(e.target.value);
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({ type: 'typing' }));
+    }    
   };
 
   const formatTime = (created) => {
