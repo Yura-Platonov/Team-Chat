@@ -341,6 +341,9 @@ const Chat = () => {
   const handleMessageChange = (e) => {
     setMessage(e.target.value);
     setEditedMessage(e.target.value);
+    if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      socketRef.current.send(JSON.stringify({ type: 'typing' }));
+    }    
   };
 
   const formatTime = (created) => {
