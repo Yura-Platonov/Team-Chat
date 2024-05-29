@@ -18,6 +18,7 @@ const RegistrationForm = (props) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [userNameValue, setUserNameValue] = useState('');
   const debouncedUserName = useDebounce(userNameValue, 2000);
+  const [isUserNameUnique, setIsUserNameUnique] = useState(true);
 
   useEffect(() => {
     axios
@@ -38,9 +39,19 @@ const RegistrationForm = (props) => {
         console.error('Error loading images:', error);
       });
   }, []);
-
+  
   useEffect(() => {
     console.log('Debounced user name:', debouncedUserName);
+    const checkUserNameUnique = async () => {
+      if (!debouncedUserName) return; 
+      try {
+        const response = await axios.get(`https://cool-chat.club/api/users/audit/${debouncedUserName}`);
+        setIsUserNameUnique(response.status === 204);
+      } catch (error) {
+        console.error('Error checking username uniqueness:', error);
+      }
+    };
+    checkUserNameUnique();
   }, [debouncedUserName]);
 
   const togglePasswordVisibility = () => {
@@ -65,26 +76,7 @@ const RegistrationForm = (props) => {
     user_name: yup.string().required('Username is required').matches(
       /^[a-zA-Z\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0491\u0490\u0454\u0404\u04E7\u04E6 ()_.]+$/,
       'Please input correct Username'
-    ).test('checkUsernameUnique', 'Username already exists', async function (value) {
-         if (!debouncedUserName) return true;
-          try {
-        const response = await axios.get(`https://cool-chat.club/api/users/audit/${debouncedUserName}`);
-        if (response.status === 200) {
-          return false;
-        }
-        if (response.status === 204) {
-          return true;
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error('Server error:', error.response.status);
-          return false;
-        } else {
-          console.error('Network or other error:', error);
-          return false;
-        }
-      }
-    }),
+    ).test('checkUsernameUnique', 'Username already exists', () => isUserNameUnique),
   
     email: yup.string()
     .test('is-valid-email', 'Please input correct email', value => (
