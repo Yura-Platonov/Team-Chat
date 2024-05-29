@@ -6,70 +6,9 @@ import qs from 'qs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import css from './RegistrationForm.module.css';
+import useDebounce from 'components/Hooks/useDebounce';
 import { useAuth } from '../LoginForm/AuthContext';
 
-const validationSchema = yup.object().shape({
-  user_name: yup.string().required('Username is required').matches(
-    /^[a-zA-Z\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0491\u0490\u0454\u0404\u04E7\u04E6 ()_.]+$/,
-    'Please input correct Username'
-  ).test('checkUsernameUnique', 'Username already exists', async function (value) {
-    if (!value) return true;
-    try {
-      const response = await axios.get(`https://cool-chat.club/api/users/audit/${value}`);
-      if (response.status === 200) {
-        return false;
-      }
-      if (response.status === 204) {
-        return true;
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error('Server error:', error.response.status);
-        return false;
-      } else {
-        console.error('Network or other error:', error);
-        return false;
-      }
-    }
-  }),
-
-  email: yup.string()
-  .test('is-valid-email', 'Please input correct email', value => (
-    value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
-  ))
-  .required('Email is required')
-  .test('checkEmailUnique', 'Email already exists', async function (value) {
-    if (!value) return true;
-    try {
-      const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
-      
-      if (response.status === 200) {
-        return false;
-      }
-      if (response.status === 204) {
-        return true;
-      }
-    } catch (error) {
-      if (error.response) {
-        console.error('Server error:', error.response.status);
-        return false;
-      } else {
-        console.error('Network or other error:', error);
-        return false;
-      }
-    }
-  }),
-
-  password: yup.string()
-    .required('Password is required')
-    .matches(
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s)/,
-      'Use at least one: (0-9), (a-z), (A-Z), (@#$%^&+=!)'
-    )
-    .max(8, 'Password must be at most 8 characters long'),
-
-  confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm Password is required'),
-});
 
 const RegistrationForm = (props) => {
   const { login } = useAuth();
@@ -77,6 +16,8 @@ const RegistrationForm = (props) => {
   const [selectedAvatar, setSelectedAvatar] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
+  const [userNameValue, setUserNameValue] = useState('');
+  const debouncedUserName = useDebounce(userNameValue, 2000);
 
   useEffect(() => {
     axios
@@ -98,6 +39,10 @@ const RegistrationForm = (props) => {
       });
   }, []);
 
+  useEffect(() => {
+    console.log('Debounced user name:', debouncedUserName);
+  }, [debouncedUserName]);
+
   const togglePasswordVisibility = () => {
     setShowPassword(prevShowPassword => !prevShowPassword);
   };
@@ -115,6 +60,71 @@ const RegistrationForm = (props) => {
       setActiveCardIndex(0);
     }
   }, [defaultAvatar, imageOptions]);
+
+  const validationSchema = yup.object().shape({
+    user_name: yup.string().required('Username is required').matches(
+      /^[a-zA-Z\u0430-\u044F\u0410-\u042F\u0456\u0406\u0457\u0407\u0491\u0490\u0454\u0404\u04E7\u04E6 ()_.]+$/,
+      'Please input correct Username'
+    ).test('checkUsernameUnique', 'Username already exists', async function (value) {
+         if (!debouncedUserName) return true;
+          try {
+        const response = await axios.get(`https://cool-chat.club/api/users/audit/${debouncedUserName}`);
+        if (response.status === 200) {
+          return false;
+        }
+        if (response.status === 204) {
+          return true;
+        }
+      } catch (error) {
+        if (error.response) {
+          console.error('Server error:', error.response.status);
+          return false;
+        } else {
+          console.error('Network or other error:', error);
+          return false;
+        }
+      }
+    }),
+  
+    email: yup.string()
+    .test('is-valid-email', 'Please input correct email', value => (
+      value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
+    ))
+    .required('Email is required')
+    .test('checkEmailUnique', 'Email already exists', async function (value) {
+      if (!value) return true;
+      try {
+        const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
+        
+        if (response.status === 200) {
+          return false;
+        }
+        if (response.status === 204) {
+          return true;
+        }
+      } catch (error) {
+        if (error.response) {
+          console.error('Server error:', error.response.status);
+          return false;
+        } else {
+          console.error('Network or other error:', error);
+          return false;
+        }
+      }
+    }),
+  
+    password: yup.string()
+      .required('Password is required')
+      .matches(
+        /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?!.*\s)/,
+        'Use at least one: (0-9), (a-z), (A-Z), (@#$%^&+=!)'
+      )
+      .max(8, 'Password must be at most 8 characters long'),
+  
+    confirmPassword: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match').required('Confirm Password is required'),
+  });
+
+  
 
   return (
     <Formik
@@ -180,6 +190,8 @@ const RegistrationForm = (props) => {
           alert('Check your information and try again.');
         } 
       }}
+
+      
     >
       {({ errors, touched, setFieldValue }) => (
         <Form className={css.registerForm}>
@@ -244,6 +256,11 @@ const RegistrationForm = (props) => {
               name="user_name"
               autoComplete="off"
               placeholder="Nikoletta"
+              value={userNameValue} 
+              onChange={(e) => {
+                setUserNameValue(e.target.value);
+                setFieldValue('user_name', e.target.value);
+              }}
             />
             <ErrorMessage name="user_name" component="div" className={css.errorMessage} />
           </div>
