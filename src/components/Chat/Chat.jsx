@@ -210,9 +210,12 @@ const Chat = () => {
         try {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
-          console.log("2222:", messageData.type);
           
-          if (messageData.typе === 'typing' && !isAnimating) {            
+          if (messageData.type === 'active_users') {
+            setUserList(messageData.data);
+          }
+
+          else if (messageData === 'type' && !isAnimating) {            
             console.log("1234:", messageData.type);
             isAnimating = true;
             setShowSVG(true);
@@ -221,10 +224,6 @@ const Chat = () => {
                 setShowSVG(false);
                 isAnimating = false;
             }, 3000);
-          }
-
-          if (messageData.type === 'active_users') {
-            setUserList(messageData.data);
           }
          else if (messageData.id) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
