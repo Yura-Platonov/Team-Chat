@@ -215,7 +215,7 @@ const Chat = () => {
             setUserList(messageData.data);
           }
 
-          else if (messageData === 'type' && !isAnimating) {            
+          else if (messageData.type && !isAnimating) {            
             console.log("1234:", messageData.type);
             isAnimating = true;
             setShowSVG(true);
