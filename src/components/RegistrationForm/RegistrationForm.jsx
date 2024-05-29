@@ -17,8 +17,11 @@ const RegistrationForm = (props) => {
   const [imageOptions, setImageOptions] = useState([]);
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [userNameValue, setUserNameValue] = useState('');
+  const [userEmailValue, setUserEmailValue] = useState('');
   const debouncedUserName = useDebounce(userNameValue, 2000);
+  const debouncedUserEmail = useDebounce(userEmailValue, 2000);
   const [isUserNameUnique, setIsUserNameUnique] = useState(true);
+  const [isEmailUnique, setIsEmailUnique] = useState(true);
 
   useEffect(() => {
     axios
@@ -39,7 +42,7 @@ const RegistrationForm = (props) => {
         console.error('Error loading images:', error);
       });
   }, []);
-  
+
   useEffect(() => {
     console.log('Debounced user name:', debouncedUserName);
     const checkUserNameUnique = async () => {
@@ -53,6 +56,22 @@ const RegistrationForm = (props) => {
     };
     checkUserNameUnique();
   }, [debouncedUserName]);
+
+  useEffect(() => {
+    console.log('Debounced user email:', debouncedUserEmail);
+
+    const checkEmailUnique = async () => {
+      if (!debouncedUserEmail) return;
+      try {
+        const response = await axios.get(`https://cool-chat.club/api/users/${debouncedUserEmail}`);
+        setIsEmailUnique(response.status === 204); 
+      } catch (error) {
+        console.error('Error checking email uniqueness:', error);
+      }
+    };
+    checkEmailUnique();
+  }, [debouncedUserEmail]);
+  
 
   const togglePasswordVisibility = () => {
     setShowPassword(prevShowPassword => !prevShowPassword);
@@ -83,27 +102,28 @@ const RegistrationForm = (props) => {
       value && /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/.test(value)
     ))
     .required('Email is required')
-    .test('checkEmailUnique', 'Email already exists', async function (value) {
-      if (!value) return true;
-      try {
-        const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
+    .test('checkEmailUnique', 'Email already exists', () => isEmailUnique),
+    // .test('checkEmailUnique', 'Email already exists', async function (value) {
+    //   if (!value) return true;
+    //   try {
+    //     const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
         
-        if (response.status === 200) {
-          return false;
-        }
-        if (response.status === 204) {
-          return true;
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error('Server error:', error.response.status);
-          return false;
-        } else {
-          console.error('Network or other error:', error);
-          return false;
-        }
-      }
-    }),
+    //     if (response.status === 200) {
+    //       return false;
+    //     }
+    //     if (response.status === 204) {
+    //       return true;
+    //     }
+    //   } catch (error) {
+    //     if (error.response) {
+    //       console.error('Server error:', error.response.status);
+    //       return false;
+    //     } else {
+    //       console.error('Network or other error:', error);
+    //       return false;
+    //     }
+    //   }
+    // }),
   
     password: yup.string()
       .required('Password is required')
@@ -199,6 +219,11 @@ const RegistrationForm = (props) => {
               name="email"
               autoComplete="email"
               placeholder="name@gmail.com"
+              value={userEmailValue} 
+              onChange={(e) => {
+                setUserEmailValue(e.target.value);
+                setFieldValue('email', e.target.value);
+              }}
             />
             <ErrorMessage name="email" component="div" className={css.errorMessage} />
           </div>
