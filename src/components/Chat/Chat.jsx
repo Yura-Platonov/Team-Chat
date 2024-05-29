@@ -210,8 +210,9 @@ const Chat = () => {
         try {
           const messageData = JSON.parse(event.data);
           console.log("Received message:", messageData);
+          console.log("2222:", messageData.type);
           
-          if (messageData.type === 'Test'  && !isAnimating) {            
+          if (messageData.typе === 'typing' && !isAnimating) {            
             console.log("1234:", messageData.type);
             isAnimating = true;
             setShowSVG(true);
