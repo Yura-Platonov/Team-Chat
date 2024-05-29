@@ -18,8 +18,8 @@ const RegistrationForm = (props) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [userNameValue, setUserNameValue] = useState('');
   const [userEmailValue, setUserEmailValue] = useState('');
-  const debouncedUserName = useDebounce(userNameValue, 2000);
-  const debouncedUserEmail = useDebounce(userEmailValue, 2000);
+  const debouncedUserName = useDebounce(userNameValue, 1500);
+  const debouncedUserEmail = useDebounce(userEmailValue, 1500);
   const [isUserNameUnique, setIsUserNameUnique] = useState(true);
   const [isEmailUnique, setIsEmailUnique] = useState(true);
 
@@ -103,27 +103,6 @@ const RegistrationForm = (props) => {
     ))
     .required('Email is required')
     .test('checkEmailUnique', 'Email already exists', () => isEmailUnique),
-    // .test('checkEmailUnique', 'Email already exists', async function (value) {
-    //   if (!value) return true;
-    //   try {
-    //     const response = await axios.get(`https://cool-chat.club/api/users/${value}`);
-        
-    //     if (response.status === 200) {
-    //       return false;
-    //     }
-    //     if (response.status === 204) {
-    //       return true;
-    //     }
-    //   } catch (error) {
-    //     if (error.response) {
-    //       console.error('Server error:', error.response.status);
-    //       return false;
-    //     } else {
-    //       console.error('Network or other error:', error);
-    //       return false;
-    //     }
-    //   }
-    // }),
   
     password: yup.string()
       .required('Password is required')
