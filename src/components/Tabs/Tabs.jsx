@@ -18,27 +18,27 @@ const Tabs = ({ defaultActiveIndex, children }) => {
     setActiveIndex(index);
   };
 
-//   const createTab = async () => {
-//     try {
-//       const requestData = {
-//         name_tab: 'example_tab',
-//         image_tab: 'example_image_url'
-//       };
+  // const createTab = async () => {
+  //   try {
+  //     const requestData = {
+  //       name_tab: 'example_tab',
+  //       image_tab: 'example_image_url'
+  //     };
 
-//       const response = await axios.post('https://cool-chat.club/api/tabs/', requestData, {
-//         headers: {
-//           'Content-Type': 'application/json',
-//           'Accept': 'application/json'
-//         }
-//       });
+  //     const response = await axios.post('https://cool-chat.club/api/tabs/', requestData, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json'
+  //       }
+  //     });
 
-//       console.log('Tab created:', response.data);
-//       // После успешного создания таба закрываем модальное окно
-//     //   setShowModal(false);
-//     } catch (error) {
-//       console.error('Error creating tab:', error);
-//     }
-//   };
+  //     console.log('Tab created:', response.data);
+  //     // После успешного создания таба закрываем модальное окно
+  //   //   setShowModal(false);
+  //   } catch (error) {
+  //     console.error('Error creating tab:', error);
+  //   }
+  // };
 
   return (
     <div className="tabs">
