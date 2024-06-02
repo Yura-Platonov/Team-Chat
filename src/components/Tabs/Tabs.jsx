@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 // import axios from 'axios';
 import CreateTabModal from 'components/Modal/CreateTabModal';
+import css from './Tabs.module.css';
 
 const Tabs = ({ defaultActiveIndex, children }) => {
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex || 0);
@@ -46,7 +47,7 @@ const Tabs = ({ defaultActiveIndex, children }) => {
         {React.Children.map(children, (child, index) => (
           <div
             key={index}
-            className={`tab-header-item ${index === activeIndex ? 'active' : ''}`}
+            className={`${index === activeIndex ? css.active : ''}`}
             onClick={() => handleTabClick(index)}
           >
             {child.props.title}

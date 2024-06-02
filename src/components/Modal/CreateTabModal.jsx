@@ -90,7 +90,7 @@ const CreateTabModal = ({
                   onClick={() => setSelectedIcon(icon.name)}
                 >
                   <IconComponent />
-                  <span className={css.iconLabel}>{icon.name}</span>
+                  {/* <span className={css.iconLabel}>{icon.name}</span> */}
                 </div>
               );
             })}
