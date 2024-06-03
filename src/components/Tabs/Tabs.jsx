@@ -1,38 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import axios from 'axios';
+import React, { useState} from 'react';
 import CreateTabModal from 'components/Modal/CreateTabModal';
 import css from './Tabs.module.css';
-import { useAuth } from '../LoginForm/AuthContext';
 
-const Tabs = ({ defaultActiveIndex, children }) => {
+const Tabs = ({ defaultActiveIndex, tabs }) => {
   const [activeIndex, setActiveIndex] = useState(defaultActiveIndex || 0);
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
-  const [tabs, setTabs] = useState([]);
-  const { authToken } = useAuth();
-  const didFetchTabs = useRef(false);
 
-  useEffect(() => {
-    const fetchTabs = async () => {
-      try {
-        const response = await axios.get('https://cool-chat.club/api/tabs/', {
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          }
-        });
-        setTabs(response.data);
-      } catch (error) {
-        console.error('Error fetching tabs:', error);
-        setTabs([]);
-      }
-    };
-
-    if (!didFetchTabs.current) {
-      fetchTabs();
-      didFetchTabs.current = true;
-    }
-  }, [authToken]);
 
   const openCreateTabModal = () => {
     setIsCreateTabModalOpen(true);
