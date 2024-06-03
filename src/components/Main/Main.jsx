@@ -7,6 +7,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 
 function Main() {
   const [tabs, setTabs] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); 
   const { authToken } = useAuth();
   const didFetchTabs = useRef(false);
 
@@ -21,7 +22,7 @@ function Main() {
           }
         });
         setTabs(response.data);
-        console.log(response.data); 
+        setIsLoading(false);
       } catch (error) {
         console.error('Error fetching tabs:', error);
       }
@@ -33,18 +34,29 @@ function Main() {
     }
   }, [authToken]);
 
+  console.log(tabs);
+
   return (
     <div>
       <section className={css.welcome}>
         <h1 className={css.welcome_title}>Welcome every tourist <br /> to Coolchat</h1>
         <p className={css.welcome_text}>Chat about a wide variety of tourist equipment.<br />Communicate, get good advice and choose!</p>
       </section>
-      <Tabs defaultActiveIndex={0} tabs={tabs} >
-        
-      </Tabs>
+      {!isLoading && (
+      <Tabs defaultActiveIndex={0}>
+      {Array.isArray(tabs) && tabs.map(tab => (
+        <div key={tab.id}>
+          {console.log(tab)}
+          {tab.name_tab}
+        </div>
+      ))}
+    </Tabs>
+    
+      )}
       <RoomList />
     </div>
   );
 }
+
 
 export default Main;
