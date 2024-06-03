@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import CustomModal from './CustomModal';
+import axios from 'axios';
 import css from './CreateTabModal.module.css';
 import * as Icons from '@mui/icons-material';
+import { useAuth } from '../LoginForm/AuthContext';
+
+
 
 const iconList = [
   { name: 'Aeroplane', component: Icons.Flight },
@@ -59,10 +63,35 @@ const iconList = [
 const CreateTabModal = ({
   isOpen,
   onClose,
-   
+ 
 }) => {
 
   const [selectedIcon, setSelectedIcon] = useState('');
+  const [tabName, setTabName] = useState('');
+  const { authToken } = useAuth();
+
+   const handleCreateTab = async () => {
+    try {
+      const requestData = {
+        name_tab: tabName,
+        image_tab: selectedIcon,
+      };
+
+      const response = await axios.post('https://cool-chat.club/api/tabs/', requestData, {
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      });
+
+      console.log('Tab created:', response.data);
+      onClose();
+    } catch (error) {
+      console.error('Error creating tab:', error);
+    }
+  };
+
 
   return (
     <CustomModal isOpen={isOpen} onClose={onClose} className={css.modal}>
@@ -74,8 +103,8 @@ const CreateTabModal = ({
             className={css.input}
             type="text"
             placeholder="Tab Name"
-            // value={roomName}
-            // onChange={(e) => setRoomName(e.target.value)}
+            value={tabName}
+            onChange={(e) => setTabName(e.target.value)}
           />
         </label>
         <div>
@@ -90,16 +119,13 @@ const CreateTabModal = ({
                   onClick={() => setSelectedIcon(icon.name)}
                 >
                   <IconComponent />
-                  {/* <span className={css.iconLabel}>{icon.name}</span> */}
                 </div>
               );
             })}
           </div>
         </div>
         <div className={css.center}>
-          {/* <button className={css.button} onClick={handleCreateRoom}> */}
-          <button className={css.button} >
-
+          <button className={css.button} onClick={handleCreateTab} >
             Approve
           </button>
         </div>
