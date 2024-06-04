@@ -1,10 +1,37 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect, } from 'react';
 import CreateTabModal from 'components/Modal/CreateTabModal';
 import css from './Tabs.module.css';
+import axios from 'axios';
+import { useAuth } from '../LoginForm/AuthContext';
 
-const Tabs = ({ defaultActiveIndex, tabs }) => {
-  // const [activeIndex, setActiveIndex] = useState(defaultActiveIndex || 0);
+
+const Tabs = () => {
+  const [tabs, setTabs] = useState([]);
+  const { authToken } = useAuth();
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
+
+  const fetchTabs = () => {
+    axios.get('https://cool-chat.club/api/tabs/', 
+    {headers: {
+         Authorization: `Bearer ${authToken}`,
+         'Content-Type': 'application/json',
+         'Accept': 'application/json'
+       }
+     })
+     .then((response) => {
+      console.log(response.data);
+      setTabs(Object.values(response.data));
+   }) 
+   .catch ((error) =>  {
+     console.error('Error fetching tabs:', error);
+   });
+ };
+
+ 
+ useEffect(() => {
+   fetchTabs();
+ }, []); 
+
 
 
   const openCreateTabModal = () => {
@@ -16,17 +43,17 @@ const Tabs = ({ defaultActiveIndex, tabs }) => {
     setIsCreateTabModalOpen(false);
   };
 
-  // const handleTabClick = (index) => {
-  //   setActiveIndex(index);
-  // };
+
   return (
-    <div className={css.tabs}>
-      <div className={css.tabHeader}>
+      <ul>
+      
+      {tabs.map((tab) => (
+      <p className={css.room_name}>{tab.name_tab}</p>))}
       
         <button onClick={openCreateTabModal}>Create Tab</button>
-      </div>
+      
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
-    </div>
+    </ul>
   );
 };
 
@@ -60,7 +87,7 @@ const Tabs = ({ defaultActiveIndex, tabs }) => {
 
 const Tab = ({ title, children }) => {
   return (
-    <div className={css.tab}>
+    <div>
       <h2>{title}</h2>
       {children}
     </div>
