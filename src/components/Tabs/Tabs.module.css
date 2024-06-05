@@ -11,3 +11,25 @@
       padding: 100px;
   }
   }
+
+  .selected{
+    border: 1px solid black ;
+    background-color: aqua;
+  }
+
+  .list_tabs {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .item_tabs {
+    margin: 10px;
+    text-align: center;
+  }
+  
+  .tab_icon {
+    width: 50px;
+    height: 50px;
+  }
