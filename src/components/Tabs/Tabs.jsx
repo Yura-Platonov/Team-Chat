@@ -3,6 +3,7 @@ import CreateTabModal from 'components/Modal/CreateTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
 import { useAuth } from '../LoginForm/AuthContext';
+import tabsIcons from './TabsIcons';
 
 
 const Tabs = () => {
@@ -45,45 +46,20 @@ const Tabs = () => {
 
 
   return (
-      <ul>
-      
-      {tabs.map((tab) => (
-      <p className={css.room_name}>{tab.name_tab}</p>))}
-      
-        <button onClick={openCreateTabModal}>Create Tab</button>
-      
-      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
-    </ul>
+    <ul className={css.list_tabs}>
+    {tabs.map((tab) => {
+      const IconComponent = tabsIcons[tab.image_tab];
+      return (
+        <li key={tab.id} className={css.item_tabs}>
+          {IconComponent ? <IconComponent className={css.tab_icon} /> : tab.name_tab}
+        </li>
+       );
+      })}
+    <button onClick={openCreateTabModal}>Create Tab</button>
+    <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
+  </ul>
   );
 };
-
-//   return (
-//     <div className={css.tabs}>
-//       <div className={css.tabHeader}>
-//         {Array.isArray(tabs) && tabs.map((tab, index) => (
-//           <div
-//             key={tab.id}
-//             className={`${css.tabTitle} ${index === activeIndex ? css.active : ''}`}
-//             onClick={() => handleTabClick(index)}
-//           >
-//             {tab.name_tab}
-//           </div>
-//         ))}
-//         <button onClick={openCreateTabModal}>Create Tab</button>
-//       </div>
-//       <div className={css.tabContent}>
-//         {Array.isArray(tabs) && tabs.map((tab, index) =>
-//           index === activeIndex ? (
-//             <Tab key={tab.id} title={tab.name_tab}>
-//               <p>Content for {tab.name_tab}</p>
-//             </Tab>
-//           ) : null
-//         )}
-//       </div>
-//       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
-//     </div>
-//   );
-// };
 
 const Tab = ({ title, children }) => {
   return (
