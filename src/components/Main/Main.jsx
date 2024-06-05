@@ -1,6 +1,6 @@
 import React from 'react';
 import Tabs  from 'components/Tabs/Tabs';
-import RoomList from '../RoomList/RoomList';
+// import RoomList from '../RoomList/RoomList';
 import css from './Main.module.css';
 
 function Main() {
@@ -16,7 +16,7 @@ function Main() {
     </Tabs>
   
       
-      <RoomList />
+      {/* <RoomList /> */}
     </div>
   );
 }
