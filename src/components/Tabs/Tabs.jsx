@@ -61,13 +61,13 @@ const Tabs = () => {
   );
 };
 
-const Tab = ({ title, children }) => {
-  return (
-    <div>
-      <h2>{title}</h2>
-      {children}
-    </div>
-  );
-};
+// const Tab = ({ title, children }) => {
+//   return (
+//     <div>
+//       <h2>{title}</h2>
+//       {children}
+//     </div>
+//   );
+// };
 
-export { Tabs, Tab };
+export { Tabs };
