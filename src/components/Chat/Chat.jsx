@@ -856,11 +856,6 @@ const Chat = () => {
                               </div>
                               <div className={css.replyContentDown}>
                               {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} 
-                              // onClick={(e) => {
-                              //   e.stopPropagation();
-                              //   setIsImageModalOpen(true);
-                              //   setSelectedImageUrl(msg.fileUrl);
-                              // }} 
                               />}
                               <p className={css.messageTextReply}>{msg.message}</p>
                               {msg.edited && <span className={css.editedText}>edited</span>}
@@ -870,19 +865,6 @@ const Chat = () => {
                       ) : (
                         <div>
                           {msg.fileUrl && renderFile(msg.fileUrl)}
-                          {/* {msg.fileUrl && (
-                            <img 
-                              src={msg.fileUrl} 
-                              alt="Uploaded" 
-                              className={css.imageInChat}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setIsImageModalOpen(true);
-                                setSelectedImageUrl(msg.fileUrl);
-                              }}
-                            />
-                          )} */}
-                          
                           {msg.message && <p>{msg.message}</p>}
                           {msg.edited && <span className={css.editedText}>edited</span>}
                         </div>
@@ -913,7 +895,7 @@ const Chat = () => {
                           Reply to message
                         </button>
                         <button className={css.chatMenuMsgButton} 
-                           onClick={() => {
+                          onClick={() => {
                               handleEditMessageClick(msg.message, msg.id);
                               handleCloseChatMenu();
                           }}> 
