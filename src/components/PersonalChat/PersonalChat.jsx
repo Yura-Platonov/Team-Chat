@@ -5,6 +5,7 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedWrite.svg';
 import ImageModal from 'components/Modal/ImageModal';
 import Bg from '../Images/Bg_empty_chat.png';
 import css from '../Chat/Chat.module.css';
@@ -25,9 +26,15 @@ const PersonalChat = () => {
   const [selectedImageUrl, setSelectedImageUrl] = useState('');
   const [editingMessageId, setEditingMessageId] = useState(null);
   const [editedMessage, setEditedMessage] = useState('');  
-  const [deletedMessages, setDeletedMessages] = useState([]);
   const [isImageSending, setIsImageSending] = useState(false);
   const [isChatMenuOpen, setIsChatMenuOpen] = useState(false);
+  // const [selectedUser, setSelectedUser] = useState(null);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+  const lastLikedMessageIdRef = useRef(null);
+  const [showSVG, setShowSVG] = useState(false);
+
+
+
 
   const [partnerId, setPartnerId] = useState(null);
   const currentUserId = localStorage.getItem('user_id');
@@ -59,7 +66,18 @@ const PersonalChat = () => {
         const messageData = JSON.parse(event.data);
         console.log('Received message:', messageData);
 
-        const { user_name: sender = 'Unknown Sender', sender_id, created_at, avatar, messages, id, id_return, fileUrl,edited, } = messageData;
+        if (messageData.type && !isAnimating) {            
+          console.log("1234:", messageData.type);
+          isAnimating = true;
+          setShowSVG(true);
+          
+          setTimeout(() => {
+              setShowSVG(false);
+              isAnimating = false;
+          }, 3000);
+        }
+
+        const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
         const formattedDate = formatTime(created_at);
 
         const newMessage = {
@@ -68,6 +86,7 @@ const PersonalChat = () => {
           message,
           id,
           id_return,
+          vote,
           receiver_id,
           formattedDate,
           fileUrl,
@@ -104,11 +123,15 @@ const PersonalChat = () => {
   }, [partnerId, token]);
 
  
-  useEffect(() => {
-    if (messageContainerRef.current) {
+ useEffect(() => {
+    if (shouldScrollToBottom && messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+      const timeoutId = setTimeout(() => {
+        setShouldScrollToBottom(true);
+      }, 1000);
+      return () => clearTimeout(timeoutId);
     }
-  }, [messages]);
+  }, [shouldScrollToBottom, messages]);
 
 
   const sendMessage = async() => {
@@ -181,9 +204,6 @@ const PersonalChat = () => {
     }
   };
 
-  const handleCloseMenu = () => {
-    setSelectedUser(null);
-  };
 
   const handleCloseChatMenu = () => {
     setIsChatMenuOpen(false);
@@ -408,7 +428,6 @@ const PersonalChat = () => {
       console.error('WebSocket is not open. Delete message not sent.');
     }
     setMessages(prevMessages => prevMessages.filter(msg => msg.id !== messageId));
-      console.log(deletedMessages);
 
   };
 
