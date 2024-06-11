@@ -5,6 +5,7 @@ import { ReactComponent as AddFileSVG } from 'components/Images/AddFileSVG.svg';
 import { ReactComponent as ButtonReplyCloseSVG } from 'components/Images/ButtonReplyClose.svg';
 import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg';
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
+import { ReactComponent as ShowTypingSVG } from 'components/Images/userWrite.svg';
 import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedWrite.svg';
 import ImageModal from 'components/Modal/ImageModal';
 import Bg from '../Images/Bg_empty_chat.png';
@@ -32,11 +33,8 @@ const PersonalChat = () => {
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const lastLikedMessageIdRef = useRef(null);
   const [showSVG, setShowSVG] = useState(false);
-
-
-
-
   const [partnerId, setPartnerId] = useState(null);
+
   const currentUserId = localStorage.getItem('user_id');
 
   const token = localStorage.getItem('access_token');
@@ -51,6 +49,7 @@ const PersonalChat = () => {
 
   useEffect(() => {
     if (!partnerId) return;
+    console.log(partnerId);
 
     const socket = new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${token}`);
     socketRef.current = socket;
@@ -552,13 +551,11 @@ const PersonalChat = () => {
     }
   };
 
-
-
   return (
     <div className={css.container}>
-      <h2 className={css.title}>Direct chat: </h2>
-      <div className={css.main_container}>
-      <div className={css.chat_container}>
+      <h2 className={css.title}>Direct chat:</h2>
+      <div className={css.main_container}>        
+        <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>
             { messages.length === 0 && (
               <div className={css.no_messages}>
@@ -573,52 +570,85 @@ const PersonalChat = () => {
                   src={msg.avatar}
                   alt={`${msg.sender}'s Avatar`}
                   className={css.chat_avatar}
-                  // onClick={() => handleAvatarClick({ user_name: msg.sender, avatar: msg.avatar, receiver_id: msg.receiver_id })}
                 />
                 <div className={css.chat_div}>
                   <div className={css.chat_nicktime}>
                     <span className={css.chat_sender}>{msg.sender}</span>
                     <span className={css.time}>{msg.formattedDate}</span>
                   </div>
-                  {msg.messages || msg.fileUrl ? (
-                      <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
-                       {msg.id_return && msg.id_return !== 0 ? (
+                  {msg.message || msg.fileUrl ? (
+                    <div className={`${css.messageText} ${parseInt(currentUserId) === parseInt(msg.receiver_id) ? css.my_message_text : ''}`} onClick={() => setIsChatMenuOpen(msg.id)}>
+                      {msg.id_return && msg.id_return !== 0 ? (
+                        messages.find(message => message.id === msg.id_return) ? (
                           messages.map((message, index) => {
                             if (message.id === msg.id_return) {
                               return (
                                 <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
                                   <p className={css.replyMessageUsername}>{message.sender}</p>
-                                  <div className={css.replyContent}>
-                                    {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
-                                    {message.messages && <p className={css.replyMessageText}>{message.messages}</p>}
+                                  <div className={css.replyContentUp}>
+                                  {message.fileUrl && getFileType(message.fileUrl) === 'image' && (
+                                      <img src={message.fileUrl} alt='Reply' 
+                                      className={css.ReplyMessageImage} 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsImageModalOpen(true);
+                                        setSelectedImageUrl(message.fileUrl);
+                                      }} />
+                                    )}
+                                    {message.fileUrl && getFileType(message.fileUrl) === 'document' && (
+                                      <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
+                                          <svg width="36" height="48" className={css.docInChat} viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                          <path d="M21 12.75V0H2.25C1.00312 0 0 1.00312 0 2.25V45.75C0 46.9969 1.00312 48 2.25 48H33.75C34.9969 48 36 46.9969 36 45.75V15H23.25C22.0125 15 21 13.9875 21 12.75ZM28.1672 32.565L19.1278 41.5369C18.5044 42.1566 17.4975 42.1566 16.8741 41.5369L7.83469 32.565C6.88313 31.6209 7.55062 30 8.88937 30H15V22.5C15 21.6712 15.6712 21 16.5 21H19.5C20.3288 21 21 21.6712 21 22.5V30H27.1106C28.4494 30 29.1169 31.6209 28.1672 32.565ZM35.3438 9.84375L26.1656 0.65625C25.7438 0.234375 25.1719 0 24.5719 0H24V12H36V11.4281C36 10.8375 35.7656 10.2656 35.3438 9.84375Z"/>
+                                          </svg>
+                                      </a>
+                                    )}
+                                    {message.fileUrl && getFileType(message.fileUrl) === 'video' && (
+                                      <video  className={css.imageInChat} controls>
+                                        <source src={message.fileUrl} type={`video/${getFileExtension(message.fileUrl)}`} />
+                                        Your browser does not support the video tag.
+                                      </video>
+                                    )}
+                                    {message.message && <p className={css.replyMessageText}>{message.message}</p>}
                                   </div>
-                                  <p className={css.messageTextReply}>{msg.messages}</p>
+                                  <div className={css.replyContentDown}>
+                                  {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage}
+                                  onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsImageModalOpen(true);
+                                        setSelectedImageUrl(msg.fileUrl);
+                                      }}  />}
+                                  <p className={css.messageTextReply}>{msg.message}</p>
                                   {msg.edited && <span className={css.editedText}>edited</span>}
+                                  </div>
                                 </div>
                               );
                             }
                             return null;
                           })
-                        ) :(
-                          <div>
-                             {msg.fileUrl && (
-                              <img 
-                                src={msg.fileUrl} 
-                                alt="Uploaded" 
-                                className={css.imageInChat}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setIsImageModalOpen(true);
-                                  setSelectedImageUrl(msg.fileUrl);
-                                }}
-                              />
-                            )}
-                             {msg.messages && <p>{msg.messages}</p>}
-                             {msg.edited && <span className={css.editedText}>edited</span>}
-                          </div>
-                        )}
-                      </div>
-                    ) : null}
+                        ) : (
+                            <div key={index} onClick={() => setIsChatMenuOpen(msg.id)}>
+                              <p className={css.replyMessageUsername}>{message.sender}</p>
+                              <div className={css.replyContentUp}>
+                                {message.fileUrl && <img src={message.fileUrl} alt='Reply' className={css.ReplyMessageImage} />}
+                                <p className={css.replyMessageText}>Deleted Message</p>
+                              </div>
+                              <div className={css.replyContentDown}>
+                              {msg.fileUrl && <img src={msg.fileUrl} alt='Reply' className={css.ReplyMessageImage} 
+                              />}
+                              <p className={css.messageTextReply}>{msg.message}</p>
+                              {msg.edited && <span className={css.editedText}>edited</span>}
+                            </div>
+                            </div>
+                        )
+                      ) : (
+                        <div>
+                          {msg.fileUrl && renderFile(msg.fileUrl)}
+                          {msg.message && <p>{msg.message}</p>}
+                          {msg.edited && <span className={css.editedText}>edited</span>}
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
 
                   <div className={css.actions}>
                     {(msg.vote > 0 || hoveredMessageId === msg.id) && (
@@ -637,14 +667,14 @@ const PersonalChat = () => {
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
-                            handleSelectReplyMessage(msg.id, msg.messages, msg.sender, msg.fileUrl);
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
                           Reply to message
                         </button>
                         <button className={css.chatMenuMsgButton} 
-                           onClick={() => {
-                              handleEditMessageClick(msg.messages, msg.id);
+                          onClick={() => {
+                              handleEditMessageClick(msg.message, msg.id);
                               handleCloseChatMenu();
                           }}> 
                           Edit message
@@ -664,7 +694,7 @@ const PersonalChat = () => {
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
-                            handleSelectReplyMessage(msg.id, msg.messages, msg.sender, msg.fileUrl);
+                            handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
                           Reply to message
@@ -674,11 +704,29 @@ const PersonalChat = () => {
                     <button className={css.d} onClick={handleCloseChatMenu}>X</button>
                   </div>
                 )}
+                 {showSVG && (
+            <div className={css.svg_container}>
+              <AnimatesTypingSVG className={css.wave}/>
+              <ShowTypingSVG/>
+            </div>
+          )}
+
             </div>
           </div>
         ))}
 
-            {selectedReplyMessageId && (
+{/*          
+            {selectedUser && (
+              <div className={css.userMenu}>
+                <p>Write a direct message to {selectedUser.user_name}</p>
+                <button onClick={handleDirectMessageClick}>Write a direct message</button>
+                <button onClick={handleCloseMenu}>Close</button>
+              </div>
+            )} */}
+
+
+
+            {/* {selectedReplyMessageId && (
               <div className={css.replyContainer}>
                 <IconReplySVG/>
                 <div className={css.replyContainerFlex}>
@@ -698,16 +746,77 @@ const PersonalChat = () => {
                   <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
                 </div>
               </div>
-            )}
+            )} */}
           </div>
-
+          {selectedReplyMessageId && (
+              <div className={css.replyContainer}>
+                <IconReplySVG/>
+                <div className={css.replyContainerFlex}>
+                  <p className={css.replyMessageUsername}>Reply to {selectedReplyMessageSender}</p>
+                  <div className={css.replyContainerImgText}>
+                  {selectedReplyMessageImage && (
+                    <div>
+                      <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
+                    </div>
+                  )}
+                  {/* {selectedReplyMessageImage && getFileType(selectedReplyMessageImage) === 'image' && (
+                    <img src={selectedReplyMessageImage} alt='Reply' 
+                    className={css.ReplyMessageImage} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(selectedReplyMessageImage);
+                    }} />
+                  )}
+                  {selectedReplyMessageImage && getFileType(message.fileUrl) === 'document' && (
+                    <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
+                        <svg width="36" height="48" className={css.docInChat} viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 12.75V0H2.25C1.00312 0 0 1.00312 0 2.25V45.75C0 46.9969 1.00312 48 2.25 48H33.75C34.9969 48 36 46.9969 36 45.75V15H23.25C22.0125 15 21 13.9875 21 12.75ZM28.1672 32.565L19.1278 41.5369C18.5044 42.1566 17.4975 42.1566 16.8741 41.5369L7.83469 32.565C6.88313 31.6209 7.55062 30 8.88937 30H15V22.5C15 21.6712 15.6712 21 16.5 21H19.5C20.3288 21 21 21.6712 21 22.5V30H27.1106C28.4494 30 29.1169 31.6209 28.1672 32.565ZM35.3438 9.84375L26.1656 0.65625C25.7438 0.234375 25.1719 0 24.5719 0H24V12H36V11.4281C36 10.8375 35.7656 10.2656 35.3438 9.84375Z"/>
+                        </svg>
+                    </a>
+                  )}
+                  {selectedReplyMessageImage && getFileType(message.fileUrl) === 'video' && (
+                    <video  className={css.imageInChat} controls>
+                      <source src={message.fileUrl} type={`video/${getFileExtension(message.fileUrl)}`} />
+                      Your browser does not support the video tag.
+                    </video>
+                  )} */}
+                  {selectedReplyMessageText && (
+                    <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
+                  )}
+                  </div>
+                </div>
+                <div className={css.buttons}>
+                  <ButtonReplyCloseSVG onClick={handleCloseReply} className={css.svgCloseReply}/>
+                </div>
+              </div>
+            )}
           {selectedImage && (
               <div className={css.imgContainerUpload}>
                 <div className={css.imgUploadDiv}>
+                {isImageExtension(selectedImage.name.toLowerCase().split('.').pop()) ? (
+
                   <img className={css.imgUpload} src={URL.createObjectURL(selectedImage)} alt={`Preview`}  onClick={() => {
                       setIsImageModalOpen(true);
                       setSelectedImageUrl(URL.createObjectURL(selectedImage));
                     }} />
+                  ) : isDocumentExtension(selectedImage.name.toLowerCase().split('.').pop()) ? (
+                    <a href={URL.createObjectURL(selectedImage)} target="_blank" rel="noopener noreferrer">
+                      <svg width="36" height="48" className={css.docInChat} viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M21 12.75V0H2.25C1.00312 0 0 1.00312 0 2.25V45.75C0 46.9969 1.00312 48 2.25 48H33.75C34.9969 48 36 46.9969 36 45.75V15H23.25C22.0125 15 21 13.9875 21 12.75ZM28.1672 32.565L19.1278 41.5369C18.5044 42.1566 17.4975 42.1566 16.8741 41.5369L7.83469 32.565C6.88313 31.6209 7.55062 30 8.88937 30H15V22.5C15 21.6712 15.6712 21 16.5 21H19.5C20.3288 21 21 21.6712 21 22.5V30H27.1106C28.4494 30 29.1169 31.6209 28.1672 32.565ZM35.3438 9.84375L26.1656 0.65625C25.7438 0.234375 25.1719 0 24.5719 0H24V12H36V11.4281C36 10.8375 35.7656 10.2656 35.3438 9.84375Z"/>
+                      </svg>
+                    </a>
+                  ) : (
+                    <video
+                      className={css.imgUpload}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                      controls
+                    >
+                      <source src={URL.createObjectURL(selectedImage)} type={`video/${selectedImage.name.split('.').pop()}`} />
+                    </video>
+                  )}
                 </div>
                 <div className={css.imageInfo}>
                   <p>{selectedImage.name}</p>
@@ -738,7 +847,8 @@ const PersonalChat = () => {
               <label className={css.file_input_label}>
                 <AddFileSVG className={css.add_file_icon} />
                 {selectedFilesCount > 0 && <span className={css.selected_files_count}>{selectedFilesCount}</span>}
-                <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} />
+                {/* <input type="file" key={selectedFilesCount} accept="image/*" onChange={handleImageChange}  className={css.file_input} /> */}
+                <input type="file" key={selectedFilesCount}  onChange={handleImageChange}  className={css.file_input} />
                 </label>
               </div>
             </label>
@@ -757,7 +867,7 @@ const PersonalChat = () => {
         </div>
       </div>
       <ImageModal isOpen={isImageModalOpen} imageUrl={selectedImageUrl} onClose={() => setIsImageModalOpen(false)} />
-    </div>
+      </div>
   );
 };
 

@@ -7,21 +7,22 @@ import BgPersonalChat  from 'components/Images/BgPersonalChat.jpg';
 import css from './PersonalChatPage.module.css';
 
 const ChatCard = ({ messageData }) => {
-  const {  recipient_id, recipient_name, recipient_avatar, is_read } = messageData;
+  // console.log(messageData);
+  const {  receiver_id, receiver_name, receiver_avatar, is_read } = messageData;
 
   const handleChatCardClick = () => {
-    localStorage.setItem('currentPartnerId', recipient_id);
+    localStorage.setItem('currentPartnerId', receiver_id);
   };
 
 
   return (
-    <Link to={`/Personalchat/${recipient_name}`} className={css.chatCard} onClick={handleChatCardClick}>
+    <Link to={`/Personalchat/${receiver_name}`} className={css.chatCard} onClick={handleChatCardClick}>
       <img src={BgPersonalChat} alt="фон" className={css.bg} />
       <div className={css.avatarBorder}>
-      <img src={recipient_avatar} alt={`${recipient_name}'s Avatar`} className={css.avatar} />
+      <img src={receiver_avatar} alt={`${receiver_name}'s Avatar`} className={css.avatar} />
       </div>
       <div className={css.info}>
-        <p className={css.userName}>{recipient_name}</p>
+        <p className={css.userName}>{receiver_name}</p>
         <div className={css.unreadMsg}>
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="22" viewBox="0 0 28 22" className={css.unreadMsgSvg} fill={is_read ? "#F5FBFF" : "#E02849"} >
           <rect width="28" height="22" rx="4" fill="current"/>
@@ -95,7 +96,7 @@ const PersonalChatPage = () => {
       <div className={css.chatList}>
         {privateMessages.length > 0 ? (
           privateMessages.map((message) => (
-            <ChatCard key={message.recipient_id} messageData={message} />
+            <ChatCard key={message.receiver_id} messageData={message} />
           ))
         ) : (
           <div className={css.noChats_container}>
