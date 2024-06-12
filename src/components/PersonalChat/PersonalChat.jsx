@@ -170,6 +170,9 @@ const PersonalChat = () => {
   };
 
   const formatTime = (created) => {
+    if (!created || isNaN(new Date(created))) {
+      return ''; 
+    }
     const dateTime = new Date(created);
     const now = new Date();
     const yesterday = new Date(now);
