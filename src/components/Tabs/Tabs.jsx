@@ -80,7 +80,9 @@ const Tabs = () => {
       };
 
   return (
-    <div>
+    <div className={css.tabsContainer}>
+      <div className={css.tabsContainerTitle}>
+      <h2>{selectedTab}</h2>
       <ul className={css.list_tabs}>
         {tabs.map((tab) => {
           const IconComponent = tabsIcons[tab.image_tab];
@@ -101,6 +103,7 @@ const Tabs = () => {
           <WebIcon className={css.tab_icon} />
         </li>
       </ul>
+      </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
       {selectedTab === 'Web' && <RoomList rooms={rooms} />}
