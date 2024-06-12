@@ -36,21 +36,6 @@ const Tabs = () => {
     fetchTabs();
   }, [authToken]);
   
-  // const fetchTabs = () => {
-  //   axios.get('https://cool-chat.club/api/tabs/', {
-  //     headers: {
-  //       Authorization: `Bearer ${authToken}`,
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json'
-  //     }
-  //   })
-  //   .then((response) => {
-  //     setTabs(Object.values(response.data));
-  //   }) 
-  //   .catch((error) => {
-  //     console.error('Error fetching tabs:', error);
-  //   });
-  // };
 
   const fetchRooms = useCallback((name_tab) => {
     axios.get(`https://cool-chat.club/api/tabs/${name_tab}`, {
@@ -68,10 +53,6 @@ const Tabs = () => {
       console.error('Error fetching rooms:', error);
     });
   }, [authToken]);
-
-  // useEffect(() => {
-  //   fetchTabs();
-  // }, []); 
 
   const openCreateTabModal = () => {
     setIsCreateTabModalOpen(true);
@@ -99,7 +80,9 @@ const Tabs = () => {
       };
 
   return (
-    <div>
+    <div className={css.tabsContainer}>
+      <div className={css.tabsContainerTitle}>
+      <h2>{selectedTab}</h2>
       <ul className={css.list_tabs}>
         {tabs.map((tab) => {
           const IconComponent = tabsIcons[tab.image_tab];
@@ -120,6 +103,7 @@ const Tabs = () => {
           <WebIcon className={css.tab_icon} />
         </li>
       </ul>
+      </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
       {selectedTab === 'Web' && <RoomList rooms={rooms} />}
