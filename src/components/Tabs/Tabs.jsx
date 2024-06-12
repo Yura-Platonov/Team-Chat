@@ -17,6 +17,7 @@ const Tabs = () => {
 
 
   useEffect(() => {
+    if(authToken){
     const fetchTabs = () => {
       axios.get('https://cool-chat.club/api/tabs/', {
         headers: {
@@ -32,8 +33,9 @@ const Tabs = () => {
         console.error('Error fetching tabs:', error);
       });
     };
-
     fetchTabs();
+  }
+
   }, [authToken]);
   
 

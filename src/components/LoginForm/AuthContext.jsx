@@ -49,7 +49,8 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('user_name');
     localStorage.removeItem('avatar');
 
-    navigate('/');
+  navigate('/');
+
   }, [navigate]);
 
   const refreshAccessToken = useCallback(async () => {
