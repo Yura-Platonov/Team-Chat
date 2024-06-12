@@ -7,6 +7,9 @@ import { ReactComponent as IconReplySVG } from 'components/Images/IconReply.svg'
 import { ReactComponent as SendImgSVG } from 'components/Images/SendImg.svg';
 import { ReactComponent as ShowTypingSVG } from 'components/Images/userWrite.svg';
 import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedWrite.svg';
+import { ReactComponent as EditSvg } from 'components/Images/Edit.svg';
+import { ReactComponent as DeleteSvg } from 'components/Images/Delete.svg';
+import { ReactComponent as ReplySvg } from 'components/Images/Reply.svg';
 import ImageModal from 'components/Modal/ImageModal';
 import Bg from '../Images/Bg_empty_chat.png';
 import css from '../Chat/Chat.module.css';
@@ -76,6 +79,7 @@ const PersonalChat = () => {
           }, 3000);
         }
 
+        else if (messageData.id) {
         const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
         const formattedDate = formatTime(created_at);
 
@@ -103,7 +107,7 @@ const PersonalChat = () => {
 
               return [...prevMessages, newMessage];
             });
-          
+          }  
       } catch (error) {
         console.error('Error parsing JSON:', error);
       }
@@ -664,23 +668,25 @@ const PersonalChat = () => {
                 </div>
 
                 {isChatMenuOpen === msg.id && (
-                  <div id={`chat-menu-container-${msg.id}`} className={css.chatMenuContainer}>
+                  <div id={`chat-menu-container-${msg.id}`}  className={css.chatMenuContainer}>
                     {parseInt(currentUserId) === parseInt(msg.receiver_id) && (
-                      <div>
+                      <div className={css.chatMenuList}>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
                             handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
-                          Reply to message
+                          <ReplySvg/> 
+                          Reply
                         </button>
                         <button className={css.chatMenuMsgButton} 
                           onClick={() => {
                               handleEditMessageClick(msg.message, msg.id);
                               handleCloseChatMenu();
                           }}> 
-                          Edit message
+                          <EditSvg/>
+                          Edit
                         </button>
                         <button 
                           className={css.chatMenuMsgButton}  
@@ -688,23 +694,25 @@ const PersonalChat = () => {
                             handleDeleteMessage(msg.id);
                             handleCloseChatMenu();
                           }}>
-                          Delete Message
+                            <DeleteSvg/>
+                          Delete
                         </button>
                       </div>
                     )}
                     {parseInt(currentUserId) !== parseInt(msg.receiver_id) && (
-                      <div>
+                      <div className={css.chatMenuList}>
                         <button 
                           className={css.chatMenuMsgButton}  
                           onClick={() => {
                             handleSelectReplyMessage(msg.id, msg.message, msg.sender, msg.fileUrl);
                             handleCloseChatMenu();
                           }}>
-                          Reply to message
+                          <ReplySvg/>
+                          Reply
                         </button>
                       </div>
                     )}
-                    <button className={css.d} onClick={handleCloseChatMenu}>X</button>
+                    <button className={css.chatMenuClose} onClick={handleCloseChatMenu}>X</button>
                   </div>
                 )}
                  {showSVG && (
@@ -717,17 +725,6 @@ const PersonalChat = () => {
             </div>
           </div>
         ))}
-
-{/*          
-            {selectedUser && (
-              <div className={css.userMenu}>
-                <p>Write a direct message to {selectedUser.user_name}</p>
-                <button onClick={handleDirectMessageClick}>Write a direct message</button>
-                <button onClick={handleCloseMenu}>Close</button>
-              </div>
-            )} */}
-
-
 
             {/* {selectedReplyMessageId && (
               <div className={css.replyContainer}>
@@ -762,28 +759,7 @@ const PersonalChat = () => {
                       <img src={selectedReplyMessageImage} alt="Reply" className={css.replyImage} />
                     </div>
                   )}
-                  {/* {selectedReplyMessageImage && getFileType(selectedReplyMessageImage) === 'image' && (
-                    <img src={selectedReplyMessageImage} alt='Reply' 
-                    className={css.ReplyMessageImage} 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsImageModalOpen(true);
-                      setSelectedImageUrl(selectedReplyMessageImage);
-                    }} />
-                  )}
-                  {selectedReplyMessageImage && getFileType(message.fileUrl) === 'document' && (
-                    <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
-                        <svg width="36" height="48" className={css.docInChat} viewBox="0 0 36 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M21 12.75V0H2.25C1.00312 0 0 1.00312 0 2.25V45.75C0 46.9969 1.00312 48 2.25 48H33.75C34.9969 48 36 46.9969 36 45.75V15H23.25C22.0125 15 21 13.9875 21 12.75ZM28.1672 32.565L19.1278 41.5369C18.5044 42.1566 17.4975 42.1566 16.8741 41.5369L7.83469 32.565C6.88313 31.6209 7.55062 30 8.88937 30H15V22.5C15 21.6712 15.6712 21 16.5 21H19.5C20.3288 21 21 21.6712 21 22.5V30H27.1106C28.4494 30 29.1169 31.6209 28.1672 32.565ZM35.3438 9.84375L26.1656 0.65625C25.7438 0.234375 25.1719 0 24.5719 0H24V12H36V11.4281C36 10.8375 35.7656 10.2656 35.3438 9.84375Z"/>
-                        </svg>
-                    </a>
-                  )}
-                  {selectedReplyMessageImage && getFileType(message.fileUrl) === 'video' && (
-                    <video  className={css.imageInChat} controls>
-                      <source src={message.fileUrl} type={`video/${getFileExtension(message.fileUrl)}`} />
-                      Your browser does not support the video tag.
-                    </video>
-                  )} */}
+                 
                   {selectedReplyMessageText && (
                     <p className={css.chatTextReply}>{selectedReplyMessageText}</p>
                   )}

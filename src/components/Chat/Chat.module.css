@@ -428,7 +428,6 @@ justify-content: space-between;
 
   
 .userList{
-
     display: flex;
     gap: 15px;
 
@@ -459,6 +458,10 @@ justify-content: space-between;
     align-items: center;
     gap: 5px;
 
+    border-radius: 20px;
+
+    background: linear-gradient(90deg, #0287DF -80%, rgba(2, 135, 223, 0) 80%);
+
     @media screen and (min-width: 768px) and (max-width: 1023px){
         gap: 10px;
     } 
@@ -481,17 +484,17 @@ justify-content: space-between;
     font-weight: 400;
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
-        font-size: 19px;
+        font-size: 16px;
     } 
     @media screen and (min-width: 1024px) {
         
-        font-size: 24px;
+        font-size: 18px;
 
       }
 
 }
 
-.user_avatarBorder{
+/* .user_avatarBorder{
     width: 75px;
     height: 90px;
     border-radius: 14px;
@@ -508,25 +511,28 @@ justify-content: space-between;
         height: 110px;
         border-radius: 20px;
       }
-}
+} */
 
 .user_avatar{
-      position: relative;
+    width: 80px;
+    height: 80px;
+      /* position: relative;
       top: -10%;
       left: 5%;
       width: 110%;
-      height: 110%;
+      height: 110%; */
    
-      object-position: center bottom;
+      /* object-position: center bottom; */
       /* @media screen and (min-width: 768px) and (max-width: 1023px){
           
       }  */
-      @media screen and (min-width: 1024px) {
+      
+      /* @media screen and (min-width: 1024px) {
         top: -7%;
         left: 0;
         width: 90px;
         height: 115px;
-        }
+        } */
 
 }
 
@@ -853,9 +859,11 @@ width: 100%;
     align-items: center;
     justify-content: space-between;
 
+    
     border-radius: 20px;
-    border: 2px solid  #024A7A;
-    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    border: 0px solid  #024A7A;
+    /* box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30); */
+    box-shadow: 4px 4px 8px 0px #0287DF4D;
     
     width: 100%;
     height: 150px;

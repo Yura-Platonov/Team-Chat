@@ -767,13 +767,13 @@ const Chat = () => {
       <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
-          <h3 className={css.members_title}>Chat members</h3>
+          {/* <h3 className={css.members_title}>Chat members</h3> */}
           <ul className={css.userList}>
             {userList.map((userData) => (
               <li key={userData.user_name} className={css.userItem}>
-                <div className={css.user_avatarBorder}>
+                {/* <div className={css.user_avatarBorder}> */}
                   <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
-                </div>
+                {/* </div> */}
                 <span className={css.user_name}>{userData.user_name}</span>
               </li>
             ))}
