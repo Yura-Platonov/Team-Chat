@@ -40,6 +40,10 @@ const Tabs = () => {
   
 
   const fetchRooms = useCallback((name_tab) => {
+    if (!authToken) {
+      console.error('No auth token available');
+      return; 
+    }
     axios.get(`https://cool-chat.club/api/tabs/${name_tab}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
