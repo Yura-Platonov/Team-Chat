@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import css from './RoomList.module.css';
 import CreateRoom from 'components/CreateRoom/CreateRoom';
-// import { ReactComponent as HeartSVG } from 'components/Images/Heart.svg';
 import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 
 function RoomList() {
@@ -19,21 +18,6 @@ function RoomList() {
         console.error('Ошибка при загрузке списка комнат:', error);
       });
   };
-
-  // const loadRooms = () => {
-  //   axios.get('https://cool-chat.club/api/rooms/')
-  //     .then((response) => {
-  //       const roomsWithFavorites = response.data.map(room => ({
-  //         ...room,
-  //         favorite: Boolean(room.favorite)
-  //       }));
-  //       setRooms(roomsWithFavorites);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при загрузке списка комнат:', error);
-  //     });
-  // };
-
   useEffect(() => {
     loadRooms();
   }, []); 
@@ -41,22 +25,7 @@ function RoomList() {
   const addRoom = (newRoom) => {
     setRooms([...rooms, newRoom]);
   };
-
-  // const toggleFavorite = (event, roomId) => {
-  //   event.preventDefault();
-  //   axios.put(`https://cool-chat.club/api/rooms/${roomId}`, { favorite: !rooms.find(room => room.id === roomId).favorite })
-  //     .then(() => {
-  //       setRooms(prevRooms =>
-  //         prevRooms.map(room =>
-  //           room.id === roomId ? { ...room, favorite: !room.favorite } : room
-  //         )
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при обновлении поля favorite:', error);
-  //     });
-  // };
-  
+ 
 
   return (
     <div className={css.room_section}>
@@ -71,15 +40,7 @@ function RoomList() {
               </div>
              
               <div className={css.room_description}>
-              {/* <HeartSVG
-                  className={room.favorite ? css.favoriteHeart : css.heart}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    toggleFavorite(event, room.id);
-                }}
-                /> */}
-              
-                <ul className={css.countList}>
+                 <ul className={css.countList}>
                   <li className={css.people_count}>
                     <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 28 20" className={css.unreadMsgSvg} fill={"#F5FBFF"} >
                       <rect width="28" height="20" rx="4" fill="current"/>
