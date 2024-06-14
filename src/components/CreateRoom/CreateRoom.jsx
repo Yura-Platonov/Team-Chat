@@ -11,8 +11,6 @@ import useLoginModal from '../Hooks/useLoginModal';
 
 import { useAuth } from '../LoginForm/AuthContext';
 
-
-
 function CreateRoom({ onRoomCreated }) {
   const { authToken } = useAuth();
   const [roomName, setRoomName] = useState('');
@@ -23,14 +21,14 @@ function CreateRoom({ onRoomCreated }) {
   const [activeCardIndex, setActiveCardIndex] = useState(null);
   const [isVerificationUserModalOpen ,setIsVerificationUserModalOpen] = useState(false);
 
-  const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
-
+  const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
   const openVerificationUserModal = () => {
     setIsVerificationUserModalOpen(true);
   };
+
   const closeVerificationUserModal = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     setIsVerificationUserModalOpen(false);
   };
 
@@ -99,40 +97,39 @@ function CreateRoom({ onRoomCreated }) {
         console.error('Ошибка при проверке верификации пользователя:', error);
       });
   };
-  
 
   const openCreateRoomModal = () => {
     setIsCreateRoomModalOpen(true);
   };
 
   const closeCreateRoomModal = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     setIsCreateRoomModalOpen(false);
   };
 
   return (
     <>
-    <div className={css.room_item} onClick={() => openCreateRoomModal()}>
-    <div className={css.room_container}>
-      <img
-        src={CreateRoomImg}
-        alt="CreateRoomImg"
-        className={css.room_img}
-        />
-    <div className={css.room_add}>
-        <img
-        src={IconAdd}
-        alt="IconAdd"
-        className={css.room_imgAdd}
-        />
-        <p className={css.room_name}>Add room</p>
-      </div>
-    </div>
-    <div className={css.room_description}>
+      <div className={css.room_item} onClick={() => openCreateRoomModal()}>
+        <div className={css.room_container}>
+          <img
+            src={CreateRoomImg}
+            alt="CreateRoomImg"
+            className={css.room_img}
+          />
+          <div className={css.room_add}>
+            <img
+              src={IconAdd}
+              alt="IconAdd"
+              className={css.room_imgAdd}
+            />
+            <p className={css.room_name}>Add room</p>
+          </div>
+        </div>
+        <div className={css.room_description}>
           <div className={css.people_count}>
           </div>
         </div>
-    </div>
+      </div>
       <CreateRoomModal
         isOpen={isCreateRoomModalOpen}
         onClose={closeCreateRoomModal}

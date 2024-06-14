@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback  } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import CreateTabModal from 'components/Modal/CreateTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
@@ -7,37 +7,33 @@ import tabsIcons from './TabsIcons';
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 
-
 const Tabs = () => {
   const [tabs, setTabs] = useState([]);
   const [rooms, setRooms] = useState([]);
-  const [selectedTab, setSelectedTab] =  useState('Web');
+  const [selectedTab, setSelectedTab] = useState('Web');
   const { authToken } = useAuth();
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
 
-
   useEffect(() => {
-    if(authToken){
-    const fetchTabs = () => {
-      axios.get('https://cool-chat.club/api/tabs/', {
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      })
-      .then((response) => {
-        setTabs(Object.values(response.data));
-      }) 
-      .catch((error) => {
-        console.error('Error fetching tabs:', error);
-      });
-    };
-    fetchTabs();
-  }
-
+    if (authToken) {
+      const fetchTabs = () => {
+        axios.get('https://cool-chat.club/api/tabs/', {
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        })
+        .then((response) => {
+          setTabs(Object.values(response.data));
+        })
+        .catch((error) => {
+          console.error('Error fetching tabs:', error);
+        });
+      };
+      fetchTabs();
+    }
   }, [authToken]);
-  
 
   const fetchRooms = useCallback((name_tab) => {
     if (!authToken) {
@@ -54,6 +50,7 @@ const Tabs = () => {
     .then((response) => {
       setRooms(response.data.rooms || []);
       setSelectedTab(name_tab);
+      console.log(response.data.rooms);
     })
     .catch((error) => {
       console.error('Error fetching rooms:', error);
@@ -75,7 +72,6 @@ const Tabs = () => {
       fetchRooms(defaultTab.name_tab);
     }
   }, [fetchRooms, tabs]);
-  
 
   const handleSelectTab = (tabName) => {
     setSelectedTab(tabName);
@@ -83,36 +79,40 @@ const Tabs = () => {
       return;
     }
     fetchRooms(tabName);
-      };
+  };
+
+  const handleRoomCreated = (newRoom) => {
+    setRooms((prevRooms) => [...prevRooms, newRoom]);
+  };
 
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
-      <h2>{selectedTab}</h2>
-      <ul className={css.list_tabs}>
-        {tabs.map((tab) => {
-          const IconComponent = tabsIcons[tab.image_tab];
-          return (
-            <li 
-              key={tab.id} 
-              className={`${css.item_tabs} ${selectedTab === tab.name_tab ? css.selected : ''}`}
-              onClick={() => handleSelectTab(tab.name_tab)}
-            >
-              {IconComponent ? <IconComponent className={css.tab_icon} /> : tab.name_tab}
-            </li>
-          );
-        })}
-        <li 
-          className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
-          onClick={() => handleSelectTab('Web')}
-        >
-          <WebIcon className={css.tab_icon} />
-        </li>
-      </ul>
+        <h2>{selectedTab}</h2>
+        <ul className={css.list_tabs}>
+          {tabs.map((tab) => {
+            const IconComponent = tabsIcons[tab.image_tab];
+            return (
+              <li 
+                key={tab.id} 
+                className={`${css.item_tabs} ${selectedTab === tab.name_tab ? css.selected : ''}`}
+                onClick={() => handleSelectTab(tab.name_tab)}
+              >
+                {IconComponent ? <IconComponent className={css.tab_icon} /> : tab.name_tab}
+              </li>
+            );
+          })}
+          <li 
+            className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
+            onClick={() => handleSelectTab('Web')}
+          >
+            <WebIcon className={css.tab_icon} />
+          </li>
+        </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
-      {selectedTab === 'Web' && <RoomList rooms={rooms} />}
+      {selectedTab === 'Web' && <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />}
       {selectedTab !== 'Web' && (
         <div className={css.rooms_container}>
           <h2>
