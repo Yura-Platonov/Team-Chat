@@ -48,14 +48,29 @@ const Tabs = () => {
       }
     })
     .then((response) => {
-      setRooms(response.data.rooms || []);
+      setRooms(response.data || []);
       setSelectedTab(name_tab);
-      console.log(response.data.rooms);
+      console.log(response.data);
     })
     .catch((error) => {
       console.error('Error fetching rooms:', error);
     });
   }, [authToken]);
+
+  const loadRooms = () => {
+        axios.get('https://cool-chat.club/api/rooms/')
+          .then((response) => {
+            setRooms(response.data);
+            console.log(response.data);
+          })
+          .catch((error) => {
+            console.error('Ошибка при загрузке списка комнат:', error);
+          });
+      };
+
+  useEffect(() => {
+        loadRooms();
+      }, []); 
 
   const openCreateTabModal = () => {
     setIsCreateTabModalOpen(true);
@@ -114,25 +129,26 @@ const Tabs = () => {
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
       {selectedTab === 'Web' && <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />}
       {selectedTab !== 'Web' && (
-        <div className={css.rooms_container}>
-          <h2>
-            <span className={css.tab_icon}>
-              {tabsIcons[selectedTab]?.className && <i className={tabsIcons[selectedTab].className} />}
-            </span>
-            Rooms in {selectedTab}
-          </h2>
-          <ul>
-            {rooms.length === 0 ? (
-              <li>Нет комнат</li>
-            ) : (
-              rooms.map((room) => (
-                <li key={room.id} className={css.room_item}>
-                  {room.name}
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
+        // <div className={css.rooms_container}>
+        //   <h2>
+        //     <span className={css.tab_icon}>
+        //       {tabsIcons[selectedTab]?.className && <i className={tabsIcons[selectedTab].className} />}
+        //     </span>
+        //     Rooms in {selectedTab}
+        //   </h2>
+        //   <ul>
+        //     {rooms.length === 0 ? (
+        //       <li>Нет комнат</li>
+        //     ) : (
+        //       rooms.map((room) => (
+        //         <li key={room.id} className={css.room_item}>
+        //           {room.name}
+        //         </li>
+        //       ))
+        //     )}
+        //   </ul>
+        // </div>
+        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
       )}
     </div>
   );
