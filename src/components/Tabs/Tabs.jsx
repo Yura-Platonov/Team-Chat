@@ -6,6 +6,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 import tabsIcons from './TabsIcons';
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
+import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
 
 const Tabs = () => {
   const [tabs, setTabs] = useState([]);
@@ -13,6 +14,7 @@ const Tabs = () => {
   const [selectedTab, setSelectedTab] = useState('Web');
   const { authToken } = useAuth();
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
+  const [isMenuTabsOpen, setIsMenuTabsOpen] = useState(false);
 
   useEffect(() => {
     if (authToken) {
@@ -26,6 +28,7 @@ const Tabs = () => {
         })
         .then((response) => {
           setTabs(Object.values(response.data));
+          console.log(Object.values(response.data));
         })
         .catch((error) => {
           console.error('Error fetching tabs:', error);
@@ -91,7 +94,8 @@ const Tabs = () => {
   const handleSelectTab = (tabName) => {
     setSelectedTab(tabName);
     if (tabName === 'Web') {
-      return;
+      loadRooms();
+      return
     }
     fetchRooms(tabName);
   };
@@ -100,10 +104,29 @@ const Tabs = () => {
     setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
+  const ToggleMenuTabs = () => {
+    return (
+      <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+      <button>Edit</button>
+      <button>Delete</button>
+    </div>
+      );
+  };
+
+  const toggleMenu = () => {
+    setIsMenuTabsOpen(!isMenuTabsOpen);
+  };
+
+
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
-        <h2>{selectedTab}</h2>
+        <div>
+        <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
+            <ToggleMenuTabsSvg />
+          </button>
+          <h2>{selectedTab}</h2>
+        </div>
         <ul className={css.list_tabs}>
           {tabs.map((tab) => {
             const IconComponent = tabsIcons[tab.image_tab];
@@ -127,30 +150,11 @@ const Tabs = () => {
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
-      {selectedTab === 'Web' && <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />}
-      {selectedTab !== 'Web' && (
-        // <div className={css.rooms_container}>
-        //   <h2>
-        //     <span className={css.tab_icon}>
-        //       {tabsIcons[selectedTab]?.className && <i className={tabsIcons[selectedTab].className} />}
-        //     </span>
-        //     Rooms in {selectedTab}
-        //   </h2>
-        //   <ul>
-        //     {rooms.length === 0 ? (
-        //       <li>Нет комнат</li>
-        //     ) : (
-        //       rooms.map((room) => (
-        //         <li key={room.id} className={css.room_item}>
-        //           {room.name}
-        //         </li>
-        //       ))
-        //     )}
-        //   </ul>
-        // </div>
+      <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
+        <ToggleMenuTabs />
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
-      )}
-    </div>
+      </div>
+      </div>
   );
 };
 

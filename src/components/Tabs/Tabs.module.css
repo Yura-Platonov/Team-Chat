@@ -65,3 +65,47 @@
   color: #fff;
   }
   }
+
+  .menuTabs_container{
+  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: 500px;
+  transition: transform 2s ease;
+  transform: translateX(-500px);
+  }
+
+  .flex{
+  display: flex;
+
+}
+
+
+
+.menuButton {
+  margin-right: 10px;
+  transition: transform 0.3s;
+}
+
+.menuButtonOpen {
+  transform: rotate(180deg);
+}
+
+
+.menuTabs_containerOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.flex {
+  display: flex;
+  padding-left: -300px;
+}
+
+ .roomListShifted {
+  padding-left: 300px; 
+  transition: padding-left 0.3s;
+} 

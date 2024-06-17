@@ -28,7 +28,7 @@ function RoomList({ rooms, onRoomCreated }) {
 
   return (
     <div className={css.room_section}>
-      <h2 className={css.room_title}>Choose a room for <br/> communication</h2>
+      {/* <h2 className={css.room_title}>Choose a room for <br/> communication</h2> */}
       <ul className={css.room_list}>
         {rooms.map((room) => (
           <li className={css.room_item} key={room.id}>
