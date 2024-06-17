@@ -66,6 +66,9 @@
   }
   }
 
+  .tabsFlex{
+  display: flex;}
+
   .menuTabs_container {
     position: absolute;
     top: 0;
@@ -75,15 +78,14 @@
     padding: 10px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
-    width: 300px;
-    height: 500px;
-    z-index: 1000;
     transform: translateX(-100%);
+    transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.5s ease;    width: 300px;
+    height: 500px;
+    z-index: 5;
   }
 
   .menuTabs_containerOpen {
-    left: 0;
+    left: 0px;
     opacity: 1;
     visibility: visible;
     transform: translateX(0);
@@ -98,6 +100,8 @@
 
 
 .menuButton {
+  background: none;
+  border: none;
   margin-right: 10px;
   transition: transform 0.5s;
 }

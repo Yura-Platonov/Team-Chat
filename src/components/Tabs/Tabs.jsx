@@ -107,6 +107,7 @@ const Tabs = () => {
   const ToggleMenuTabs = () => {
     return (
       <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+      <h2>Tab settings</h2>
       <button>Delete</button>
     </div>
       );
@@ -120,7 +121,7 @@ const Tabs = () => {
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
-        <div>
+        <div className={css.tabsFlex}>
         <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
             <ToggleMenuTabsSvg />
           </button>
