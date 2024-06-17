@@ -203,21 +203,22 @@
 
 .button_send{
     cursor: pointer;
-    box-sizing: border-box;
-    width: 120px;
-    height: 70px;
+    /* box-sizing: border-box; */
+    /* width: 120px;
+    height: 70px; */
     
    
-    font-size: 24px;
+    /* font-size: 24px;
     font-weight: 500;
-    line-height: 124%;
+    line-height: 124%; */
 
     border: none;
-    border-radius: 20px;
+    background: transparent;
+    /* border-radius: 20px;
     background: #024A7A;
-    color: #F5FBFF;
+    color: #F5FBFF; */
 
-    @media screen and (min-width: 768px) and (max-width: 1023px){
+    /* @media screen and (min-width: 768px) and (max-width: 1023px){
         width: 160px;
         height: 75px;
         font-size: 28px;
@@ -227,7 +228,7 @@
         height: 80px;
         font-size: 32px;
 
-      }
+      } */
 
 }
 

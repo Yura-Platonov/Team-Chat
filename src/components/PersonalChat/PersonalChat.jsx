@@ -10,6 +10,7 @@ import { ReactComponent as AnimatesTypingSVG } from 'components/Images/animatedW
 import { ReactComponent as EditSvg } from 'components/Images/Edit.svg';
 import { ReactComponent as DeleteSvg } from 'components/Images/Delete.svg';
 import { ReactComponent as ReplySvg } from 'components/Images/Reply.svg';
+import { ReactComponent as ButtonSendMessage } from 'components/Images/ButtonSendMessage.svg';
 import ImageModal from 'components/Modal/ImageModal';
 import Bg from '../Images/Bg_empty_chat.png';
 import css from '../Chat/Chat.module.css';
@@ -352,7 +353,11 @@ const PersonalChat = () => {
   
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
-      handleChatMessageSend();
+      if (editingMessageId) {
+        handleEditMessageSend();
+      } else {
+        handleChatMessageSend();
+      }
     }
   };
 
@@ -832,14 +837,10 @@ const PersonalChat = () => {
               </div>
             </label>
             <div className={css.input_container}>
-                {editingMessageId ? (
-                  <button className={css.button_send} onClick={handleEditMessageSend}>
-                    Edit
-                  </button>
+            {editingMessageId ? (
+                    <ButtonSendMessage className={css.button_send} onClick={handleEditMessageSend}/>
                 ) : (
-                  <button className={css.button_send} onClick={handleChatMessageSend}>
-                    Send
-                  </button>
+                  <ButtonSendMessage className={css.button_send} onClick={handleChatMessageSend}/>
                 )}
               </div>
           </div>

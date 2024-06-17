@@ -73,8 +73,16 @@ export const AuthProvider = ({ children }) => {
     const interceptor = axios.interceptors.response.use(
       response => response,
       async error => {
-        if (error.response && error.response.status === 401) {
-          await refreshAccessToken();
+        const originalRequest = error.config;
+        if (error.response && error.response.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+          try {
+            const newToken = await refreshAccessToken();
+            originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+            return axios(originalRequest);
+          } catch (refreshError) {
+            return Promise.reject(refreshError);
+          }
         }
         return Promise.reject(error);
       }
@@ -84,30 +92,33 @@ export const AuthProvider = ({ children }) => {
       axios.interceptors.response.eject(interceptor);
     };
   }, [refreshAccessToken]);
-
+  
   useEffect(() => {
     const checkInitialToken = async () => {
       if (authToken) {
         try {
-                await axios.get('https://cool-chat.club/api/ass', {
-                  params: {
-                    token: authToken 
-                  }
-                });
-        
-                console.log('Token is valid');
+          await axios.get('https://cool-chat.club/api/ass', {
+            params: {
+              token: authToken
+            }
+          });
+          console.log('Token is valid');
         } catch (error) {
           if (error.response && error.response.status === 401) {
-            await refreshAccessToken();
+            try {
+              await refreshAccessToken();
+            } catch (refreshError) {
+              console.error('Unable to refresh token:', refreshError);
+            }
           } else {
             logout();
           }
         }
       }
     };
-  
+
     checkInitialToken();
-  }, [refreshAccessToken,authToken, logout]);
+  }, [authToken, refreshAccessToken, logout]);
 
   return (
     <AuthContext.Provider value={{ authToken, user, login, logout}}>

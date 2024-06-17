@@ -1,66 +1,34 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import css from './RoomList.module.css';
 import CreateRoom from 'components/CreateRoom/CreateRoom';
-// import { ReactComponent as HeartSVG } from 'components/Images/Heart.svg';
 import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 
-function RoomList() {
-  const [rooms, setRooms] = useState([]);
+// function RoomList() {
+//   const [rooms, setRooms] = useState([]);
   
 
-  const loadRooms = () => {
-    axios.get('https://cool-chat.club/api/rooms/')
-      .then((response) => {
-        setRooms(response.data);
-      })
-      .catch((error) => {
-        console.error('Ошибка при загрузке списка комнат:', error);
-      });
-  };
+//   const loadRooms = () => {
+//     axios.get('https://cool-chat.club/api/rooms/')
+//       .then((response) => {
+//         setRooms(response.data);
+//       })
+//       .catch((error) => {
+//         console.error('Ошибка при загрузке списка комнат:', error);
+//       });
+//   };
+//   useEffect(() => {
+//     loadRooms();
+//   }, []); 
 
-  // const loadRooms = () => {
-  //   axios.get('https://cool-chat.club/api/rooms/')
-  //     .then((response) => {
-  //       const roomsWithFavorites = response.data.map(room => ({
-  //         ...room,
-  //         favorite: Boolean(room.favorite)
-  //       }));
-  //       setRooms(roomsWithFavorites);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при загрузке списка комнат:', error);
-  //     });
-  // };
-
-  useEffect(() => {
-    loadRooms();
-  }, []); 
-
+function RoomList({ rooms, onRoomCreated }) {
   const addRoom = (newRoom) => {
-    setRooms([...rooms, newRoom]);
+    onRoomCreated(newRoom);
   };
-
-  // const toggleFavorite = (event, roomId) => {
-  //   event.preventDefault();
-  //   axios.put(`https://cool-chat.club/api/rooms/${roomId}`, { favorite: !rooms.find(room => room.id === roomId).favorite })
-  //     .then(() => {
-  //       setRooms(prevRooms =>
-  //         prevRooms.map(room =>
-  //           room.id === roomId ? { ...room, favorite: !room.favorite } : room
-  //         )
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.error('Ошибка при обновлении поля favorite:', error);
-  //     });
-  // };
-  
 
   return (
     <div className={css.room_section}>
-      <h2 className={css.room_title}>Choose a room for <br/> communication</h2>
+      {/* <h2 className={css.room_title}>Choose a room for <br/> communication</h2> */}
       <ul className={css.room_list}>
         {rooms.map((room) => (
           <li className={css.room_item} key={room.id}>
@@ -69,19 +37,10 @@ function RoomList() {
                 <img className={css.room_img} src={room.image_room} alt={room.name_room} />
                 <p className={css.room_name}>{room.name_room}</p>
               </div>
-             
               <div className={css.room_description}>
-              {/* <HeartSVG
-                  className={room.favorite ? css.favoriteHeart : css.heart}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    toggleFavorite(event, room.id);
-                }}
-                /> */}
-              
                 <ul className={css.countList}>
                   <li className={css.people_count}>
-                    <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 28 20" className={css.unreadMsgSvg} fill={"#F5FBFF"} >
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20" className={css.unreadMsgSvg} fill={"#F5FBFF"}>
                       <rect width="28" height="20" rx="4" fill="current"/>
                       <path d="M4.00391 3.88227L11.5507 9.74214C12.9942 10.8629 15.0137 10.8629 16.4571 9.74214L24.0039 3.88227" stroke="#024A7A" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
@@ -93,7 +52,7 @@ function RoomList() {
                   </li>
                 </ul>
               </div>
-              </Link>
+            </Link>
           </li>
         ))}
         <li className={css.room_item}>
@@ -101,7 +60,7 @@ function RoomList() {
         </li>
       </ul>
     </div>
-  );  
+  );
 }
 
 export default RoomList;
