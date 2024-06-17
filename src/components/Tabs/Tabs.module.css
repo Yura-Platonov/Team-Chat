@@ -66,27 +66,40 @@
   }
   }
 
-  .menuTabs_container{
-  border: 1px solid black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 500px;
-  height: 500px;
-  transition: transform 2s ease;
-  transform: translateX(-500px);
+  .menuTabs_container {
+    position: absolute;
+    top: 0;
+    left: -300px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s, visibility 0.5s, transform 0.5s;
+    width: 300px;
+    height: 500px;
+    z-index: 1000;
+    transform: translateX(-100%);
+  }
+
+  .menuTabs_containerOpen {
+    left: 0;
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
   }
 
   .flex{
   display: flex;
-
+  position: relative;
+  transition: padding-left 0.5s;
 }
 
 
 
 .menuButton {
   margin-right: 10px;
-  transition: transform 0.3s;
+  transition: transform 0.5s;
 }
 
 .menuButtonOpen {
@@ -94,18 +107,7 @@
 }
 
 
-.menuTabs_containerOpen {
-  opacity: 1;
-  visibility: visible;
-  transform: translateY(0);
-}
-
-.flex {
-  display: flex;
-  padding-left: -300px;
-}
-
  .roomListShifted {
   padding-left: 300px; 
-  transition: padding-left 0.3s;
+  transition: padding-left 0.5s;
 } 

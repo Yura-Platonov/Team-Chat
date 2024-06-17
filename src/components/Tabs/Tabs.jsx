@@ -107,7 +107,6 @@ const Tabs = () => {
   const ToggleMenuTabs = () => {
     return (
       <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-      <button>Edit</button>
       <button>Delete</button>
     </div>
       );
