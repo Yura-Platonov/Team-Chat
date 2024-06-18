@@ -32,6 +32,7 @@ function RoomList({ rooms, onRoomCreated }) {
       <ul className={css.room_list}>
         {rooms.map((room) => (
           <li className={css.room_item} key={room.id}>
+            {/* <Link to={`/chat/${room.id}`}> */}
             <Link to={`/chat/${room.name_room}`}>
               <div className={css.room_container}>
                 <img className={css.room_img} src={room.image_room} alt={room.name_room} />
