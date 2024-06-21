@@ -59,7 +59,7 @@ const Tabs = () => {
       setRooms(response.data || []);
       setSelectedTab(name_tab);
       setNewTabName(name_tab); 
-      console.log(response.data);
+      // console.log(response.data);
     })
     .catch((error) => {
       console.error('Error fetching rooms:', error);
@@ -142,6 +142,7 @@ const Tabs = () => {
       setTabs(prevTabs => prevTabs.map(tab => 
         tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
       ));
+      setSelectedTab(newTabName);
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
