@@ -134,25 +134,6 @@ const Tabs = () => {
     });
   };
 
-  const ToggleMenuTabs = () => {
-    return (
-      <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-        <h2>Tab settings</h2>
-        <button>Delete</button>
-        <div>
-          <label>Rename the tab</label>
-          <input 
-            type="text" 
-            value={newTabName} 
-            onChange={(e) => setNewTabName(e.target.value)} 
-            placeholder="Enter new tab name" 
-          />
-          <button onClick={handleRenameTab}>Rename</button>
-        </div>
-      </div>
-    );
-  };
-
 
   const toggleMenu = () => {
     setIsMenuTabsOpen(!isMenuTabsOpen);
@@ -192,9 +173,21 @@ const Tabs = () => {
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-        <ToggleMenuTabs >
-        
-        </ToggleMenuTabs>
+        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+        <h2>Tab settings</h2>
+        <button>Delete</button>
+        <div>
+          <label>Rename the tab</label>
+          <input 
+            type="text" 
+            value={newTabName} 
+            onChange={(e) => setNewTabName(e.target.value)} 
+            placeholder="Enter new tab name" 
+          />
+          <button onClick={handleRenameTab}>Rename</button>
+        </div>
+      
+        </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
       </div>
       </div>
