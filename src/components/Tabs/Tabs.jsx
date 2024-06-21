@@ -106,6 +106,10 @@ const Tabs = () => {
     setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
+  const handleCreateTab = (newTab) => {
+    setTabs([...tabs, newTab]);
+  };
+
   const handleRenameTab = () => {
     const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
     if (!selectedTabData || !newTabName) {
@@ -131,6 +135,31 @@ const Tabs = () => {
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
+    });
+  };
+
+  const handleDeleteTab = () => {
+    const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
+    if (!selectedTabData) {
+      console.error('No tab selected for deletion');
+      return;
+    }
+
+    axios.delete(`https://cool-chat.club/api/tabs/?id=${selectedTabData.id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Tab deleted:', response.data);
+      setTabs(prevTabs => prevTabs.filter(tab => tab.id !== selectedTabData.id));
+      setSelectedTab('Web');
+      setNewTabName('');
+    })
+    .catch((error) => {
+      console.error('Error deleting tab:', error);
     });
   };
 
@@ -171,11 +200,10 @@ const Tabs = () => {
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
-      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
+      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
         <h2>Tab settings</h2>
-        <button>Delete</button>
         <div>
           <label>Rename the tab</label>
           <input 
@@ -186,7 +214,10 @@ const Tabs = () => {
           />
           <button onClick={handleRenameTab}>Rename</button>
         </div>
-      
+        <div>
+        <p>Delete the tab</p>
+        <button onClick={handleDeleteTab}>Delete</button>
+        </div>
         </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
       </div>
