@@ -20,7 +20,7 @@ const Tabs = () => {
   const [isChangeIconModalOpen, setIsChangeIconModalOpen] = useState(false);
   const [currentTabId, setCurrentTabId] = useState(null);
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
-  const [isWebTabSelected, setIsWebTabSelected] = useState(true); // Начальное состояние для вкладки "Web"
+  const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
 
   useEffect(() => {
     if (authToken) {
@@ -177,6 +177,7 @@ const Tabs = () => {
     setIsChangeIconModalOpen(true); 
     console.log(selectedTab);
     console.log(currentTabId);
+    console.log(currentTabIcon);
   };
   
   const closeChangeIconModal = () => {
