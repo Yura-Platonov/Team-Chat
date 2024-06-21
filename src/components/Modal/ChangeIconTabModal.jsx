@@ -1,29 +1,23 @@
 import React, { useState } from 'react';
 import CustomModal from './CustomModal';
 import axios from 'axios';
-import css from './ChangeIconTab.module.css';
-import tabsIcons from 'components/Tabs/TabsIcons';
-import { useAuth } from '../LoginForm/AuthContext';
+import css from './CreateTabModal.module.css';
 
-const ChangeIconTab = ({
+const ChangeIconTabModal = ({
   isOpen,
   onClose,
-  currentTabName, // Принимаем текущее имя вкладки
-  currentIcon, // Принимаем текущую иконку вкладки
+  authToken,
+  currentTabId,
+  tabsIcons,
+  setTabs,
+  selectedTab,
 }) => {
-  const { authToken } = useAuth();
-  const [selectedIcon, setSelectedIcon] = useState(currentIcon); // Состояние для выбранной иконки
+  const [selectedIcon, setSelectedIcon] = useState('');
 
-  // Функция для изменения выбранной иконки
-  const handleIconChange = (iconName) => {
-    setSelectedIcon(iconName);
-  };
-
-  // Функция для отправки запроса на изменение иконки
   const handleChangeIcon = async () => {
     try {
       const requestData = {
-        name_tab: currentTabName, // Текущее имя вкладки
+        name_tab: selectedTab, // Используем текущее имя табы
         image_tab: selectedIcon, // Новая выбранная иконка
       };
 
@@ -40,7 +34,10 @@ const ChangeIconTab = ({
       );
 
       console.log('Tab icon updated:', response.data);
-      onClose();
+      onClose(); 
+      setTabs(prevTabs => prevTabs.map(tab =>
+        tab.id === currentTabId ? { ...tab, image_tab: selectedIcon } : tab
+      ));
     } catch (error) {
       console.error('Error updating tab icon:', error);
     }
@@ -56,10 +53,8 @@ const ChangeIconTab = ({
             return (
               <div
                 key={iconName}
-                className={`${css.iconWrapper} ${
-                  selectedIcon === iconName ? css.selected : ''
-                }`}
-                onClick={() => handleIconChange(iconName)}
+                className={`${css.iconWrapper} ${selectedIcon === iconName ? css.selected : ''}`}
+                onClick={() => setSelectedIcon(iconName)}
               >
                 <IconComponent />
               </div>
@@ -76,4 +71,4 @@ const ChangeIconTab = ({
   );
 };
 
-export default ChangeIconTab;
+export default ChangeIconTabModal;
