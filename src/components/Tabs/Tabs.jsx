@@ -20,6 +20,7 @@ const Tabs = () => {
   const [isChangeIconModalOpen, setIsChangeIconModalOpen] = useState(false);
   const [currentTabId, setCurrentTabId] = useState(null);
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
+  const [isWebTabSelected, setIsWebTabSelected] = useState(true); // Начальное состояние для вкладки "Web"
 
   useEffect(() => {
     if (authToken) {
@@ -59,7 +60,7 @@ const Tabs = () => {
       setRooms(response.data || []);
       setSelectedTab(name_tab);
       setNewTabName(name_tab); 
-      // console.log(response.data);
+      console.log(response.data);
     })
     .catch((error) => {
       console.error('Error fetching rooms:', error);
@@ -102,8 +103,7 @@ const Tabs = () => {
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
     setCurrentTabIcon(selectedTabData?.image_tab);
-    // console.log(selectedTabData?.image_tab);
-    // console.log(selectedTabData?.id);
+    setIsWebTabSelected(tabName === 'Web'); // Обновляем состояние для вкладки "Web"
     if (tabName === 'Web') {
       loadRooms();
       return;
@@ -120,7 +120,6 @@ const Tabs = () => {
   };
 
   const handleRenameTab = () => {
-    console.log(currentTabId);
     const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
     if (!selectedTabData || !newTabName) {
       console.error('No tab selected or new tab name is empty');
@@ -142,7 +141,7 @@ const Tabs = () => {
       setTabs(prevTabs => prevTabs.map(tab => 
         tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
       ));
-      setSelectedTab(newTabName);
+      setSelectedTab(newTabName); // Устанавливаем новое имя в selectedTab, если нужно
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
@@ -175,7 +174,6 @@ const Tabs = () => {
   };
 
   const openChangeIconModal = () => {
-   
     setIsChangeIconModalOpen(true); 
     console.log(selectedTab);
     console.log(currentTabId);
@@ -231,32 +229,34 @@ const Tabs = () => {
         setTabs={setTabs}
         selectedTab={selectedTab}
       />
-    <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-  <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-    <h2>Tab settings</h2>
-    <div>
-      <label>Rename the tab</label>
-      <input 
-        type="text" 
-        value={newTabName} 
-        onChange={(e) => setNewTabName(e.target.value)} 
-        placeholder="Enter new tab name" 
-      />
-      <button onClick={handleRenameTab}>Rename</button>
-    </div>
-    <div>
-      <p>Delete the tab</p>
-      <button onClick={handleDeleteTab}>Delete</button>
-    </div>
-    <div>
-      <p>Change the icon</p>
-      
-        <button onClick={openChangeIconModal}>123</button>
-      
-    </div>
-  </div>
-  <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
-</div>
+      <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
+        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+          <h2>Tab settings</h2>
+          {!isWebTabSelected && (
+            <>
+              <div>
+                <label>Rename the tab</label>
+                <input 
+                  type="text" 
+                  value={newTabName} 
+                  onChange={(e) => setNewTabName(e.target.value)} 
+                  placeholder="Enter new tab name" 
+                />
+                <button onClick={handleRenameTab}>Rename</button>
+              </div>
+              <div>
+                <p>Delete the tab</p>
+                <button onClick={handleDeleteTab}>Delete</button>
+              </div>
+              <div>
+                <p>Change the icon</p>
+                <button onClick={openChangeIconModal}>Change Icon</button>
+              </div>
+            </>
+          )}
+        </div>
+        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
+      </div>
     </div>
   );
 };
