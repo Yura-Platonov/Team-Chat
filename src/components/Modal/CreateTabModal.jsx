@@ -9,6 +9,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 const CreateTabModal = ({
   isOpen,
   onClose,
+  onCreateTab,
  
 }) => {
 
@@ -32,6 +33,7 @@ const CreateTabModal = ({
       });
 
       console.log('Tab created:', response.data);
+      onCreateTab(response.data);
       onClose();
     } catch (error) {
       console.error('Error creating tab:', error);

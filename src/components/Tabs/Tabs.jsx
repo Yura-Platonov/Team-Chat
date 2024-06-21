@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import CreateTabModal from 'components/Modal/CreateTabModal';
+import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
 import { useAuth } from '../LoginForm/AuthContext';
-import tabsIcons from './TabsIcons';
+import tabsIcons from './TabsIcons'; 
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
@@ -15,6 +16,11 @@ const Tabs = () => {
   const { authToken } = useAuth();
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
   const [isMenuTabsOpen, setIsMenuTabsOpen] = useState(false);
+  const [newTabName, setNewTabName] = useState('');
+  const [isChangeIconModalOpen, setIsChangeIconModalOpen] = useState(false);
+  const [currentTabId, setCurrentTabId] = useState(null);
+  const [currentTabIcon, setCurrentTabIcon] = useState(null);
+  const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
 
   useEffect(() => {
     if (authToken) {
@@ -53,6 +59,7 @@ const Tabs = () => {
     .then((response) => {
       setRooms(response.data || []);
       setSelectedTab(name_tab);
+      setNewTabName(name_tab); 
       console.log(response.data);
     })
     .catch((error) => {
@@ -61,19 +68,19 @@ const Tabs = () => {
   }, [authToken]);
 
   const loadRooms = () => {
-        axios.get('https://cool-chat.club/api/rooms/')
-          .then((response) => {
-            setRooms(response.data);
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.error('Ошибка при загрузке списка комнат:', error);
-          });
-      };
+    axios.get('https://cool-chat.club/api/rooms/')
+      .then((response) => {
+        setRooms(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Ошибка при загрузке списка комнат:', error);
+      });
+  };
 
   useEffect(() => {
-        loadRooms();
-      }, []); 
+    loadRooms();
+  }, []); 
 
   const openCreateTabModal = () => {
     setIsCreateTabModalOpen(true);
@@ -93,9 +100,13 @@ const Tabs = () => {
 
   const handleSelectTab = (tabName) => {
     setSelectedTab(tabName);
+    const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
+    setCurrentTabId(selectedTabData?.id);
+    setCurrentTabIcon(selectedTabData?.image_tab);
+    setIsWebTabSelected(tabName === 'Web'); // Обновляем состояние для вкладки "Web"
     if (tabName === 'Web') {
       loadRooms();
-      return
+      return;
     }
     fetchRooms(tabName);
   };
@@ -104,25 +115,85 @@ const Tabs = () => {
     setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
-  const ToggleMenuTabs = () => {
-    return (
-      <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-      <h2>Tab settings</h2>
-      <button>Delete</button>
-    </div>
-      );
+  const handleCreateTab = (newTab) => {
+    setTabs([...tabs, newTab]);
+  };
+
+  const handleRenameTab = () => {
+    const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
+    if (!selectedTabData || !newTabName) {
+      console.error('No tab selected or new tab name is empty');
+      return;
+    }
+
+    axios.put(`https://cool-chat.club/api/tabs/?id=${currentTabId}`, {
+      name_tab: newTabName,
+      image_tab: selectedTabData?.image_tab 
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Tab renamed:', response.data);
+      setTabs(prevTabs => prevTabs.map(tab => 
+        tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
+      ));
+      setSelectedTab(newTabName); // Устанавливаем новое имя в selectedTab, если нужно
+    })
+    .catch((error) => {
+      console.error('Error renaming tab:', error);
+    });
+  };
+
+  const handleDeleteTab = () => {
+    const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
+    if (!selectedTabData) {
+      console.error('No tab selected for deletion');
+      return;
+    }
+
+    axios.delete(`https://cool-chat.club/api/tabs/?id=${selectedTabData.id}`, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Tab deleted:', response.data);
+      setTabs(prevTabs => prevTabs.filter(tab => tab.id !== selectedTabData.id));
+      setSelectedTab('Web');
+      setNewTabName('');
+    })
+    .catch((error) => {
+      console.error('Error deleting tab:', error);
+    });
+  };
+
+  const openChangeIconModal = () => {
+    setIsChangeIconModalOpen(true); 
+    console.log(selectedTab);
+    console.log(currentTabId);
+    console.log(currentTabIcon);
+  };
+  
+  const closeChangeIconModal = () => {
+    setIsChangeIconModalOpen(false);
+    setCurrentTabId(null);
   };
 
   const toggleMenu = () => {
     setIsMenuTabsOpen(!isMenuTabsOpen);
   };
 
-
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
         <div className={css.tabsFlex}>
-        <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
+          <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
             <ToggleMenuTabsSvg />
           </button>
           <h2>{selectedTab}</h2>
@@ -149,12 +220,45 @@ const Tabs = () => {
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
-      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
+      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
+      <ChangeIconTabModal
+        isOpen={isChangeIconModalOpen}
+        onClose={closeChangeIconModal}
+        authToken={authToken}
+        currentTabId={currentTabId}
+        tabsIcons={tabsIcons}
+        setTabs={setTabs}
+        selectedTab={selectedTab}
+      />
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-        <ToggleMenuTabs />
+        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+          <h2>Tab settings</h2>
+          {!isWebTabSelected && (
+            <>
+              <div>
+                <label>Rename the tab</label>
+                <input 
+                  type="text" 
+                  value={newTabName} 
+                  onChange={(e) => setNewTabName(e.target.value)} 
+                  placeholder="Enter new tab name" 
+                />
+                <button onClick={handleRenameTab}>Rename</button>
+              </div>
+              <div>
+                <p>Delete the tab</p>
+                <button onClick={handleDeleteTab}>Delete</button>
+              </div>
+              <div>
+                <p>Change the icon</p>
+                <button onClick={openChangeIconModal}>Change Icon</button>
+              </div>
+            </>
+          )}
+        </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
       </div>
-      </div>
+    </div>
   );
 };
 
