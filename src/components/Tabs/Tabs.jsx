@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import CreateTabModal from 'components/Modal/CreateTabModal';
+import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
 import { useAuth } from '../LoginForm/AuthContext';
-import tabsIcons from './TabsIcons';
+import tabsIcons from './TabsIcons'; 
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
@@ -16,9 +17,9 @@ const Tabs = () => {
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
   const [isMenuTabsOpen, setIsMenuTabsOpen] = useState(false);
   const [newTabName, setNewTabName] = useState('');
-    const [isChangeIconModalOpen, setIsChangeIconModalOpen] = useState(false); // Состояние для модального окна смены иконки
-  const [currentTabId, setCurrentTabId] = useState(null); // Состояние для текущего id табы
-  const [currentTabIcon, setCurrentTabIcon] = useState(null); // Состояние для текущей иконки табы
+  const [isChangeIconModalOpen, setIsChangeIconModalOpen] = useState(false);
+  const [currentTabId, setCurrentTabId] = useState(null);
+  const [currentTabIcon, setCurrentTabIcon] = useState(null);
 
   useEffect(() => {
     if (authToken) {
@@ -66,19 +67,19 @@ const Tabs = () => {
   }, [authToken]);
 
   const loadRooms = () => {
-        axios.get('https://cool-chat.club/api/rooms/')
-          .then((response) => {
-            setRooms(response.data);
-            console.log(response.data);
-          })
-          .catch((error) => {
-            console.error('Ошибка при загрузке списка комнат:', error);
-          });
-      };
+    axios.get('https://cool-chat.club/api/rooms/')
+      .then((response) => {
+        setRooms(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error('Ошибка при загрузке списка комнат:', error);
+      });
+  };
 
   useEffect(() => {
-        loadRooms();
-      }, []); 
+    loadRooms();
+  }, []); 
 
   const openCreateTabModal = () => {
     setIsCreateTabModalOpen(true);
@@ -98,9 +99,14 @@ const Tabs = () => {
 
   const handleSelectTab = (tabName) => {
     setSelectedTab(tabName);
+    const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
+    setCurrentTabId(selectedTabData?.id);
+    setCurrentTabIcon(selectedTabData?.image_tab);
+    console.log(selectedTabData?.id);
+    
     if (tabName === 'Web') {
       loadRooms();
-      return
+      return;
     }
     fetchRooms(tabName);
   };
@@ -120,13 +126,9 @@ const Tabs = () => {
       return;
     }
 
-    // setCurrentTabId(selectedTabData.id);
-    // console.log(currentTabId);
-    // console.log(selectedTabData.id);
-
-    axios.put(`https://cool-chat.club/api/tabs/?id=${selectedTabData.id}`, {
+    axios.put(`https://cool-chat.club/api/tabs/?id=${currentTabId}`, {
       name_tab: newTabName,
-      image_tab: selectedTabData.image_tab 
+      image_tab: selectedTabData?.image_tab 
     }, {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -170,26 +172,25 @@ const Tabs = () => {
     });
   };
 
-  const openChangeIconModal = (tab) => {
-          setCurrentTabId(tab.id); // Устанавливаем id выбранной табы
-          setIsChangeIconModalOpen(true); // Открываем модальное окно смены иконки
-        };
-      
-        const closeChangeIconModal = () => {
-          setIsChangeIconModalOpen(false);
-          setCurrentTabId(null); // Сбрасываем id табы после закрытия модального окна
-        };
+  // const openChangeIconModal = (tab) => {
+  //   // setCurrentTabId(tab.id); 
+  //   setIsChangeIconModalOpen(true); 
+  // };
+  
+  const closeChangeIconModal = () => {
+    setIsChangeIconModalOpen(false);
+    setCurrentTabId(null);
+  };
 
   const toggleMenu = () => {
     setIsMenuTabsOpen(!isMenuTabsOpen);
   };
 
-
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
         <div className={css.tabsFlex}>
-        <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
+          <button className={`${css.menuButton} ${isMenuTabsOpen ? css.menuButtonOpen : ''}`} onClick={toggleMenu}>
             <ToggleMenuTabsSvg />
           </button>
           <h2>{selectedTab}</h2>
@@ -217,32 +218,42 @@ const Tabs = () => {
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
-      <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-        <h2>Tab settings</h2>
-        <div>
-          <label>Rename the tab</label>
-          <input 
-            type="text" 
-            value={newTabName} 
-            onChange={(e) => setNewTabName(e.target.value)} 
-            placeholder="Enter new tab name" 
-          />
-          <button onClick={handleRenameTab}>Rename</button>
-        </div>
-        <div>
-        <p>Delete the tab</p>
-        <button onClick={handleDeleteTab}>Delete</button>
-        </div>
-        <div>
-              <p>Change the icon</p>
-              <button onClick={() => openChangeIconModal(selectedTab)}>
-             </button>
-             </div>
-        </div>
-        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
-      </div>
-      </div>
+      <ChangeIconTabModal
+        isOpen={isChangeIconModalOpen}
+        onClose={closeChangeIconModal}
+        authToken={authToken}
+        currentTabId={currentTabId}
+        tabsIcons={tabsIcons}
+        setTabs={setTabs}
+        selectedTab={selectedTab}
+      />
+    <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
+  <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+    <h2>Tab settings</h2>
+    <div>
+      <label>Rename the tab</label>
+      <input 
+        type="text" 
+        value={newTabName} 
+        onChange={(e) => setNewTabName(e.target.value)} 
+        placeholder="Enter new tab name" 
+      />
+      <button onClick={handleRenameTab}>Rename</button>
+    </div>
+    <div>
+      <p>Delete the tab</p>
+      <button onClick={handleDeleteTab}>Delete</button>
+    </div>
+    <div>
+      <p>Change the icon</p>
+      {currentTabIcon && tabsIcons[currentTabIcon] && (
+        <img alt='name' />
+      )}
+    </div>
+  </div>
+  <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
+</div>
+    </div>
   );
 };
 
