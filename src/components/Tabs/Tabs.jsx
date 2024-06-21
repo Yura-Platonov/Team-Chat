@@ -48,6 +48,10 @@ const Tabs = () => {
         });
       };
       fetchTabs();
+    } else {
+      setTabs([]);
+      setSelectedTab('Web');
+      loadRooms();
     }
   }, [authToken]);
 
