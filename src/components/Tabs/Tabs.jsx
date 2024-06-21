@@ -15,6 +15,7 @@ const Tabs = () => {
   const { authToken } = useAuth();
   const [isCreateTabModalOpen, setIsCreateTabModalOpen] = useState(false);
   const [isMenuTabsOpen, setIsMenuTabsOpen] = useState(false);
+  const [newTabName, setNewTabName] = useState('');
 
   useEffect(() => {
     if (authToken) {
@@ -53,6 +54,7 @@ const Tabs = () => {
     .then((response) => {
       setRooms(response.data || []);
       setSelectedTab(name_tab);
+      setNewTabName(name_tab); 
       console.log(response.data);
     })
     .catch((error) => {
@@ -104,14 +106,53 @@ const Tabs = () => {
     setRooms((prevRooms) => [...prevRooms, newRoom]);
   };
 
+  const handleRenameTab = () => {
+    const selectedTabData = tabs.find(tab => tab.name_tab === selectedTab);
+    if (!selectedTabData || !newTabName) {
+      console.error('No tab selected or new tab name is empty');
+      return;
+    }
+
+    axios.put(`https://cool-chat.club/api/tabs/?id=${selectedTabData.id}`, {
+      name_tab: newTabName,
+      image_tab: selectedTabData.image_tab 
+    }, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Tab renamed:', response.data);
+      setTabs(prevTabs => prevTabs.map(tab => 
+        tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
+      ));
+    })
+    .catch((error) => {
+      console.error('Error renaming tab:', error);
+    });
+  };
+
   const ToggleMenuTabs = () => {
     return (
       <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-      <h2>Tab settings</h2>
-      <button>Delete</button>
-    </div>
-      );
+        <h2>Tab settings</h2>
+        <button>Delete</button>
+        <div>
+          <label>Rename the tab</label>
+          <input 
+            type="text" 
+            value={newTabName} 
+            onChange={(e) => setNewTabName(e.target.value)} 
+            placeholder="Enter new tab name" 
+          />
+          <button onClick={handleRenameTab}>Rename</button>
+        </div>
+      </div>
+    );
   };
+
 
   const toggleMenu = () => {
     setIsMenuTabsOpen(!isMenuTabsOpen);
@@ -151,7 +192,9 @@ const Tabs = () => {
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} />
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-        <ToggleMenuTabs />
+        <ToggleMenuTabs >
+        
+        </ToggleMenuTabs>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
       </div>
       </div>
