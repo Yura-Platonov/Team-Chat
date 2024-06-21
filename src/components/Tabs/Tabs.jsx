@@ -8,6 +8,11 @@ import tabsIcons from './TabsIcons';
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
+import useLoginModal from '../Hooks/useLoginModal';
+import LoginModal from '../Modal/LoginModal';
+import VerificationEmailModal from '../Modal/VerificationEmailModal';
+
+
 
 const Tabs = () => {
   const [tabs, setTabs] = useState([]);
@@ -21,6 +26,8 @@ const Tabs = () => {
   const [currentTabId, setCurrentTabId] = useState(null);
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
   const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
+  const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
+
 
   useEffect(() => {
     if (authToken) {
@@ -83,6 +90,10 @@ const Tabs = () => {
   }, []); 
 
   const openCreateTabModal = () => {
+    if (!authToken) {
+      openLoginModal();
+      return
+    }
     setIsCreateTabModalOpen(true);
   };
 
@@ -141,7 +152,7 @@ const Tabs = () => {
       setTabs(prevTabs => prevTabs.map(tab => 
         tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
       ));
-      setSelectedTab(newTabName); // Устанавливаем новое имя в selectedTab, если нужно
+      setSelectedTab(newTabName); 
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
@@ -221,6 +232,8 @@ const Tabs = () => {
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
       <ChangeIconTabModal
         isOpen={isChangeIconModalOpen}
         onClose={closeChangeIconModal}
