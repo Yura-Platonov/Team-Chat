@@ -118,7 +118,7 @@ const Tabs = () => {
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
     setCurrentTabIcon(selectedTabData?.image_tab);
-    setIsWebTabSelected(tabName === 'Web'); // Обновляем состояние для вкладки "Web"
+    setIsWebTabSelected(tabName === 'Web');
     if (tabName === 'Web') {
       loadRooms();
       return;
