@@ -237,6 +237,31 @@ const Tabs = () => {
     });
   };
 
+  const handleRemoveRoomsFromTab = () => {
+    if (!selectedRooms) {
+      console.error('No target tab selected or no room ID provided');
+      return;
+    }
+
+    const data = selectedRooms;
+     
+    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Room removed from tab:', response.data);
+      fetchRooms(selectedTab);
+    })
+    .catch((error) => {
+      console.error('Error removing room from tab:', error);
+      console.log(':', error);
+    });
+  };
+
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
@@ -323,6 +348,10 @@ const Tabs = () => {
                     <button onClick={() => setIsMoveTabOpen(false)}>Cancel</button>
                   </div>
                 )}
+              </div>
+              <div>
+              <p>Delete rooms from this tab</p>
+              <button onClick={handleRemoveRoomsFromTab}>Remove rooms</button>
               </div>
             </>
           )}
