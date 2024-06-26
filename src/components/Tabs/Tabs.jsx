@@ -27,7 +27,9 @@ const Tabs = () => {
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
   const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
-
+  const [isMoveTabOpen, setIsMoveTabOpen] = useState(false);
+  const [selectedRooms, setSelectedRooms] = useState([]); 
+  const [targetTabId, setTargetTabId] = useState(null);
 
   useEffect(() => {
     if (authToken) {
@@ -204,6 +206,41 @@ const Tabs = () => {
     setIsMenuTabsOpen(!isMenuTabsOpen);
   };
 
+  const handleTargetTabClick = (tabId) => {
+    setTargetTabId(tabId);
+    console.log('Clicked tab ID:', tabId);
+  };
+
+  const handleMoveRooms = () => {
+    if (!targetTabId || selectedRooms.length === 0) {
+      console.error('No target tab selected or no rooms selected');
+      return;
+    }
+  
+    const data = {
+      targetTabId,
+      roomIds: selectedRooms
+    };
+
+  
+    axios.post(`https://cool-chat.club/api/tabs/move-rooms`, data, {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      console.log('Rooms moved:', response.data);
+      setSelectedRooms([]);
+      setIsMoveTabOpen(false);
+      fetchRooms(selectedTab);
+    })
+    .catch((error) => {
+      console.error('Error moving rooms:', error);
+    });
+  };
+
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
@@ -270,10 +307,32 @@ const Tabs = () => {
                 <p>Change the icon</p>
                 <button onClick={openChangeIconModal}>Change Icon</button>
               </div>
+              <div>
+                <p>Move rooms to another tab</p>
+                <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
+                {isMoveTabOpen && (
+                  <div>
+                   <ul>
+                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                        <li 
+                          key={tab.id} 
+                          onClick={() => handleTargetTabClick(tab.id)}
+                          className={targetTabId === tab.id ? css.highlightedTab : ''}
+                        >
+                          {tab.name_tab}
+                        </li>
+                      ))}
+                    </ul>
+                    <button onClick={handleMoveRooms}>Submit</button>
+                    <button onClick={() => setIsMoveTabOpen(false)}>Cancel</button>
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
-        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated} />
+        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
+          setSelectedRooms={setSelectedRooms} />
       </div>
     </div>
   );

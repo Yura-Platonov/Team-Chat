@@ -1,8 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import css from './RoomList.module.css';
-import CreateRoom from 'components/CreateRoom/CreateRoom';
-import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
+import CreateRoom from '../CreateRoom/CreateRoom';
+import IconPeopleOnline from '../Images/IconPeopleOnline.svg';
 
 // function RoomList() {
 //   const [rooms, setRooms] = useState([]);
@@ -21,19 +21,32 @@ import IconPeopleOnline from 'components/Images/IconPeopleOnline.svg';
 //     loadRooms();
 //   }, []); 
 
-function RoomList({ rooms, onRoomCreated }) {
+function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
   const addRoom = (newRoom) => {
     onRoomCreated(newRoom);
   };
 
+  const handleRoomSelection = (roomId) => {
+    setSelectedRooms((prevSelectedRooms) => {
+      if (prevSelectedRooms.includes(roomId)) {
+        return prevSelectedRooms.filter((id) => id !== roomId);
+      } else {
+        return [...prevSelectedRooms, roomId];
+      }
+    });
+  };
+
   return (
     <div className={css.room_section}>
-      {/* <h2 className={css.room_title}>Choose a room for <br/> communication</h2> */}
       <ul className={css.room_list}>
         {rooms.map((room) => (
           <li className={css.room_item} key={room.id}>
+            <input
+              type="checkbox"
+              checked={selectedRooms.includes(room.id)}
+              onChange={() => handleRoomSelection(room.id)}
+            />
             <Link to={`/chat/${room.id}`}>
-            {/* <Link to={`/chat/${room.name_room}`}> */}
               <div className={css.room_container}>
                 <img className={css.room_img} src={room.image_room} alt={room.name_room} />
                 <p className={css.room_name}>{room.name_room}</p>
