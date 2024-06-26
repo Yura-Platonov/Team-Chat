@@ -217,13 +217,9 @@ const Tabs = () => {
       return;
     }
   
-    const data = {
-      targetTabId,
-      roomIds: selectedRooms
-    };
-
+    const data = selectedRooms;
   
-    axios.post(`https://cool-chat.club/api/tabs/move-rooms`, data, {
+    axios.post(`https://cool-chat.club/api/tabs/add-room-to-tab/${targetTabId}`, data, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',

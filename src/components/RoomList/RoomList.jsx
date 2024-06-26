@@ -26,6 +26,7 @@ function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
     onRoomCreated(newRoom);
   };
 
+ 
   const handleRoomSelection = (roomId) => {
     setSelectedRooms((prevSelectedRooms) => {
       if (prevSelectedRooms.includes(roomId)) {
@@ -34,6 +35,8 @@ function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
         return [...prevSelectedRooms, roomId];
       }
     });
+    console.log('Clicked room ID:', roomId);
+
   };
 
   return (
@@ -45,6 +48,7 @@ function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
               type="checkbox"
               checked={selectedRooms.includes(room.id)}
               onChange={() => handleRoomSelection(room.id)}
+              className={css.checkbox}
             />
             <Link to={`/chat/${room.id}`}>
               <div className={css.room_container}>
