@@ -43,7 +43,7 @@ function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms, isMov
     <div className={css.room_section}>
       <ul className={css.room_list}>
         {rooms.map((room) => (
-          <li className={css.room_item} key={room.id}>
+          <li className={`${css.room_item} ${selectedRooms.includes(room.id) ? css.room_item_active : ''}`} key={room.id}>
             {isMoveTabOpen && ( 
               <input
                 type="checkbox"
