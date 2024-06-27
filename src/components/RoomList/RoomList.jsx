@@ -21,7 +21,7 @@ import IconPeopleOnline from '../Images/IconPeopleOnline.svg';
 //     loadRooms();
 //   }, []); 
 
-function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
+function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms, isMoveTabOpen }) {
   const addRoom = (newRoom) => {
     onRoomCreated(newRoom);
   };
@@ -44,18 +44,20 @@ function RoomList({ rooms, onRoomCreated, selectedRooms, setSelectedRooms }) {
       <ul className={css.room_list}>
         {rooms.map((room) => (
           <li className={css.room_item} key={room.id}>
-            <input
-              type="checkbox"
-              checked={selectedRooms.includes(room.id)}
-              onChange={() => handleRoomSelection(room.id)}
-              className={css.checkbox}
-            />
+            {isMoveTabOpen && ( 
+              <input
+                type="checkbox"
+                checked={selectedRooms.includes(room.id)}
+                onChange={() => handleRoomSelection(room.id)}
+                className={css.checkbox}
+              />
+            )}
             <Link to={`/chat/${room.id}`}>
               <div className={css.room_container}>
                 <img className={css.room_img} src={room.image_room} alt={room.name_room} />
                 <p className={css.room_name}>{room.name_room}</p>
               </div>
-              <div className={css.room_description}>
+              <div className={`${css.room_description} ${selectedRooms.includes(room.id) ? css.selected : ''}`}>
                 <ul className={css.countList}>
                   <li className={css.people_count}>
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 20" className={css.unreadMsgSvg} fill={"#F5FBFF"}>

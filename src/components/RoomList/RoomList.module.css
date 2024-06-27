@@ -229,6 +229,11 @@ gap: 15px;
   
 }
 
+.selected{
+  background: linear-gradient(90deg, #08553A 0%, #17B73B 100%);
+
+}
+
 .people_count {
   display: flex;
   align-items: center;

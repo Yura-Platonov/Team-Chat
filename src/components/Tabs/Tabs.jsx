@@ -328,7 +328,7 @@ const Tabs = () => {
           )}
         </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
-          setSelectedRooms={setSelectedRooms} />
+          setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen}/>
       </div>
     </div>
   );
