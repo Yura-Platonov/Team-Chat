@@ -115,3 +115,6 @@
   padding-left: 300px; 
   transition: padding-left 0.5s;
 } 
+
+.highlightedTab {
+  background-color: aqua; }

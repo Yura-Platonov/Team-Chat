@@ -89,6 +89,7 @@
   }
 
   .room_item {
+    position: relative;
     width: 160px;
     height: 190px;
     margin: 10px;
@@ -100,6 +101,7 @@
     border: 2px solid  #024A7A;
     overflow: hidden;
     box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
+    cursor: pointer;
 
     @media screen and (max-width: 400px){
       width:  calc(50% - 20px);
@@ -120,6 +122,15 @@
     
   }
   
+  .room_item_active{
+    border: 2px solid  #17B73B;
+
+  }
+
+  .room_item_delete{
+    border: 2px solid  #D03838;
+  }
+
 .room_img{
     display: block;
     max-width: 100%;
@@ -163,6 +174,7 @@
   }
 
 }
+
 
 
 .room_img {
@@ -228,6 +240,16 @@ gap: 15px;
   
 }
 
+
+.room_description_move{
+  background: linear-gradient(90deg, #08553A 0%, #17B73B 100%);
+
+}
+
+.room_description_delete{
+  background: #D03838;
+}
+
 .people_count {
   display: flex;
   align-items: center;
@@ -271,4 +293,12 @@ height: 30px;
   height: 30px;
   
   }
+  }
+
+  .checkbox{
+    display: none;
+    /* position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 20; */
   }
