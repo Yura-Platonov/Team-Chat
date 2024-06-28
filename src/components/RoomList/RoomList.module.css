@@ -127,6 +127,10 @@
 
   }
 
+  .room_item_delete{
+    border: 2px solid  #D03838;
+  }
+
 .room_img{
     display: block;
     max-width: 100%;
@@ -237,9 +241,13 @@ gap: 15px;
 }
 
 
-.selected{
+.room_description_move{
   background: linear-gradient(90deg, #08553A 0%, #17B73B 100%);
 
+}
+
+.room_description_delete{
+  background: #D03838;
 }
 
 .people_count {

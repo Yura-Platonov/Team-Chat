@@ -28,6 +28,7 @@ const Tabs = () => {
   const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
   const [isMoveTabOpen, setIsMoveTabOpen] = useState(false);
+  const [isMoveTabOpenDelete, setIsMoveTabOpenDelete] = useState(false);
   const [selectedRooms, setSelectedRooms] = useState([]); 
   const [targetTabId, setTargetTabId] = useState(null);
 
@@ -125,7 +126,12 @@ const Tabs = () => {
       loadRooms();
       return;
     }
+   else {
     fetchRooms(tabName);
+  }
+    setIsMoveTabOpen(false);
+    setIsMoveTabOpenDelete(false);
+    setSelectedRooms([]); 
   };
 
   const handleRoomCreated = (newRoom) => {
@@ -244,6 +250,8 @@ const Tabs = () => {
     }
 
     const data = selectedRooms;
+
+    console.log(selectedRooms);
      
     axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
       headers: {
@@ -254,6 +262,8 @@ const Tabs = () => {
     })
     .then((response) => {
       console.log('Room removed from tab:', response.data);
+      setSelectedRooms([]);
+      setIsMoveTabOpenDelete(false);
       fetchRooms(selectedTab);
     })
     .catch((error) => {
@@ -345,19 +355,50 @@ const Tabs = () => {
                       ))}
                     </ul>
                     <button onClick={handleMoveRooms}>Submit</button>
-                    <button onClick={() => setIsMoveTabOpen(false)}>Cancel</button>
+                    <button onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
                   </div>
                 )}
               </div>
               <div>
+              <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button>
+              {isMoveTabOpenDelete && (
+                  <div>
               <p>Delete rooms from this tab</p>
-              <button onClick={handleRemoveRoomsFromTab}>Remove rooms</button>
+              
+               <button onClick={handleRemoveRoomsFromTab}>Submit</button>
+               <button onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}>Cancel</button>
+               </div>
+                )}
               </div>
             </>
           )}
+          {isWebTabSelected && (
+  <div>
+    <p>Move rooms to another tab</p>
+    <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
+    {isMoveTabOpen && (
+      <div>
+        <ul>
+          {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+            <li 
+              key={tab.id} 
+              onClick={() => handleTargetTabClick(tab.id)}
+              className={targetTabId === tab.id ? css.highlightedTab : ''}
+            >
+              {tab.name_tab}
+            </li>
+          ))}
+        </ul>
+        <button onClick={handleMoveRooms}>Submit</button>
+        <button onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
+      </div>
+    )}
+  </div>
+)}
+
         </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
-          setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen}/>
+          setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen} isMoveTabOpenDelete={isMoveTabOpenDelete}/>
       </div>
     </div>
   );
