@@ -63,6 +63,9 @@ const Tabs = () => {
       console.error('No auth token available');
       return; 
     }
+    if(name_tab === 'Web'){
+      return
+    }
     axios.get(`https://cool-chat.club/api/tabs/${name_tab}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
