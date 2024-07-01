@@ -8,6 +8,14 @@ import tabsIcons from './TabsIcons';
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
+import { ReactComponent as ChangeIconSvg } from '../Images/changeIcon.svg';
+import { ReactComponent as DeleteRoomsSvg } from '../Images/deleteRooms.svg';
+import { ReactComponent as DeleteTabSvg } from '../Images/deleteTab.svg';
+import { ReactComponent as MoveRoomsSvg } from '../Images/moveRooms.svg';
+import { ReactComponent as RenameTabSvg } from '../Images/renameTab.svg';
+import { ReactComponent as TabCanselButtonSvg } from '../Images/tabCanselButton.svg';
+import { ReactComponent as TabConfirmButtonSvg } from '../Images/tabConfirmButton.svg';
+
 import useLoginModal from '../Hooks/useLoginModal';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
@@ -322,13 +330,14 @@ const Tabs = () => {
       />
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-          <h2>Tab settings</h2>
+          <h2 className={css.menu_title}>Tab settings</h2>
           {!isWebTabSelected && (
             <>
               <div>
-                <label>Rename the tab</label>
+                <label className={css.menu_subtitle}><p>Rename the tab</p> <RenameTabSvg/></label>
                 <input 
                   type="text" 
+                  className={css.menu_input}
                   value={newTabName} 
                   onChange={(e) => setNewTabName(e.target.value)} 
                   placeholder="Enter new tab name" 
@@ -336,15 +345,18 @@ const Tabs = () => {
                 <button onClick={handleRenameTab}>Rename</button>
               </div>
               <div>
-                <p>Delete the tab</p>
+                <p className={css.menu_subtitle}>Delete the tab</p>
+                <DeleteTabSvg/>
                 <button onClick={handleDeleteTab}>Delete</button>
               </div>
               <div>
-                <p>Change the icon</p>
+                <p  className={css.menu_subtitle}>Change the icon</p>
+                <ChangeIconSvg/>
                 <button onClick={openChangeIconModal}>Change Icon</button>
               </div>
               <div>
-                <p>Move rooms to another tab</p>
+                <p  className={css.menu_subtitle}>Move rooms to another tab</p>
+                <MoveRoomsSvg/>
                 <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
                 {isMoveTabOpen && (
                   <div>
@@ -359,8 +371,8 @@ const Tabs = () => {
                         </li>
                       ))}
                     </ul>
-                    <button onClick={handleMoveRooms}>Submit</button>
-                    <button onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
+                    <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
+                    <TabCanselButtonSvg onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
                   </div>
                 )}
               </div>
@@ -368,10 +380,10 @@ const Tabs = () => {
               <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button>
               {isMoveTabOpenDelete && (
                   <div>
-              <p>Delete rooms from this tab</p>
-              
-               <button onClick={handleRemoveRoomsFromTab}>Submit</button>
-               <button onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}>Cancel</button>
+              <p  className={css.menu_subtitle}>Delete rooms from this tab</p>
+              <DeleteRoomsSvg/>
+               <TabConfirmButtonSvg onClick={handleRemoveRoomsFromTab}></TabConfirmButtonSvg>
+               <TabCanselButtonSvg onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
                </div>
                 )}
               </div>
@@ -380,6 +392,7 @@ const Tabs = () => {
           {isWebTabSelected && (
   <div>
     <p>Move rooms to another tab</p>
+    <MoveRoomsSvg/>
     <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
     {isMoveTabOpen && (
       <div>
@@ -394,8 +407,8 @@ const Tabs = () => {
             </li>
           ))}
         </ul>
-        <button onClick={handleMoveRooms}>Submit</button>
-        <button onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
+        <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
+        <TabCanselButtonSvg onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
       </div>
     )}
   </div>
