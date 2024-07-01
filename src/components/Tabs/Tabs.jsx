@@ -12,7 +12,7 @@ import useLoginModal from '../Hooks/useLoginModal';
 import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
 
-
+//new tab
 
 const Tabs = () => {
   const [tabs, setTabs] = useState([]);
