@@ -58,7 +58,8 @@ const Tabs = () => {
     }
   }, [authToken]);
 
-  const fetchRooms = useCallback((name_tab) => {
+  const fetchRooms = useCallback((name_tab, id) => {
+    console.log(name_tab, id)
     if (!authToken) {
       console.error('No auth token available');
       return; 
@@ -66,7 +67,7 @@ const Tabs = () => {
     if(name_tab === 'Web'){
       return
     }
-    axios.get(`https://cool-chat.club/api/tabs/${name_tab}`, {
+    axios.get(`https://cool-chat.club/api/tabs/${id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
@@ -115,11 +116,12 @@ const Tabs = () => {
   useEffect(() => {
     const defaultTab = tabs.find(tab => tab.image_tab === 'Web');
     if (defaultTab) {
-      fetchRooms(defaultTab.name_tab);
+      fetchRooms(defaultTab.name_tab, defaultTab.id);
     }
   }, [fetchRooms, tabs]);
 
-  const handleSelectTab = (tabName) => {
+  const handleSelectTab = (tabName, id) => {
+    console.log(tabName, id)
     setSelectedTab(tabName);
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
@@ -130,7 +132,7 @@ const Tabs = () => {
       return;
     }
    else {
-    fetchRooms(tabName);
+    fetchRooms(tabName, id);
   }
     setIsMoveTabOpen(false);
     setIsMoveTabOpenDelete(false);
@@ -291,7 +293,7 @@ const Tabs = () => {
               <li 
                 key={tab.id} 
                 className={`${css.item_tabs} ${selectedTab === tab.name_tab ? css.selected : ''}`}
-                onClick={() => handleSelectTab(tab.name_tab)}
+                onClick={() => handleSelectTab(tab.name_tab, tab.id)}
               >
                 {IconComponent ? <IconComponent className={css.tab_icon} /> : tab.name_tab}
               </li>
