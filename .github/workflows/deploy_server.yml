@@ -36,9 +36,9 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         SSH_USER: ${{ secrets.SSH_USER }}
       run: |
-       sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "
-      cd /web-chat && \
-      git pull origin main && \
-      npm ci && \
-      npm run build && \
-      pm2 restart react-app"
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "
+        cd /web-chat && \
+        git pull origin main && \
+        npm ci && \
+        npm run build && \
+        pm2 restart react-app"
