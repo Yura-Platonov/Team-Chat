@@ -40,6 +40,4 @@ jobs:
         sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "
         cd /home/$SSH_USER/web-chat && \
         git pull origin main && \
-        npm install && \
-        npm run build && \
         pm2 restart react-app"
