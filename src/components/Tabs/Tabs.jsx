@@ -39,6 +39,8 @@ const Tabs = () => {
   const [isMoveTabOpenDelete, setIsMoveTabOpenDelete] = useState(false);
   const [selectedRooms, setSelectedRooms] = useState([]); 
   const [targetTabId, setTargetTabId] = useState(null);
+  const [buttonAction, setButtonAction] = useState(null);
+
 
   useEffect(() => {
     if (authToken) {
@@ -145,6 +147,7 @@ const Tabs = () => {
     setIsMoveTabOpen(false);
     setIsMoveTabOpenDelete(false);
     setSelectedRooms([]); 
+    setButtonAction(null);
   };
 
   const handleRoomCreated = (newRoom) => {
@@ -178,6 +181,7 @@ const Tabs = () => {
         tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
       ));
       setSelectedTab(newTabName); 
+      setButtonAction(null);
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
@@ -203,6 +207,7 @@ const Tabs = () => {
       setTabs(prevTabs => prevTabs.filter(tab => tab.id !== selectedTabData.id));
       setSelectedTab('Web');
       setNewTabName('');
+      setButtonAction(null);
     })
     .catch((error) => {
       console.error('Error deleting tab:', error);
@@ -249,6 +254,7 @@ const Tabs = () => {
       console.log('Rooms moved:', response.data);
       setSelectedRooms([]);
       setIsMoveTabOpen(false);
+      setButtonAction(null);
       fetchRooms(selectedTab);
     })
     .catch((error) => {
@@ -278,11 +284,41 @@ const Tabs = () => {
       console.log('Room removed from tab:', response.data);
       setSelectedRooms([]);
       setIsMoveTabOpenDelete(false);
+      setButtonAction(null);
       fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
       console.error('Error removing room from tab:', error);
     });
+  };
+
+  const handleActionButtonClick = (action) => {
+    setButtonAction(action);
+  };
+
+  const handleConfirmAction = () => {
+    switch (buttonAction) {
+      case 'rename':
+        handleRenameTab();
+        break;
+      case 'deleteTab':
+        handleDeleteTab();
+        break;
+      case 'move':
+        handleMoveRooms();
+        break;
+      case 'removeRooms':
+        handleRemoveRoomsFromTab();
+        break;
+          
+      default:
+        console.error('Unknown action:', buttonAction);
+    }
+  };
+
+  const handleCancelAction = () => {
+    setSelectedRooms([]);
+    setButtonAction(null);
   };
 
   
@@ -342,20 +378,21 @@ const Tabs = () => {
                   value={newTabName} 
                   onChange={(e) => setNewTabName(e.target.value)} 
                   placeholder="Enter new tab name" 
+                  onClick={() => handleActionButtonClick('rename')}
                 />
-                <button onClick={handleRenameTab}>Rename</button>
+                {/* <button onClick={handleRenameTab}>Rename</button> */}
               </div>
-              <div>
+              <div  onClick={() => handleActionButtonClick('deleteTab')}>
                 <p className={css.menu_subtitle}>Delete the tab</p>
                 <DeleteTabSvg/>
-                <button onClick={handleDeleteTab}>Delete</button>
+                {/* <button onClick={handleDeleteTab}>Delete</button> */}
               </div>
               <div>
                 <p  className={css.menu_subtitle}>Change the icon</p>
                 <ChangeIconSvg/>
                 <button onClick={openChangeIconModal}>Change Icon</button>
               </div>
-              <div>
+              <div  onClick={() => handleActionButtonClick('move')}>
                 <p  className={css.menu_subtitle}>Move rooms to another tab</p>
                 <MoveRoomsSvg/>
                 <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
@@ -372,8 +409,8 @@ const Tabs = () => {
                         </li>
                       ))}
                     </ul>
-                    <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
-                    <TabCanselButtonSvg onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
+                    {/* <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
+                    <TabCanselButtonSvg onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg> */}
                   </div>
                 )}
               </div>
@@ -414,6 +451,16 @@ const Tabs = () => {
     )}
   </div>
 )}
+ {buttonAction && (
+              <div className={css.confirmCancelButtons}>
+                <button className={css.confirmButton} onClick={handleConfirmAction}>
+                  <TabConfirmButtonSvg />
+                </button>
+                <button className={css.cancelButton} onClick={handleCancelAction}>
+                  <TabCanselButtonSvg />
+                </button>
+              </div>
+            )}
 
         </div>
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
