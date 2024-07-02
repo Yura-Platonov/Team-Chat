@@ -353,18 +353,7 @@ const Tabs = () => {
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
-      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
-      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-      <ChangeIconTabModal
-        isOpen={isChangeIconModalOpen}
-        onClose={closeChangeIconModal}
-        authToken={authToken}
-        currentTabId={currentTabId}
-        tabsIcons={tabsIcons}
-        setTabs={setTabs}
-        selectedTab={selectedTab}
-      />
+
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
           <h2 className={css.menu_title}>Tab settings</h2>
@@ -387,10 +376,10 @@ const Tabs = () => {
                 <DeleteTabSvg/>
                 {/* <button onClick={handleDeleteTab}>Delete</button> */}
               </div>
-              <div>
+              <div  onClick={openChangeIconModal}>
                 <p  className={css.menu_subtitle}>Change the icon</p>
                 <ChangeIconSvg/>
-                <button onClick={openChangeIconModal}>Change Icon</button>
+                {/* <button onClick={openChangeIconModal}>Change Icon</button> */}
               </div>
               <div  onClick={() => handleActionButtonClick('move')}>
                 <p  className={css.menu_subtitle}>Move rooms to another tab</p>
@@ -428,30 +417,30 @@ const Tabs = () => {
             </>
           )}
           {isWebTabSelected && (
-  <div>
-    <p>Move rooms to another tab</p>
-    <MoveRoomsSvg/>
-    <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
-    {isMoveTabOpen && (
-      <div>
-        <ul>
-          {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
-            <li 
-              key={tab.id} 
-              onClick={() => handleTargetTabClick(tab.id)}
-              className={targetTabId === tab.id ? css.highlightedTab : ''}
-            >
-              {tab.name_tab}
-            </li>
-          ))}
-        </ul>
-        <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
-        <TabCanselButtonSvg onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
-      </div>
-    )}
-  </div>
-)}
- {buttonAction && (
+            <div>
+              <p>Move rooms to another tab</p>
+              <MoveRoomsSvg/>
+              <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
+              {isMoveTabOpen && (
+                <div>
+                  <ul>
+                    {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                      <li 
+                        key={tab.id} 
+                        onClick={() => handleTargetTabClick(tab.id)}
+                        className={targetTabId === tab.id ? css.highlightedTab : ''}
+                      >
+                        {tab.name_tab}
+                      </li>
+                    ))}
+                  </ul>
+                  <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
+                  <TabCanselButtonSvg onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
+                </div>
+              )}
+            </div>
+          )}
+            {buttonAction && (
               <div className={css.confirmCancelButtons}>
                 <button className={css.confirmButton} onClick={handleConfirmAction}>
                   <TabConfirmButtonSvg />
@@ -466,6 +455,18 @@ const Tabs = () => {
         <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
           setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen} isMoveTabOpenDelete={isMoveTabOpenDelete}/>
       </div>
+      <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
+      <ChangeIconTabModal
+        isOpen={isChangeIconModalOpen}
+        onClose={closeChangeIconModal}
+        authToken={authToken}
+        currentTabId={currentTabId}
+        tabsIcons={tabsIcons}
+        setTabs={setTabs}
+        selectedTab={selectedTab}
+      />
     </div>
   );
 };
