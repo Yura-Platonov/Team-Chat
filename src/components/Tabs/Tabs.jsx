@@ -256,35 +256,65 @@ const Tabs = () => {
     });
   };
 
+  // const handleRemoveRoomsFromTab = () => {
+  //   if (!selectedRooms) {
+  //     console.error('No target tab selected or no room ID provided');
+  //     return;
+  //   }
+
+  //   const data = selectedRooms;
+
+  //   console.log(data);
+     
+  //   axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
+  //     headers: {
+  //       Authorization: `Bearer ${authToken}`,
+  //       'Content-Type': 'application/json',
+  //       'Accept': 'application/json'
+  //     }
+  //   })
+  //   .then((response) => {
+  //     console.log('Room removed from tab:', response.data);
+  //     setSelectedRooms([]);
+  //     setIsMoveTabOpenDelete(false);
+  //     fetchRooms(selectedTab);
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error removing room from tab:', error);
+  //     console.log(':', error);
+  //   });
+  // };
+
   const handleRemoveRoomsFromTab = () => {
-    if (!selectedRooms) {
-      console.error('No target tab selected or no room ID provided');
+    if (!selectedRooms || selectedRooms.length === 0) {
+      console.error('No rooms selected for removal');
       return;
     }
-
-    const data = selectedRooms;
-
-    console.log(selectedRooms);
-     
-    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
+  
+    const data =  selectedRooms;
+  
+    console.log(data);
+  
+    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      data: data
     })
     .then((response) => {
       console.log('Room removed from tab:', response.data);
       setSelectedRooms([]);
       setIsMoveTabOpenDelete(false);
-      fetchRooms(selectedTab);
+      fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
       console.error('Error removing room from tab:', error);
-      console.log(':', error);
     });
   };
 
+  
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
