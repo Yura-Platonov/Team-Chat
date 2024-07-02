@@ -256,36 +256,7 @@ const Tabs = () => {
     });
   };
 
-  // const handleRemoveRoomsFromTab = () => {
-  //   if (!selectedRooms) {
-  //     console.error('No target tab selected or no room ID provided');
-  //     return;
-  //   }
-
-  //   const data = selectedRooms;
-
-  //   console.log(data);
-     
-  //   axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
-  //     headers: {
-  //       Authorization: `Bearer ${authToken}`,
-  //       'Content-Type': 'application/json',
-  //       'Accept': 'application/json'
-  //     }
-  //   })
-  //   .then((response) => {
-  //     console.log('Room removed from tab:', response.data);
-  //     setSelectedRooms([]);
-  //     setIsMoveTabOpenDelete(false);
-  //     fetchRooms(selectedTab);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error removing room from tab:', error);
-  //     console.log(':', error);
-  //   });
-  // };
-
-  const handleRemoveRoomsFromTab = () => {
+    const handleRemoveRoomsFromTab = () => {
     if (!selectedRooms || selectedRooms.length === 0) {
       console.error('No rooms selected for removal');
       return;
@@ -364,7 +335,7 @@ const Tabs = () => {
           {!isWebTabSelected && (
             <>
               <div>
-                <label className={css.menu_subtitle}><p>Rename the tab</p> <RenameTabSvg/></label>
+                <label className={css.menu_subtitle}><p className={css.text}>Rename the tab</p> <RenameTabSvg/></label>
                 <input 
                   type="text" 
                   className={css.menu_input}
