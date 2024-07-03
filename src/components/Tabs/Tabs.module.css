@@ -73,15 +73,20 @@
     position: absolute;
     top: 0;
     left: -300px;
-    background: #FFFFFF4D;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 270px;
+    height: 500px;
     padding: 20px;
+
     opacity: 0;
+    background: #FFFFFF4D;
     visibility: hidden;
     transform: translateY(-100%);
     transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.5s ease;    
-    width: 270px;
-    height: 500px;
-    /* border: none; */
+  
     box-shadow: 4px 4px 8px 0px #024A7A4D;
     border-radius: 30px;
     z-index: 5;
@@ -176,8 +181,22 @@
     color: #454545;  
   }
 
+.confirmCancelButtons{
+display: flex;
+justify-content: space-between;
+padding: 0px 10px;
+}
+
+.confirmButton{
+  stroke:#00DE764D;
+   &:hover{
+    cursor: pointer;
+    stroke:#33AF75}
+}
+
   .cancelButton{
+    stroke: #FBAFB3;
   &:hover{
     cursor: pointer;
-   stroke: aqua}
+    stroke: #E3767B}
   }

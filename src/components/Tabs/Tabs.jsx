@@ -358,6 +358,7 @@ const Tabs = () => {
 
       <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+          <div className={css.container}>
           <h2 className={css.menu_title}>Tab settings</h2>
           {!isWebTabSelected && (
             <>
@@ -371,19 +372,15 @@ const Tabs = () => {
                   placeholder="Enter new tab name" 
                   onClick={() => handleActionButtonClick('rename')}
                 />
-                {/* <button onClick={handleRenameTab}>Rename</button> */}
               </div>
               <div className={css.menu_subtitle} onClick={() => handleActionButtonClick('deleteTab')}>
                 <p className={css.text}>Delete the tab</p>
                 <DeleteTabSvg/>
-                {/* <button onClick={handleDeleteTab}>Delete</button> */}
               </div>
               <div className={css.menu_subtitle} onClick={openChangeIconModal}>
                 <p className={css.text}>Change the icon</p>
                 <ChangeIconSvg/>
-                {/* <button onClick={openChangeIconModal}>Change Icon</button> */}
               </div>
-              {/* <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(!isMoveTabOpen)}}> */}
               <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
                 <MoveRoomsSvg/>
@@ -428,6 +425,7 @@ const Tabs = () => {
                 )}
             </>
           )}
+            </div>
             {buttonAction && (
               <div className={css.confirmCancelButtons}>
                   <TabConfirmButtonSvg className={css.confirmButton} onClick={handleConfirmAction}/>           
