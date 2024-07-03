@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import CreateTabModal from 'components/Modal/CreateTabModal';
-import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
 import { useAuth } from '../LoginForm/AuthContext';
@@ -8,9 +6,20 @@ import tabsIcons from './TabsIcons';
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
+import { ReactComponent as ChangeIconSvg } from '../Images/changeIcon.svg';
+import { ReactComponent as DeleteRoomsSvg } from '../Images/deleteRooms.svg';
+import { ReactComponent as DeleteTabSvg } from '../Images/deleteTab.svg';
+import { ReactComponent as MoveRoomsSvg } from '../Images/moveRooms.svg';
+import { ReactComponent as RenameTabSvg } from '../Images/renameTab.svg';
+import { ReactComponent as TabCanselButtonSvg } from '../Images/tabCanselButton.svg';
+import { ReactComponent as TabConfirmButtonSvg } from '../Images/tabConfirmButton.svg';
+
 import useLoginModal from '../Hooks/useLoginModal';
-import LoginModal from '../Modal/LoginModal';
-import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import LoginModal from 'components/Modal/LoginModal';
+import VerificationEmailModal from 'components/Modal/VerificationEmailModal';
+import CreateTabModal from 'components/Modal/CreateTabModal';
+import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
+import DeleteRoomFromTabModal from 'components/Modal/DeleteRoomFromTabModal';
 
 //new tab
 
@@ -31,6 +40,9 @@ const Tabs = () => {
   const [isMoveTabOpenDelete, setIsMoveTabOpenDelete] = useState(false);
   const [selectedRooms, setSelectedRooms] = useState([]); 
   const [targetTabId, setTargetTabId] = useState(null);
+  const [buttonAction, setButtonAction] = useState(null);
+  const [isDeleteRoomModalOpen, setIsDeleteRoomModalOpen] = useState(false);
+
 
   useEffect(() => {
     if (authToken) {
@@ -58,7 +70,8 @@ const Tabs = () => {
     }
   }, [authToken]);
 
-  const fetchRooms = useCallback((name_tab) => {
+  const fetchRooms = useCallback((name_tab, id) => {
+    console.log(name_tab, id)
     if (!authToken) {
       console.error('No auth token available');
       return; 
@@ -66,7 +79,7 @@ const Tabs = () => {
     if(name_tab === 'Web'){
       return
     }
-    axios.get(`https://cool-chat.club/api/tabs/${name_tab}`, {
+    axios.get(`https://cool-chat.club/api/tabs/${id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
@@ -115,11 +128,12 @@ const Tabs = () => {
   useEffect(() => {
     const defaultTab = tabs.find(tab => tab.image_tab === 'Web');
     if (defaultTab) {
-      fetchRooms(defaultTab.name_tab);
+      fetchRooms(defaultTab.name_tab, defaultTab.id);
     }
   }, [fetchRooms, tabs]);
 
-  const handleSelectTab = (tabName) => {
+  const handleSelectTab = (tabName, id) => {
+    console.log(tabName, id)
     setSelectedTab(tabName);
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
@@ -130,11 +144,12 @@ const Tabs = () => {
       return;
     }
    else {
-    fetchRooms(tabName);
+    fetchRooms(tabName, id);
   }
     setIsMoveTabOpen(false);
     setIsMoveTabOpenDelete(false);
     setSelectedRooms([]); 
+    setButtonAction(null);
   };
 
   const handleRoomCreated = (newRoom) => {
@@ -168,6 +183,7 @@ const Tabs = () => {
         tab.id === selectedTabData.id ? { ...tab, name_tab: newTabName } : tab
       ));
       setSelectedTab(newTabName); 
+      setButtonAction(null);
     })
     .catch((error) => {
       console.error('Error renaming tab:', error);
@@ -193,6 +209,7 @@ const Tabs = () => {
       setTabs(prevTabs => prevTabs.filter(tab => tab.id !== selectedTabData.id));
       setSelectedTab('Web');
       setNewTabName('');
+      setButtonAction(null);
     })
     .catch((error) => {
       console.error('Error deleting tab:', error);
@@ -239,42 +256,78 @@ const Tabs = () => {
       console.log('Rooms moved:', response.data);
       setSelectedRooms([]);
       setIsMoveTabOpen(false);
-      fetchRooms(selectedTab);
+      setButtonAction(null);
+      fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
       console.error('Error moving rooms:', error);
     });
   };
 
-  const handleRemoveRoomsFromTab = () => {
-    if (!selectedRooms) {
-      console.error('No target tab selected or no room ID provided');
+    const handleRemoveRoomsFromTab = () => {
+    if (!selectedRooms || selectedRooms.length === 0) {
+      console.error('No rooms selected for removal');
       return;
     }
-
-    const data = selectedRooms;
-
-    console.log(selectedRooms);
-     
-    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, data, {
+  
+    const data =  selectedRooms;
+  
+    console.log(data);
+  
+    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
         'Accept': 'application/json'
-      }
+      },
+      data: data
     })
     .then((response) => {
       console.log('Room removed from tab:', response.data);
-      setSelectedRooms([]);
-      setIsMoveTabOpenDelete(false);
-      fetchRooms(selectedTab);
+      // setSelectedRooms([]);
+      // setIsMoveTabOpenDelete(false);
+      setButtonAction(null);
+      setIsDeleteRoomModalOpen(false);
+      fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
       console.error('Error removing room from tab:', error);
-      console.log(':', error);
     });
   };
 
+  const handleActionButtonClick = (action) => {
+    setButtonAction(action);
+  };
+
+  const handleConfirmAction = () => {
+    switch (buttonAction) {
+      case 'rename':
+        handleRenameTab();
+        break;
+      case 'deleteTab':
+        handleDeleteTab();
+        break;
+      case 'move':
+        handleMoveRooms();
+        break;
+      case 'removeRooms':
+        setIsDeleteRoomModalOpen(true);
+        // handleRemoveRoomsFromTab();
+        break;
+          
+      default:
+        console.error('Unknown action:', buttonAction);
+    }
+  };
+
+  const handleCancelAction = () => {
+    setSelectedRooms([]);
+    setButtonAction(null);
+    setIsMoveTabOpen(false);
+    setIsMoveTabOpenDelete(false);
+  };
+
+  
   return (
     <div className={css.tabsContainer}>
       <div className={css.tabsContainerTitle}>
@@ -291,7 +344,7 @@ const Tabs = () => {
               <li 
                 key={tab.id} 
                 className={`${css.item_tabs} ${selectedTab === tab.name_tab ? css.selected : ''}`}
-                onClick={() => handleSelectTab(tab.name_tab)}
+                onClick={() => handleSelectTab(tab.name_tab, tab.id)}
               >
                 {IconComponent ? <IconComponent className={css.tab_icon} /> : tab.name_tab}
               </li>
@@ -306,6 +359,88 @@ const Tabs = () => {
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
+
+      <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
+        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
+          <div className={css.container}>
+          <h2 className={css.menu_title}>Tab settings</h2>
+          {!isWebTabSelected && (
+            <ul className={css.menu_list}>
+              <li>
+                <label className={css.menu_subtitle}><p className={css.text}>Rename the tab</p> <RenameTabSvg/></label>
+                <input 
+                  type="text" 
+                  className={css.menu_input}
+                  value={newTabName} 
+                  onChange={(e) => setNewTabName(e.target.value)} 
+                  placeholder="Enter new tab name" 
+                  onClick={() => handleActionButtonClick('rename')}
+                />
+              </li>
+              <li className={css.menu_subtitle} onClick={() => handleActionButtonClick('deleteTab')}>
+                <p className={css.text}>Delete the tab</p>
+                <DeleteTabSvg style={{ height: '30px' }}/>
+              </li>
+              <li className={css.menu_subtitle} onClick={openChangeIconModal}>
+                <p className={css.text}>Change the icon</p>
+                <ChangeIconSvg/>
+              </li>
+              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+                <p className={css.text}>Move rooms to...</p>
+                <MoveRoomsSvg style={{ height: '30px' }}/>
+              </li>
+              {isMoveTabOpen && (
+                   <ul>
+                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                        <li 
+                          key={tab.id} 
+                          onClick={() => handleTargetTabClick(tab.id)}
+                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
+                          >
+                          {tab.name_tab}
+                        </li>
+                      ))}
+                    </ul>
+                )}
+              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('removeRooms'); setIsMoveTabOpenDelete(true)}}>
+                <p className={css.text}>Delete rooms</p>
+                <DeleteRoomsSvg style={{ height: '30px' }}/>
+              </li>
+            </ul>
+          )}
+          {isWebTabSelected && (
+            <ul>
+             <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+                <p className={css.text}>Move rooms to...</p>
+                <MoveRoomsSvg/>
+              </li>
+              {isMoveTabOpen && (
+                   <ul>
+                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                        <li 
+                          key={tab.id} 
+                          onClick={() => handleTargetTabClick(tab.id)}
+                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
+                          >
+                          {tab.name_tab}
+                        </li>
+                      ))}
+                    </ul>
+                )}
+            </ul>
+          )}
+            </div>
+            {buttonAction && (
+              <div className={css.confirmCancelButtons}>
+                  <TabConfirmButtonSvg className={css.confirmButton} onClick={handleConfirmAction}/>           
+                  <TabCanselButtonSvg className={css.cancelButton}  onClick={handleCancelAction}/>
+              </div>
+            )}
+
+        </div>
+        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
+          setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen} isMoveTabOpenDelete={isMoveTabOpenDelete}/>
+      </div>
       <CreateTabModal isOpen={isCreateTabModalOpen} onClose={closeCreateTabModal} onCreateTab={handleCreateTab}/>
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
@@ -318,91 +453,16 @@ const Tabs = () => {
         setTabs={setTabs}
         selectedTab={selectedTab}
       />
-      <div className={`${css.flex} ${isMenuTabsOpen ? css.roomListShifted : ''}`}>
-        <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
-          <h2>Tab settings</h2>
-          {!isWebTabSelected && (
-            <>
-              <div>
-                <label>Rename the tab</label>
-                <input 
-                  type="text" 
-                  value={newTabName} 
-                  onChange={(e) => setNewTabName(e.target.value)} 
-                  placeholder="Enter new tab name" 
-                />
-                <button onClick={handleRenameTab}>Rename</button>
-              </div>
-              <div>
-                <p>Delete the tab</p>
-                <button onClick={handleDeleteTab}>Delete</button>
-              </div>
-              <div>
-                <p>Change the icon</p>
-                <button onClick={openChangeIconModal}>Change Icon</button>
-              </div>
-              <div>
-                <p>Move rooms to another tab</p>
-                <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
-                {isMoveTabOpen && (
-                  <div>
-                   <ul>
-                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
-                        <li 
-                          key={tab.id} 
-                          onClick={() => handleTargetTabClick(tab.id)}
-                          className={targetTabId === tab.id ? css.highlightedTab : ''}
-                        >
-                          {tab.name_tab}
-                        </li>
-                      ))}
-                    </ul>
-                    <button onClick={handleMoveRooms}>Submit</button>
-                    <button onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
-                  </div>
-                )}
-              </div>
-              <div>
-              <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button>
-              {isMoveTabOpenDelete && (
-                  <div>
-              <p>Delete rooms from this tab</p>
-              
-               <button onClick={handleRemoveRoomsFromTab}>Submit</button>
-               <button onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}>Cancel</button>
-               </div>
-                )}
-              </div>
-            </>
-          )}
-          {isWebTabSelected && (
-  <div>
-    <p>Move rooms to another tab</p>
-    <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
-    {isMoveTabOpen && (
-      <div>
-        <ul>
-          {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
-            <li 
-              key={tab.id} 
-              onClick={() => handleTargetTabClick(tab.id)}
-              className={targetTabId === tab.id ? css.highlightedTab : ''}
-            >
-              {tab.name_tab}
-            </li>
-          ))}
-        </ul>
-        <button onClick={handleMoveRooms}>Submit</button>
-        <button onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}>Cancel</button>
-      </div>
-    )}
-  </div>
-)}
-
-        </div>
-        <RoomList rooms={rooms} onRoomCreated={handleRoomCreated}  selectedRooms={selectedRooms} 
-          setSelectedRooms={setSelectedRooms} isMoveTabOpen={isMoveTabOpen} isMoveTabOpenDelete={isMoveTabOpenDelete}/>
-      </div>
+     <DeleteRoomFromTabModal
+          isOpen={isDeleteRoomModalOpen}
+          onClose={() => {
+            setIsDeleteRoomModalOpen(false);
+            setSelectedRooms([]);
+            setButtonAction(null);
+            setIsMoveTabOpenDelete(false); }}
+          onConfirmDelete={handleRemoveRoomsFromTab}
+        />
+     
     </div>
   );
 };
