@@ -255,7 +255,7 @@ const Tabs = () => {
       setSelectedRooms([]);
       setIsMoveTabOpen(false);
       setButtonAction(null);
-      fetchRooms(selectedTab);
+      fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
       console.error('Error moving rooms:', error);
@@ -319,6 +319,8 @@ const Tabs = () => {
   const handleCancelAction = () => {
     setSelectedRooms([]);
     setButtonAction(null);
+    setIsMoveTabOpen(false);
+    setIsMoveTabOpenDelete(false);
   };
 
   
@@ -371,48 +373,46 @@ const Tabs = () => {
                 />
                 {/* <button onClick={handleRenameTab}>Rename</button> */}
               </div>
-              <div  onClick={() => handleActionButtonClick('deleteTab')}>
-                <p className={css.menu_subtitle}>Delete the tab</p>
+              <div className={css.menu_subtitle} onClick={() => handleActionButtonClick('deleteTab')}>
+                <p className={css.text}>Delete the tab</p>
                 <DeleteTabSvg/>
                 {/* <button onClick={handleDeleteTab}>Delete</button> */}
               </div>
-              <div  onClick={openChangeIconModal}>
-                <p  className={css.menu_subtitle}>Change the icon</p>
+              <div className={css.menu_subtitle} onClick={openChangeIconModal}>
+                <p className={css.text}>Change the icon</p>
                 <ChangeIconSvg/>
                 {/* <button onClick={openChangeIconModal}>Change Icon</button> */}
               </div>
-              <div  onClick={() => handleActionButtonClick('move')}>
-                <p  className={css.menu_subtitle}>Move rooms to another tab</p>
+              {/* <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(!isMoveTabOpen)}}> */}
+              <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+                <p className={css.text}>Move rooms to...</p>
                 <MoveRoomsSvg/>
-                <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
-                {isMoveTabOpen && (
-                  <div>
+                {/* <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button> */}
+              </div>
+              {isMoveTabOpen && (
                    <ul>
                       {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
                         <li 
                           key={tab.id} 
                           onClick={() => handleTargetTabClick(tab.id)}
-                          className={targetTabId === tab.id ? css.highlightedTab : ''}
-                        >
+                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
+                          >
                           {tab.name_tab}
                         </li>
                       ))}
                     </ul>
-                    {/* <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
-                    <TabCanselButtonSvg onClick={() => {setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg> */}
-                  </div>
                 )}
-              </div>
-              <div>
-              <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button>
-              {isMoveTabOpenDelete && (
-                  <div>
-              <p  className={css.menu_subtitle}>Delete rooms from this tab</p>
+              <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('removeRooms'); setIsMoveTabOpenDelete(true)}}>
+              <p className={css.text}>Delete rooms</p>
               <DeleteRoomsSvg/>
+              {/* <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button> */}
+              {/* {isMoveTabOpenDelete && (
+                  <div>
+              
                <TabConfirmButtonSvg onClick={handleRemoveRoomsFromTab}></TabConfirmButtonSvg>
                <TabCanselButtonSvg onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
                </div>
-                )}
+                )} */}
               </div>
             </>
           )}
