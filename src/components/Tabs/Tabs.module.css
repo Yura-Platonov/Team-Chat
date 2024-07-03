@@ -90,6 +90,8 @@
     box-shadow: 4px 4px 8px 0px #024A7A4D;
     border-radius: 30px;
     z-index: 5;
+    overflow-y: auto;
+    
   }
 
   .menuTabs_containerOpen {
@@ -103,6 +105,12 @@
   display: flex;
   position: relative;
   transition: padding-left 0.5s;
+}
+
+.menu_list{
+display: flex;
+flex-direction: column;
+gap: 20px;
 }
 
 
@@ -156,6 +164,7 @@
   }
 
   .menu_input{
+    margin-top: 15px;
   width: -webkit-fill-available;
   background: linear-gradient(90deg, rgba(0, 138, 229, 0.3) 0%, rgba(160, 203, 231, 0.1) 100%);
   font-size: 20px;

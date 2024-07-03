@@ -361,8 +361,8 @@ const Tabs = () => {
           <div className={css.container}>
           <h2 className={css.menu_title}>Tab settings</h2>
           {!isWebTabSelected && (
-            <>
-              <div>
+            <ul className={css.menu_list}>
+              <li>
                 <label className={css.menu_subtitle}><p className={css.text}>Rename the tab</p> <RenameTabSvg/></label>
                 <input 
                   type="text" 
@@ -372,19 +372,19 @@ const Tabs = () => {
                   placeholder="Enter new tab name" 
                   onClick={() => handleActionButtonClick('rename')}
                 />
-              </div>
-              <div className={css.menu_subtitle} onClick={() => handleActionButtonClick('deleteTab')}>
+              </li>
+              <li className={css.menu_subtitle} onClick={() => handleActionButtonClick('deleteTab')}>
                 <p className={css.text}>Delete the tab</p>
-                <DeleteTabSvg/>
-              </div>
-              <div className={css.menu_subtitle} onClick={openChangeIconModal}>
+                <DeleteTabSvg style={{ height: '30px' }}/>
+              </li>
+              <li className={css.menu_subtitle} onClick={openChangeIconModal}>
                 <p className={css.text}>Change the icon</p>
                 <ChangeIconSvg/>
-              </div>
-              <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+              </li>
+              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
-                <MoveRoomsSvg/>
-              </div>
+                <MoveRoomsSvg style={{ height: '30px' }}/>
+              </li>
               {isMoveTabOpen && (
                    <ul>
                       {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
@@ -398,18 +398,18 @@ const Tabs = () => {
                       ))}
                     </ul>
                 )}
-              <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('removeRooms'); setIsMoveTabOpenDelete(true)}}>
+              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('removeRooms'); setIsMoveTabOpenDelete(true)}}>
                 <p className={css.text}>Delete rooms</p>
-                <DeleteRoomsSvg/>
-              </div>
-            </>
+                <DeleteRoomsSvg style={{ height: '30px' }}/>
+              </li>
+            </ul>
           )}
           {isWebTabSelected && (
-            <>
-             <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+            <ul>
+             <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
                 <MoveRoomsSvg/>
-              </div>
+              </li>
               {isMoveTabOpen && (
                    <ul>
                       {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
@@ -423,7 +423,7 @@ const Tabs = () => {
                       ))}
                     </ul>
                 )}
-            </>
+            </ul>
           )}
             </div>
             {buttonAction && (
