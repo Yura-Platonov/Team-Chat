@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import CreateTabModal from 'components/Modal/CreateTabModal';
-import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import css from './Tabs.module.css';
 import axios from 'axios';
 import { useAuth } from '../LoginForm/AuthContext';
@@ -17,8 +15,11 @@ import { ReactComponent as TabCanselButtonSvg } from '../Images/tabCanselButton.
 import { ReactComponent as TabConfirmButtonSvg } from '../Images/tabConfirmButton.svg';
 
 import useLoginModal from '../Hooks/useLoginModal';
-import LoginModal from '../Modal/LoginModal';
-import VerificationEmailModal from '../Modal/VerificationEmailModal';
+import LoginModal from 'components/Modal/LoginModal';
+import VerificationEmailModal from 'components/Modal/VerificationEmailModal';
+import CreateTabModal from 'components/Modal/CreateTabModal';
+import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
+import DeleteRoomFromTabModal from 'components/Modal/DeleteRoomFromTabModal';
 
 
 
@@ -40,6 +41,7 @@ const Tabs = () => {
   const [selectedRooms, setSelectedRooms] = useState([]); 
   const [targetTabId, setTargetTabId] = useState(null);
   const [buttonAction, setButtonAction] = useState(null);
+  const [isDeleteRoomModalOpen, setIsDeleteRoomModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -282,9 +284,10 @@ const Tabs = () => {
     })
     .then((response) => {
       console.log('Room removed from tab:', response.data);
-      setSelectedRooms([]);
-      setIsMoveTabOpenDelete(false);
+      // setSelectedRooms([]);
+      // setIsMoveTabOpenDelete(false);
       setButtonAction(null);
+      setIsDeleteRoomModalOpen(false);
       fetchRooms(selectedTab, currentTabId);
     })
     .catch((error) => {
@@ -308,7 +311,8 @@ const Tabs = () => {
         handleMoveRooms();
         break;
       case 'removeRooms':
-        handleRemoveRoomsFromTab();
+        setIsDeleteRoomModalOpen(true);
+        // handleRemoveRoomsFromTab();
         break;
           
       default:
@@ -449,6 +453,16 @@ const Tabs = () => {
         setTabs={setTabs}
         selectedTab={selectedTab}
       />
+     <DeleteRoomFromTabModal
+          isOpen={isDeleteRoomModalOpen}
+          onClose={() => {
+            setIsDeleteRoomModalOpen(false);
+            setSelectedRooms([]);
+            setButtonAction(null);
+            setIsMoveTabOpenDelete(false); }}
+          onConfirmDelete={handleRemoveRoomsFromTab}
+        />
+     
     </div>
   );
 };
