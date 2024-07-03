@@ -387,7 +387,6 @@ const Tabs = () => {
               <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
                 <MoveRoomsSvg/>
-                {/* <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button> */}
               </div>
               {isMoveTabOpen && (
                    <ul>
@@ -403,51 +402,36 @@ const Tabs = () => {
                     </ul>
                 )}
               <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('removeRooms'); setIsMoveTabOpenDelete(true)}}>
-              <p className={css.text}>Delete rooms</p>
-              <DeleteRoomsSvg/>
-              {/* <button  onClick={() => setIsMoveTabOpenDelete(!isMoveTabOpenDelete)}>Remove rooms</button> */}
-              {/* {isMoveTabOpenDelete && (
-                  <div>
-              
-               <TabConfirmButtonSvg onClick={handleRemoveRoomsFromTab}></TabConfirmButtonSvg>
-               <TabCanselButtonSvg onClick={() => { setIsMoveTabOpenDelete(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
-               </div>
-                )} */}
+                <p className={css.text}>Delete rooms</p>
+                <DeleteRoomsSvg/>
               </div>
             </>
           )}
           {isWebTabSelected && (
-            <div>
-              <p>Move rooms to another tab</p>
-              <MoveRoomsSvg/>
-              <button onClick={() => setIsMoveTabOpen(!isMoveTabOpen)}>Move rooms to ...</button>
+            <>
+             <div className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+                <p className={css.text}>Move rooms to...</p>
+                <MoveRoomsSvg/>
+              </div>
               {isMoveTabOpen && (
-                <div>
-                  <ul>
-                    {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
-                      <li 
-                        key={tab.id} 
-                        onClick={() => handleTargetTabClick(tab.id)}
-                        className={targetTabId === tab.id ? css.highlightedTab : ''}
-                      >
-                        {tab.name_tab}
-                      </li>
-                    ))}
-                  </ul>
-                  <TabConfirmButtonSvg onClick={handleMoveRooms}></TabConfirmButtonSvg>
-                  <TabCanselButtonSvg onClick={() => { setIsMoveTabOpen(false); setSelectedRooms([]); }}></TabCanselButtonSvg>
-                </div>
-              )}
-            </div>
+                   <ul>
+                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                        <li 
+                          key={tab.id} 
+                          onClick={() => handleTargetTabClick(tab.id)}
+                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
+                          >
+                          {tab.name_tab}
+                        </li>
+                      ))}
+                    </ul>
+                )}
+            </>
           )}
             {buttonAction && (
               <div className={css.confirmCancelButtons}>
-                <button className={css.confirmButton} onClick={handleConfirmAction}>
-                  <TabConfirmButtonSvg />
-                </button>
-                <button className={css.cancelButton} onClick={handleCancelAction}>
-                  <TabCanselButtonSvg />
-                </button>
+                  <TabConfirmButtonSvg className={css.confirmButton} onClick={handleConfirmAction}/>           
+                  <TabCanselButtonSvg className={css.cancelButton}  onClick={handleCancelAction}/>
               </div>
             )}
 

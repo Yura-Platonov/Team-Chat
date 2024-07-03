@@ -175,3 +175,9 @@
     border: none;
     color: #454545;  
   }
+
+  .cancelButton{
+  &:hover{
+    cursor: pointer;
+   stroke: aqua}
+  }
