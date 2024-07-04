@@ -21,12 +21,13 @@ export const App = () => {
     <div className="app">
       <AuthProvider value={{ authToken, setAuthToken }}>
         <Header />
+        {/* <Socet /> */}
         <Routes >
             <Route path="/" exact element={<Main/>} />  
             <Route path="/PersonalChatPage" element={<PersonalChatPage/>} />
             <Route path="/PrivacyPolicy" element={<PrivacyPolicy/>} />
             <Route path="/RoolsOfTheChat" element={<RoolsOfTheChat/>} />
-            <Route path="/chat/:roomName" element={<Chat/>}/>
+            <Route path="/chat/:roomId" element={<Chat/>}/>
             <Route path="/PersonalChat/:recipient_name" element={<PersonalChat/>}/>
 
           </Routes>

@@ -1,7 +1,13 @@
 import * as Icons from '@mui/icons-material';
+import {Flight}  from '@mui/icons-material';
+
+export const icons = {
+  Aeroplane: { name: 'ATV', component: Flight },
+};
 
 const iconList = [
   { name: 'Aeroplane', component: Icons.Flight },
+  { Aeroplane: { name: 'ATV', component: Flight }},
   { name: 'ATV', component: Icons.Toys },
   { name: 'Audio Input XLR', component: Icons.SettingsInputComponent },
   { name: 'Auto Fix', component: Icons.Build },

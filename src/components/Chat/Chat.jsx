@@ -24,7 +24,7 @@ const Chat = () => {
   const [message, setMessage] = useState('');
   const [userList, setUserList] = useState([]);
   const [messages, setMessages] = useState([]);
-  const { roomName } = useParams();
+  const { roomId } = useParams();
   const token = localStorage.getItem('access_token');
   const messageContainerRef = useRef(null);
   const lastLikedMessageIdRef = useRef(null);
@@ -178,7 +178,7 @@ const Chat = () => {
     let isAnimating = false;
 
     if (!token) {
-      axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
+      axios.get(`https://cool-chat.club/api/messages/${roomId}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
@@ -203,7 +203,7 @@ const Chat = () => {
           console.error('Error fetching messages:', error);
         });
     } else {
-      const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
+      const socket = new WebSocket(`wss://cool-chat.club/ws/${roomId}?token=${token}`);
       socketRef.current = socket;
 
       socket.onopen = () => {
@@ -274,7 +274,7 @@ const Chat = () => {
         }
       };
     }
-  }, [roomName, token]);
+  }, [roomId, token]);
   
 
   // useEffect(() => {
@@ -770,7 +770,7 @@ const Chat = () => {
   
   return (
     <div className={css.container}>
-      <h2 className={css.title}>{roomName}</h2>
+      <h2 className={css.title}>{roomId}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
           {/* <h3 className={css.members_title}>Chat members</h3> */}
