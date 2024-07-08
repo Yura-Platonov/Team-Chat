@@ -327,6 +327,10 @@ const Tabs = () => {
         handleMoveRooms();
         break;
       case 'removeRooms':
+        if (!selectedRooms || selectedRooms.length === 0) {
+          alert('No rooms selected for removal');
+          return;
+        }
         setIsDeleteRoomModalOpen(true);
         // handleRemoveRoomsFromTab();
         break;
