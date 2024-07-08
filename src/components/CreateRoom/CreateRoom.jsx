@@ -54,6 +54,8 @@ function CreateRoom({ onRoomCreated }) {
     const file = event.target.files[0];
     if (file) {
       setRoomImage(file);
+      setSelectedOption(null);
+      setActiveCardIndex(-1);
     }
   };
 
@@ -68,19 +70,20 @@ function CreateRoom({ onRoomCreated }) {
       return;
     }
 
-    if (!roomImage) {
+    if (!roomImage && !selectedOption) {
       alert('Please select an image for the room.');
       return;
     }
 
     const headers = {
       Authorization: `Bearer ${authToken}`,
-      'Content-Type': 'multipart/form-data',
     };
 
     const formData = new FormData();
     formData.append('name_room', roomName);
-    formData.append('file', roomImage);
+    if (roomImage) {
+      formData.append('file', roomImage);
+    }
 
     axios
       .get('https://cool-chat.club/api/users/me/', { headers: { Authorization: `Bearer ${authToken}` } })
@@ -88,9 +91,11 @@ function CreateRoom({ onRoomCreated }) {
         const isVerified = response.data.verified;
 
         if (isVerified) {
-          const url = `https://cool-chat.club/api/rooms/v2?secret=${isSecretRoom}`;
+          const url = roomImage ? `https://cool-chat.club/api/rooms/v2?secret=${isSecretRoom}` : 'https://cool-chat.club/api/rooms/';
+          const requestData = roomImage ? formData : { name_room: roomName, image_room: selectedOption.value };
+
           axios
-            .post(url, formData, { headers })
+            .post(url, requestData, { headers })
             .then((response) => {
               console.log('Комната создана:', response.data);
               setRoomName('');

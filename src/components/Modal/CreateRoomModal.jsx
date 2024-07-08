@@ -60,7 +60,7 @@ const CreateRoomModal = ({
                 onClick={() => {
                   setActiveCardIndex(index);
                   setSelectedOption(roomImg);
-                  setRoomImage(roomImg.value);
+                  setRoomImage(null);
                 }}
               >
                 <img src={roomImg.value} alt={roomImg.label} className={css.roomImg} />
