@@ -8,18 +8,18 @@ import LoginModal from '../Modal/LoginModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import VerificationUserModal from 'components/Modal/VerificationUserModal';
 import useLoginModal from '../Hooks/useLoginModal';
-
 import { useAuth } from '../LoginForm/AuthContext';
 
 function CreateRoom({ onRoomCreated }) {
   const { authToken } = useAuth();
   const [roomName, setRoomName] = useState('');
-  const [roomImage, setRoomImage] = useState('');
+  const [roomImage, setRoomImage] = useState(null);
   const [selectedOption, setSelectedOption] = useState(null);
   const [imageOptions, setImageOptions] = useState([]);
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] = useState(false);
   const [activeCardIndex, setActiveCardIndex] = useState(null);
-  const [isVerificationUserModalOpen ,setIsVerificationUserModalOpen] = useState(false);
+  const [isSecretRoom, setIsSecretRoom] = useState(false);
+  const [isVerificationUserModalOpen, setIsVerificationUserModalOpen] = useState(false);
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
@@ -50,38 +50,51 @@ function CreateRoom({ onRoomCreated }) {
       });
   }, []);
 
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setRoomImage(file);
+    }
+  };
+
   const handleCreateRoom = () => {
     if (!authToken) {
-      openLoginModal(); 
+      openLoginModal();
       return;
     }
-  
+
     if (!roomName || roomName.trim() === '') {
       alert('Please provide the room name.');
       return;
     }
-  
-    if (!selectedOption) {
+
+    if (!roomImage) {
       alert('Please select an image for the room.');
       return;
     }
-  
+
     const headers = {
       Authorization: `Bearer ${authToken}`,
+      'Content-Type': 'multipart/form-data',
     };
-  
+
+    const formData = new FormData();
+    formData.append('name_room', roomName);
+    formData.append('file', roomImage);
+
     axios
-      .get('https://cool-chat.club/api/users/me/', { headers })
+      .get('https://cool-chat.club/api/users/me/', { headers: { Authorization: `Bearer ${authToken}` } })
       .then((response) => {
         const isVerified = response.data.verified;
-  
+
         if (isVerified) {
+          const url = `https://cool-chat.club/api/rooms/v2?secret=${isSecretRoom}`;
           axios
-            .post('https://cool-chat.club/api/rooms/', { name_room: roomName, image_room: roomImage }, { headers })
+            .post(url, formData, { headers })
             .then((response) => {
               console.log('Комната создана:', response.data);
               setRoomName('');
-              setRoomImage('');
+              setRoomImage(null);
               setSelectedOption(null);
               setIsCreateRoomModalOpen(false);
               onRoomCreated(response.data);
@@ -143,8 +156,11 @@ function CreateRoom({ onRoomCreated }) {
         activeCardIndex={activeCardIndex}
         setActiveCardIndex={setActiveCardIndex}
         handleCreateRoom={handleCreateRoom}
+        handleFileChange={handleFileChange}
+        isSecretRoom={isSecretRoom}
+        setIsSecretRoom={setIsSecretRoom}
       />
-      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
+      <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess} />
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
       <VerificationUserModal isOpen={isVerificationUserModalOpen} onClose={closeVerificationUserModal} />
     </>
