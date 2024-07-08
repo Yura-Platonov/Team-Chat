@@ -162,6 +162,12 @@ const Tabs = () => {
 
   const handleCreateTab = (newTab) => {
     setTabs([...tabs, newTab]);
+    // setSelectedTab(newTab.name_tab);
+    // setCurrentTabId(newTab.id);
+    // console.log(newTab.id);
+    
+    // console.log(selectedTab, currentTabId)
+    // fetchRooms(selectedTab, currentTabId);
   };
 
   const handleRenameTab = () => {
