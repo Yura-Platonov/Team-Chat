@@ -5,6 +5,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 import tabsIcons from './TabsIcons'; 
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
+import { Fingerprint as SecretIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
 import { ReactComponent as ChangeIconSvg } from '../Images/changeIcon.svg';
 import { ReactComponent as DeleteRoomsSvg } from '../Images/deleteRooms.svg';
@@ -20,6 +21,7 @@ import VerificationEmailModal from 'components/Modal/VerificationEmailModal';
 import CreateTabModal from 'components/Modal/CreateTabModal';
 import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import DeleteRoomFromTabModal from 'components/Modal/DeleteRoomFromTabModal';
+import DeleteTabModal from 'components/Modal/DeleteTabModal';
 
 //new tab
 
@@ -42,6 +44,7 @@ const Tabs = () => {
   const [targetTabId, setTargetTabId] = useState(null);
   const [buttonAction, setButtonAction] = useState(null);
   const [isDeleteRoomModalOpen, setIsDeleteRoomModalOpen] = useState(false);
+  const [isDeleteTabModalOpen, setIsDeleteTabModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -140,7 +143,8 @@ const Tabs = () => {
     setCurrentTabIcon(selectedTabData?.image_tab);
     setIsWebTabSelected(tabName === 'Web');
     if (tabName === 'Web') {
-      loadRooms();
+      setIsWebTabSelected(true); 
+      loadRooms(); 
       return;
     }
    else {
@@ -210,6 +214,11 @@ const Tabs = () => {
       setSelectedTab('Web');
       setNewTabName('');
       setButtonAction(null);
+      setIsDeleteTabModalOpen(false);
+      setCurrentTabId(null);
+      setCurrentTabIcon(null);
+      setIsWebTabSelected(true); 
+      loadRooms(); 
     })
     .catch((error) => {
       console.error('Error deleting tab:', error);
@@ -305,7 +314,8 @@ const Tabs = () => {
         handleRenameTab();
         break;
       case 'deleteTab':
-        handleDeleteTab();
+        setIsDeleteTabModalOpen(true);
+        // handleDeleteTab();
         break;
       case 'move':
         handleMoveRooms();
@@ -354,6 +364,7 @@ const Tabs = () => {
             className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
             onClick={() => handleSelectTab('Web')}
           >
+            <SecretIcon className={css.tab_icon}/>
             <WebIcon className={css.tab_icon} />
           </li>
         </ul>
@@ -462,7 +473,15 @@ const Tabs = () => {
             setIsMoveTabOpenDelete(false); }}
           onConfirmDelete={handleRemoveRoomsFromTab}
         />
-     
+            <DeleteTabModal
+          isOpen={isDeleteTabModalOpen}
+          onClose={() => {
+            setIsDeleteTabModalOpen(false);
+            setButtonAction(null);
+            }}
+          onConfirmDelete={handleDeleteTab}
+          tabName={selectedTab}
+        />
     </div>
   );
 };
