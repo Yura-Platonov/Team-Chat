@@ -7,7 +7,6 @@ export const icons = {
 
 const iconList = [
   { name: 'Aeroplane', component: Icons.Flight },
-  { Aeroplane: { name: 'ATV', component: Flight }},
   { name: 'ATV', component: Icons.Toys },
   { name: 'Audio Input XLR', component: Icons.SettingsInputComponent },
   { name: 'Auto Fix', component: Icons.Build },
