@@ -50,15 +50,6 @@ function CreateRoom({ onRoomCreated }) {
       });
   }, []);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setRoomImage(file);
-      setSelectedOption(null);
-      setActiveCardIndex(-1);
-    }
-  };
-
   const handleCreateRoom = () => {
     if (!authToken) {
       openLoginModal();
@@ -100,6 +91,7 @@ function CreateRoom({ onRoomCreated }) {
               console.log('Комната создана:', response.data);
               setRoomName('');
               setRoomImage(null);
+              // setSelectedImg(null); 
               setSelectedOption(null);
               setIsCreateRoomModalOpen(false);
               onRoomCreated(response.data);
@@ -161,7 +153,6 @@ function CreateRoom({ onRoomCreated }) {
         activeCardIndex={activeCardIndex}
         setActiveCardIndex={setActiveCardIndex}
         handleCreateRoom={handleCreateRoom}
-        handleFileChange={handleFileChange}
         isSecretRoom={isSecretRoom}
         setIsSecretRoom={setIsSecretRoom}
       />

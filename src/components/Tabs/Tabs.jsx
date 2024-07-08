@@ -332,7 +332,6 @@ const Tabs = () => {
           return;
         }
         setIsDeleteRoomModalOpen(true);
-        // handleRemoveRoomsFromTab();
         break;
           
       default:
