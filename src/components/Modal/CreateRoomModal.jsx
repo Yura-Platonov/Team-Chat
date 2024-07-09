@@ -169,7 +169,7 @@ const CreateRoomModal = ({
               {!selectedImg && (
                 <label className={css.uploadLabel}>
                   <AddPhotoYourRoomSVG className={css.addPhotoIcon} />
-                  <div className={css.uploadOverlay}>Add a photo</div>
+                  <p className={css.uploadOverlay}>Add a photo</p>
                   <input
                     type="file"
                     accept="image/*"
