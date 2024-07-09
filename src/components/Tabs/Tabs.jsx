@@ -147,7 +147,11 @@ const Tabs = () => {
       loadRooms(); 
       return;
     }
-   else {
+    else if (tabName === 'Secret') {
+console.log(111)
+
+    }
+   else{
     fetchRooms(tabName, id);
   }
     setIsMoveTabOpen(false);
@@ -370,12 +374,18 @@ const Tabs = () => {
             );
           })}
           <li 
+            className={`${css.item_tabs} ${selectedTab === 'Secret' ? css.selected : ''}`}
+            onClick={() => handleSelectTab('Secret')}
+          >
+            <SecretIcon className={css.tab_icon}/>
+            </li>
+            <li 
             className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
             onClick={() => handleSelectTab('Web')}
           >
-            <SecretIcon className={css.tab_icon}/>
             <WebIcon className={css.tab_icon} />
-          </li>
+            </li>
+         
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
