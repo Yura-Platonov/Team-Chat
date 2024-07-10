@@ -37,6 +37,7 @@ const Tabs = () => {
   const [currentTabId, setCurrentTabId] = useState(null);
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
   const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
+  const [isSecretTabSelected, setIsSecretTabSelected] = useState(true); 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
   const [isMoveTabOpen, setIsMoveTabOpen] = useState(false);
   const [isMoveTabOpenDelete, setIsMoveTabOpenDelete] = useState(false);
@@ -80,6 +81,9 @@ const Tabs = () => {
       return; 
     }
     if(name_tab === 'Web'){
+      return
+    }
+    if(name_tab === 'Secret'){
       return
     }
     axios.get(`https://cool-chat.club/api/tabs/${id}`, {
@@ -135,21 +139,44 @@ const Tabs = () => {
     }
   }, [fetchRooms, tabs]);
 
+  const fetchSecretRooms = () => {
+    axios.get('https://cool-chat.club/api/secret/', {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      setRooms(response.data || []);
+      setSelectedTab('Secret');
+      setIsSecretTabSelected(true);
+      setIsWebTabSelected(false);
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error fetching secret rooms:', error);
+    });
+  };
+
   const handleSelectTab = (tabName, id) => {
+
     console.log(tabName, id)
     setSelectedTab(tabName);
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
     setCurrentTabIcon(selectedTabData?.image_tab);
-    setIsWebTabSelected(tabName === 'Web');
+    // setIsWebTabSelected(tabName === 'Web');
+    setIsSecretTabSelected(false);
+
     if (tabName === 'Web') {
       setIsWebTabSelected(true); 
       loadRooms(); 
       return;
     }
     else if (tabName === 'Secret') {
-console.log(111)
-
+      fetchSecretRooms();
+      setIsSecretTabSelected(true);
+      return;
     }
    else{
     fetchRooms(tabName, id);
@@ -394,7 +421,7 @@ console.log(111)
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
           <div className={css.container}>
           <h2 className={css.menu_title}>Tab settings</h2>
-          {!isWebTabSelected && (
+          {!isWebTabSelected && !isSecretTabSelected && (
             <ul className={css.menu_list}>
               <li>
                 <label className={css.menu_subtitle}><p className={css.text}>Rename the tab</p> <RenameTabSvg/></label>
@@ -438,7 +465,7 @@ console.log(111)
               </li>
             </ul>
           )}
-          {isWebTabSelected && (
+          {(isWebTabSelected || isSecretTabSelected) && (
             <ul>
              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
@@ -459,6 +486,27 @@ console.log(111)
                 )}
             </ul>
           )}
+           {/* {isSecretTabSelected && (
+            <ul>
+             <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
+                <p className={css.text}>Move rooms to...</p>
+                <MoveRoomsSvg/>
+              </li>
+              {isMoveTabOpen && (
+                   <ul>
+                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
+                        <li 
+                          key={tab.id} 
+                          onClick={() => handleTargetTabClick(tab.id)}
+                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
+                          >
+                          {tab.name_tab}
+                        </li>
+                      ))}
+                    </ul>
+                )}
+            </ul>
+          )} */}
             </div>
             {buttonAction && (
               <div className={css.confirmCancelButtons}>
