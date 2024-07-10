@@ -59,6 +59,50 @@
         margin-top: 30px;
         font-size: 24px;
        }
- 
-    
 }
+.container{
+position: relative;
+/* height: 100vh; */
+}
+.plusButton {
+    position: fixed;
+    top: 80%;
+    right: 5%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    font-size: 30px;
+    border: 1px solid black;
+    border-radius: 50%;
+    z-index: 10; 
+  }
+  
+  .plusItem {
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    transition: transform 0.5s ease;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 50%; 
+    position: absolute;
+  }
+  
+  .itemTop {
+    transform: translateY(-60px);
+  }
+  
+  .itemLeft {
+    transform: translateX(-60px);
+  }
+  
+  .itemDiagonal {
+    transform: translate(-42px, -42px);
+  }
