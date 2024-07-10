@@ -34,6 +34,7 @@ const CreateTabModal = ({
 
       console.log('Tab created:', response.data);
       onCreateTab(response.data);
+      setTabName('');
       onClose();
     } catch (error) {
       console.error('Error creating tab:', error);

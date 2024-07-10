@@ -206,3 +206,25 @@
     }
   }
   
+  .fileInput{
+  display: none;
+  }
+
+  .addPhotoIcon{
+    width: -webkit-fill-available;
+    padding-top: 15px;
+  }
+
+  /* .uploadLabel{
+    padding: 15px;
+  } */
+
+  .uploadOverlay{
+    text-align: center;
+   
+font-size: 32px;
+font-weight: 500;
+line-height: 1.2;
+color: #024A7A;
+
+  }

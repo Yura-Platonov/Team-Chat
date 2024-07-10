@@ -5,6 +5,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 import tabsIcons from './TabsIcons'; 
 import RoomList from '../RoomList/RoomList';
 import { Web as WebIcon } from '@mui/icons-material';
+import { Fingerprint as SecretIcon } from '@mui/icons-material';
 import { ReactComponent as ToggleMenuTabsSvg } from '../Images/ToggleMenuTabs.svg';
 import { ReactComponent as ChangeIconSvg } from '../Images/changeIcon.svg';
 import { ReactComponent as DeleteRoomsSvg } from '../Images/deleteRooms.svg';
@@ -20,6 +21,7 @@ import VerificationEmailModal from 'components/Modal/VerificationEmailModal';
 import CreateTabModal from 'components/Modal/CreateTabModal';
 import ChangeIconTabModal from 'components/Modal/ChangeIconTabModal';
 import DeleteRoomFromTabModal from 'components/Modal/DeleteRoomFromTabModal';
+import DeleteTabModal from 'components/Modal/DeleteTabModal';
 
 //new tab
 
@@ -35,6 +37,7 @@ const Tabs = () => {
   const [currentTabId, setCurrentTabId] = useState(null);
   const [currentTabIcon, setCurrentTabIcon] = useState(null);
   const [isWebTabSelected, setIsWebTabSelected] = useState(true); 
+  const [isSecretTabSelected, setIsSecretTabSelected] = useState(true); 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
   const [isMoveTabOpen, setIsMoveTabOpen] = useState(false);
   const [isMoveTabOpenDelete, setIsMoveTabOpenDelete] = useState(false);
@@ -42,6 +45,7 @@ const Tabs = () => {
   const [targetTabId, setTargetTabId] = useState(null);
   const [buttonAction, setButtonAction] = useState(null);
   const [isDeleteRoomModalOpen, setIsDeleteRoomModalOpen] = useState(false);
+  const [isDeleteTabModalOpen, setIsDeleteTabModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -73,10 +77,13 @@ const Tabs = () => {
   const fetchRooms = useCallback((name_tab, id) => {
     console.log(name_tab, id)
     if (!authToken) {
-      console.error('No auth token available');
+      console.log('No auth token available');
       return; 
     }
     if(name_tab === 'Web'){
+      return
+    }
+    if(name_tab === 'Secret'){
       return
     }
     axios.get(`https://cool-chat.club/api/tabs/${id}`, {
@@ -132,18 +139,50 @@ const Tabs = () => {
     }
   }, [fetchRooms, tabs]);
 
+  const fetchSecretRooms = () => {
+    if (!authToken) {
+      console.error('No auth token available');
+      return; 
+    }
+    axios.get('https://cool-chat.club/api/secret/', {
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+        'Accept': 'application/json'
+      }
+    })
+    .then((response) => {
+      setRooms(response.data || []);
+      setSelectedTab('Secret');
+      setIsSecretTabSelected(true);
+      setIsWebTabSelected(false);
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error fetching secret rooms:', error);
+    });
+  };
+
   const handleSelectTab = (tabName, id) => {
+    setRooms([]);
     console.log(tabName, id)
     setSelectedTab(tabName);
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
     setCurrentTabId(selectedTabData?.id);
     setCurrentTabIcon(selectedTabData?.image_tab);
     setIsWebTabSelected(tabName === 'Web');
+    setIsSecretTabSelected(tabName === 'Secret');
+
     if (tabName === 'Web') {
-      loadRooms();
+      setIsWebTabSelected(true); 
+      loadRooms(); 
       return;
     }
-   else {
+    else if (tabName === 'Secret') {
+      fetchSecretRooms();
+      setIsSecretTabSelected(true);
+      return;
+    }
+   else{
     fetchRooms(tabName, id);
   }
     setIsMoveTabOpen(false);
@@ -158,6 +197,12 @@ const Tabs = () => {
 
   const handleCreateTab = (newTab) => {
     setTabs([...tabs, newTab]);
+    // setSelectedTab(newTab.name_tab);
+    // setCurrentTabId(newTab.id);
+    // console.log(newTab.id);
+    
+    // console.log(selectedTab, currentTabId)
+    // fetchRooms(selectedTab, currentTabId);
   };
 
   const handleRenameTab = () => {
@@ -210,6 +255,11 @@ const Tabs = () => {
       setSelectedTab('Web');
       setNewTabName('');
       setButtonAction(null);
+      setIsDeleteTabModalOpen(false);
+      setCurrentTabId(null);
+      setCurrentTabIcon(null);
+      setIsWebTabSelected(true); 
+      loadRooms(); 
     })
     .catch((error) => {
       console.error('Error deleting tab:', error);
@@ -305,14 +355,18 @@ const Tabs = () => {
         handleRenameTab();
         break;
       case 'deleteTab':
-        handleDeleteTab();
+        setIsDeleteTabModalOpen(true);
+        // handleDeleteTab();
         break;
       case 'move':
         handleMoveRooms();
         break;
       case 'removeRooms':
+        if (!selectedRooms || selectedRooms.length === 0) {
+          alert('No rooms selected for removal');
+          return;
+        }
         setIsDeleteRoomModalOpen(true);
-        // handleRemoveRoomsFromTab();
         break;
           
       default:
@@ -350,12 +404,21 @@ const Tabs = () => {
               </li>
             );
           })}
+          {authToken && (
           <li 
+            className={`${css.item_tabs} ${selectedTab === 'Secret' ? css.selected : ''}`}
+            onClick={() => handleSelectTab('Secret')}
+          >
+            <SecretIcon className={css.tab_icon}/>
+            </li>
+            )}
+            <li 
             className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
             onClick={() => handleSelectTab('Web')}
           >
             <WebIcon className={css.tab_icon} />
-          </li>
+            </li>
+         
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
@@ -364,7 +427,7 @@ const Tabs = () => {
         <div className={`${css.menuTabs_container} ${isMenuTabsOpen ? css.menuTabs_containerOpen : ''}`}>
           <div className={css.container}>
           <h2 className={css.menu_title}>Tab settings</h2>
-          {!isWebTabSelected && (
+          {!isWebTabSelected && !isSecretTabSelected && (
             <ul className={css.menu_list}>
               <li>
                 <label className={css.menu_subtitle}><p className={css.text}>Rename the tab</p> <RenameTabSvg/></label>
@@ -408,7 +471,7 @@ const Tabs = () => {
               </li>
             </ul>
           )}
-          {isWebTabSelected && (
+          {(isWebTabSelected || isSecretTabSelected) && (
             <ul>
              <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
                 <p className={css.text}>Move rooms to...</p>
@@ -462,7 +525,15 @@ const Tabs = () => {
             setIsMoveTabOpenDelete(false); }}
           onConfirmDelete={handleRemoveRoomsFromTab}
         />
-     
+            <DeleteTabModal
+          isOpen={isDeleteTabModalOpen}
+          onClose={() => {
+            setIsDeleteTabModalOpen(false);
+            setButtonAction(null);
+            }}
+          onConfirmDelete={handleDeleteTab}
+          tabName={selectedTab}
+        />
     </div>
   );
 };

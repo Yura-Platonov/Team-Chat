@@ -1,3 +1,6 @@
+.createRoomContainer{
+padding: 30px;
+}
 
 .title {
     text-align: center;
@@ -22,21 +25,23 @@ gap: 40px;
 
 .cancelButton{
     font-size: 24px;
-    cursor: pointer;
-
+   
     width: 200px;
     height: 60px;
     border: none;
     border-radius: 14px ;
     background: linear-gradient(90deg, rgba(0, 138, 229, 0.45) 0%, rgba(0, 138, 229, 0.25) 50%, rgba(0, 138, 229, 0.45) 100%);
-
-    
+   
+    &:hover{
+    color: #fff;
+    background: linear-gradient(270deg, #20A6FE 0%, #004D94 90%);
+    cursor: pointer;
+    }
 }
 
 .confirmButton{
     color: #fff;
     font-size: 24px;
-    cursor: pointer;
 
     width: 200px;
     height: 60px;
@@ -44,5 +49,12 @@ gap: 40px;
     border-radius: 14px ;
 
     background: linear-gradient(90deg, #E25057 0%, rgba(219, 98, 104, 0.45) 50%, #E25057 100%);
+
+    &:hover{
+    color: #000;
+    background: linear-gradient(90deg, #53080C 0%, #F1000C 90%);
+    cursor: pointer;
+
+    }
 
 }
