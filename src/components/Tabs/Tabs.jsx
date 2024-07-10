@@ -77,7 +77,7 @@ const Tabs = () => {
   const fetchRooms = useCallback((name_tab, id) => {
     console.log(name_tab, id)
     if (!authToken) {
-      console.error('No auth token available');
+      console.log('No auth token available');
       return; 
     }
     if(name_tab === 'Web'){
@@ -140,6 +140,10 @@ const Tabs = () => {
   }, [fetchRooms, tabs]);
 
   const fetchSecretRooms = () => {
+    if (!authToken) {
+      console.error('No auth token available');
+      return; 
+    }
     axios.get('https://cool-chat.club/api/secret/', {
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -159,7 +163,7 @@ const Tabs = () => {
   };
 
   const handleSelectTab = (tabName, id) => {
-
+    setRooms([]);
     console.log(tabName, id)
     setSelectedTab(tabName);
     const selectedTabData = tabs.find(tab => tab.name_tab === tabName);
@@ -400,12 +404,14 @@ const Tabs = () => {
               </li>
             );
           })}
+          {authToken && (
           <li 
             className={`${css.item_tabs} ${selectedTab === 'Secret' ? css.selected : ''}`}
             onClick={() => handleSelectTab('Secret')}
           >
             <SecretIcon className={css.tab_icon}/>
             </li>
+            )}
             <li 
             className={`${css.item_tabs} ${selectedTab === 'Web' ? css.selected : ''}`}
             onClick={() => handleSelectTab('Web')}
@@ -486,27 +492,6 @@ const Tabs = () => {
                 )}
             </ul>
           )}
-           {/* {isSecretTabSelected && (
-            <ul>
-             <li className={css.menu_subtitle} onClick={() => {handleActionButtonClick('move'); setIsMoveTabOpen(true)}}>
-                <p className={css.text}>Move rooms to...</p>
-                <MoveRoomsSvg/>
-              </li>
-              {isMoveTabOpen && (
-                   <ul>
-                      {tabs.filter(tab => tab.id !== currentTabId).map(tab => (
-                        <li 
-                          key={tab.id} 
-                          onClick={() => handleTargetTabClick(tab.id)}
-                          className={`${css.menu_subtitle2} ${targetTabId === tab.id ? css.highlightedTab : ''}`}
-                          >
-                          {tab.name_tab}
-                        </li>
-                      ))}
-                    </ul>
-                )}
-            </ul>
-          )} */}
             </div>
             {buttonAction && (
               <div className={css.confirmCancelButtons}>
