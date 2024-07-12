@@ -38,6 +38,7 @@ const MobileMenu = () => {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {

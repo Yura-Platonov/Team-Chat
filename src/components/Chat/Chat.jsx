@@ -51,6 +51,10 @@ const Chat = () => {
 
   let userName = selectedUser ? selectedUser.user_name : '';
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleDirectMessageClick = () => {
     if (!token) {
       openLoginModal();
