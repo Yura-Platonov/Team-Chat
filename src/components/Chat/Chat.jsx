@@ -25,6 +25,7 @@ const Chat = () => {
   const [userList, setUserList] = useState([]);
   const [messages, setMessages] = useState([]);
   const { roomId } = useParams();
+  const [roomName, setRoomName] = useState('');
   const token = localStorage.getItem('access_token');
   const messageContainerRef = useRef(null);
   const lastLikedMessageIdRef = useRef(null);
@@ -54,6 +55,29 @@ const Chat = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  useEffect(() => {
+    const fetchRoomData = async () => {
+      try {
+        const response = await axios.get('https://cool-chat.club/api/rooms/', {
+          headers: {
+            'accept': 'application/json',
+          },
+        });
+        const rooms = response.data;
+        
+        const room = rooms.find(room => room.id === parseInt(roomId));
+        
+        if (room) {
+          setRoomName(room.name_room);
+        }
+      } catch (error) {
+        console.error('Error fetching room data:', error);
+      }
+    };
+
+    fetchRoomData();
+  }, [roomId]);
 
   const handleDirectMessageClick = () => {
     if (!token) {
@@ -774,7 +798,7 @@ const Chat = () => {
   
   return (
     <div className={css.container}>
-      <h2 className={css.title}>{roomId}</h2>
+      <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
           {/* <h3 className={css.members_title}>Chat members</h3> */}
