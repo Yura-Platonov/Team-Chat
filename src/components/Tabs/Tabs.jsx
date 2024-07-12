@@ -418,7 +418,6 @@ const Tabs = () => {
           >
             <WebIcon className={css.tab_icon} />
             </li>
-         
         </ul>
       </div>
       <button onClick={openCreateTabModal}>Create Tab</button>
