@@ -39,6 +39,8 @@ const PersonalChat = () => {
   const [showSVG, setShowSVG] = useState(false);
   const [partnerId, setPartnerId] = useState(null);
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const currentUserId = localStorage.getItem('user_id');
 
   const token = localStorage.getItem('access_token');
@@ -257,7 +259,7 @@ const PersonalChat = () => {
       console.log(file);
 
       // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-      const response = await axios.post('https://cool-chat.club/api/upload-to-backblaze/chat?bucket_name=chatall', formData);
+      const response = await axios.post(`${apiBaseUrl}/api/upload-to-backblaze/chat?bucket_name=chatall`, formData);
 
       if (response && response.data) {
         const imageUrl = response.data;

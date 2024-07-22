@@ -23,6 +23,8 @@ function CreateRoom({ onRoomCreated }) {
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const openVerificationUserModal = () => {
     setIsVerificationUserModalOpen(true);
   };
@@ -33,7 +35,7 @@ function CreateRoom({ onRoomCreated }) {
   };
 
   useEffect(() => {
-    axios.get('https://cool-chat.club/api/images/Home')
+    axios.get(`${apiBaseUrl}/api/images/Home`)
       .then((response) => {
         setImageOptions(response.data.map((image) => ({
           value: image.images,
@@ -77,12 +79,12 @@ function CreateRoom({ onRoomCreated }) {
     }
 
     axios
-      .get('https://cool-chat.club/api/users/me/', { headers: { Authorization: `Bearer ${authToken}` } })
+      .get(`${apiBaseUrl}/api/users/me/`, { headers: { Authorization: `Bearer ${authToken}` } })
       .then((response) => {
         const isVerified = response.data.verified;
 
         if (isVerified) {
-          const url = roomImage ? `https://cool-chat.club/api/rooms/v2?secret=${isSecretRoom}` : 'https://cool-chat.club/api/rooms/';
+          const url = roomImage ? `${apiBaseUrl}/api/rooms/v2?secret=${isSecretRoom}` : `${apiBaseUrl}/api/rooms/`;
           const requestData = roomImage ? formData : { name_room: roomName, image_room: selectedOption.value };
 
           axios

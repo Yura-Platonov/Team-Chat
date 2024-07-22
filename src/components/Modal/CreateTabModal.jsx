@@ -17,6 +17,9 @@ const CreateTabModal = ({
   const [tabName, setTabName] = useState('');
   const { authToken } = useAuth();
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
+
    const handleCreateTab = async () => {
     try {
       const requestData = {
@@ -24,7 +27,7 @@ const CreateTabModal = ({
         image_tab: selectedIcon,
       };
 
-      const response = await axios.post('https://cool-chat.club/api/tabs/', requestData, {
+      const response = await axios.post(`${apiBaseUrl}/api/tabs/`, requestData, {
         headers: {
           Authorization: `Bearer ${authToken}`,
           'Content-Type': 'application/json',

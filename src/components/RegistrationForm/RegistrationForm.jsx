@@ -11,6 +11,7 @@ import { useAuth } from '../LoginForm/AuthContext';
 
 
 const RegistrationForm = (props) => {
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
   const { login } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [selectedAvatar, setSelectedAvatar] = useState(null);
@@ -25,7 +26,7 @@ const RegistrationForm = (props) => {
 
   useEffect(() => {
     axios
-      .get('https://cool-chat.club/api/images/Avatar')
+      .get(`${apiBaseUrl}/api/images/Avatar`)
       .then((response) => {
         const imageOptions = response.data.map((avatar) => ({
           value: avatar.images,
@@ -48,7 +49,7 @@ const RegistrationForm = (props) => {
     const checkUserNameUnique = async () => {
       if (!debouncedUserName) return; 
       try {
-        const response = await axios.get(`https://cool-chat.club/api/users/audit/${debouncedUserName}`);
+        const response = await axios.get(`${apiBaseUrl}/api/users/audit/${debouncedUserName}`);
         setIsUserNameUnique(response.status === 204);
       } catch (error) {
         console.error('Error checking username uniqueness:', error);
@@ -63,7 +64,7 @@ const RegistrationForm = (props) => {
     const checkEmailUnique = async () => {
       if (!debouncedUserEmail) return;
       try {
-        const response = await axios.get(`https://cool-chat.club/api/users/${debouncedUserEmail}`);
+        const response = await axios.get(`${apiBaseUrl}/api/users/${debouncedUserEmail}`);
         setIsEmailUnique(response.status === 204); 
       } catch (error) {
         console.error('Error checking email uniqueness:', error);
@@ -130,7 +131,7 @@ const RegistrationForm = (props) => {
       onSubmit={async (values) => {
         try {
            const avatar = selectedAvatar.value;
-          const response = await axios.post('https://cool-chat.club/api/users/', {
+          const response = await axios.post(`${apiBaseUrl}/api/users/`, {
             user_name: values.user_name,
             email: values.email,
             password: values.password,
@@ -148,7 +149,7 @@ const RegistrationForm = (props) => {
 
               const options = {
                 method: 'POST',
-                url: 'https://cool-chat.club/api/login',
+                url: `${apiBaseUrl}/api/login`,
                 headers: {
                   Accept: 'application/json',
                   'Content-Type': 'application/x-www-form-urlencoded',

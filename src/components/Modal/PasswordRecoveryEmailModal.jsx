@@ -9,6 +9,8 @@ import PasswordRecoveryEmailModalSend from './PasswordRecoveryEmailModalSend';
 const PasswordRecoveryEmailModal = ({ isOpen, onClose }) => {
   const [requestSent, setRequestSent] = useState(false);
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const validationSchema = yup.object().shape({
     email: yup.string()
       .test('is-valid-email', 'Please input correct email', value => {
@@ -35,7 +37,7 @@ const PasswordRecoveryEmailModal = ({ isOpen, onClose }) => {
           validationSchema={validationSchema}
           onSubmit={async (values, { setSubmitting }) => {
             try {
-              const response = await axios.post('https://cool-chat.club/api/password/request/', {
+              const response = await axios.post(`${apiBaseUrl}/api/password/request/`, {
                 email: values.email
               });
               console.log('Password recovery request sent successfully:', response.data);

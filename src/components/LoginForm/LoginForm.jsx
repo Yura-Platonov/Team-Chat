@@ -35,6 +35,8 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
   const [showLoginErrorModal, setShowLoginErrorModal] = useState(false);
   const [showPasswordRecoveryEmailModal, setShowPasswordRecoveryEmailModal] = useState(false);
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const togglePasswordVisibility = () => {
     setShowPassword(prevShowPassword => !prevShowPassword);
   };
@@ -61,7 +63,7 @@ const LoginForm = ({ onClose, showRegistrationForm }) => {
 
           const options = {
             method: 'POST',
-            url: 'https://cool-chat.club/api/login',
+            url: `${apiBaseUrl}/api/login`,
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/x-www-form-urlencoded',

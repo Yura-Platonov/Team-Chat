@@ -14,6 +14,9 @@ const ChangeIconTabModal = ({
 }) => {
   const [selectedIcon, setSelectedIcon] = useState('');
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
+
   const handleChangeIcon = async () => {
     try {
       const requestData = {
@@ -22,7 +25,7 @@ const ChangeIconTabModal = ({
       };
 
       const response = await axios.put(
-        `https://cool-chat.club/api/tabs/?id=${currentTabId}`,
+        `${apiBaseUrl}/api/tabs/?id=${currentTabId}`,
         requestData,
         {
           headers: {
