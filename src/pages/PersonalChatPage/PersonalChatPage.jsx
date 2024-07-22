@@ -39,6 +39,7 @@ const ChatCard = ({ messageData }) => {
 const PersonalChatPage = () => {
   const [privateMessages, setPrivateMessages] = useState([]);
   const [userId, setUserId] = useState(null);
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +51,7 @@ const PersonalChatPage = () => {
                 const username = userObject.username;
                 console.log('Username:', username);
       
-                const response = await axios.get(`https://cool-chat.club/api/users/${encodeURIComponent(username)}`);
+                const response = await axios.get(`${apiBaseUrl}/api/users/${encodeURIComponent(username)}`);
                 const userData = response.data;
                 const userIdFromResponse = userData.id;
                 setUserId(userIdFromResponse);
@@ -72,7 +73,7 @@ const PersonalChatPage = () => {
       try {
         if (userId) {
           console.log('Fetching private messages for userId:', userId);
-          const response = await axios.get(`https://cool-chat.club/api/direct/${userId}`);
+          const response = await axios.get(`${apiBaseUrl}/api/direct/${userId}`);
           const data = response.data;
           setPrivateMessages(data);
 

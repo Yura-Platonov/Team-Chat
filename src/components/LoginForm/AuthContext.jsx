@@ -14,6 +14,8 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
   const navigate = useNavigate();
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   const login = (accessToken, refreshToken, username) => {
     setAuthToken(accessToken);
     localStorage.setItem('access_token', accessToken);
@@ -21,7 +23,7 @@ export const AuthProvider = ({ children }) => {
     setRefreshToken(refreshToken);
     localStorage.setItem('refresh_token', refreshToken);
 
-    axios.get(`https://cool-chat.club/api/users/${username}`)
+    axios.get(`${apiBaseUrl}/api/users/${username}`)
       .then((response) => {
         const userData = response.data;
         const { user_name, avatar, id } = userData;
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
 
   const refreshAccessToken = useCallback(async () => {
     try {
-      const response = await axios.post('https://cool-chat.club/api/refresh', null, {
+      const response = await axios.post(`${apiBaseUrl}/api/refresh`, null, {
       params: {
         refresh_token: refreshToken
       }
@@ -97,7 +99,7 @@ export const AuthProvider = ({ children }) => {
     const checkInitialToken = async () => {
       if (authToken) {
         try {
-          await axios.get('https://cool-chat.club/api/ass', {
+          await axios.get(`${apiBaseUrl}/api/ass`, {
             params: {
               token: authToken
             }

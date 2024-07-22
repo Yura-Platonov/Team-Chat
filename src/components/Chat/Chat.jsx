@@ -52,6 +52,8 @@ const Chat = () => {
 
   let userName = selectedUser ? selectedUser.user_name : '';
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -59,7 +61,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchRoomData = async () => {
       try {
-        const response = await axios.get('https://cool-chat.club/api/rooms/', {
+        const response = await axios.get(`${apiBaseUrl}/api/rooms/`, {
           headers: {
             'accept': 'application/json',
           },
@@ -206,7 +208,7 @@ const Chat = () => {
     let isAnimating = false;
 
     if (!token) {
-      axios.get(`https://cool-chat.club/api/messages/${roomId}?limit=50&skip=0`)
+      axios.get(`${apiBaseUrl}/api/messages/${roomId}?limit=50&skip=0`)
         .then(response => {
           const formattedMessages = response.data.map(messageData => {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
@@ -473,7 +475,7 @@ const Chat = () => {
 
       // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
       // const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
-      const response = await axios.post('https://cool-chat.club/api/upload-to-backblaze/chat?bucket_name=chatall', formData);
+      const response = await axios.post(`${apiBaseUrl}/api/upload-to-backblaze/chat?bucket_name=chatall`, formData);
 
       if (response && response.data) {
         const imageUrl = response.data;

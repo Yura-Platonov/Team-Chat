@@ -47,11 +47,12 @@ const Tabs = () => {
   const [isDeleteRoomModalOpen, setIsDeleteRoomModalOpen] = useState(false);
   const [isDeleteTabModalOpen, setIsDeleteTabModalOpen] = useState(false);
 
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
   useEffect(() => {
     if (authToken) {
       const fetchTabs = () => {
-        axios.get('https://cool-chat.club/api/tabs/', {
+        axios.get(`${apiBaseUrl}/api/tabs/`, {
           headers: {
             Authorization: `Bearer ${authToken}`,
             'Content-Type': 'application/json',
@@ -86,7 +87,7 @@ const Tabs = () => {
     if(name_tab === 'Secret'){
       return
     }
-    axios.get(`https://cool-chat.club/api/tabs/${id}`, {
+    axios.get(`${apiBaseUrl}/api/tabs/${id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
@@ -105,7 +106,7 @@ const Tabs = () => {
   }, [authToken]);
 
   const loadRooms = () => {
-    axios.get('https://cool-chat.club/api/rooms/')
+    axios.get(`${apiBaseUrl}/api/rooms/`)
       .then((response) => {
         setRooms(response.data);
         console.log(response.data);
@@ -144,7 +145,7 @@ const Tabs = () => {
       console.error('No auth token available');
       return; 
     }
-    axios.get('https://cool-chat.club/api/secret/', {
+    axios.get(`${apiBaseUrl}/api/secret/`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Accept': 'application/json'
@@ -212,7 +213,7 @@ const Tabs = () => {
       return;
     }
 
-    axios.put(`https://cool-chat.club/api/tabs/?id=${currentTabId}`, {
+    axios.put(`${apiBaseUrl}/api/tabs/?id=${currentTabId}`, {
       name_tab: newTabName,
       image_tab: selectedTabData?.image_tab 
     }, {
@@ -242,7 +243,7 @@ const Tabs = () => {
       return;
     }
 
-    axios.delete(`https://cool-chat.club/api/tabs/?id=${selectedTabData.id}`, {
+    axios.delete(`${apiBaseUrl}/api/tabs/?id=${selectedTabData.id}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
@@ -295,7 +296,7 @@ const Tabs = () => {
   
     const data = selectedRooms;
   
-    axios.post(`https://cool-chat.club/api/tabs/add-room-to-tab/${targetTabId}`, data, {
+    axios.post(`${apiBaseUrl}/api/tabs/add-room-to-tab/${targetTabId}`, data, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
@@ -324,7 +325,7 @@ const Tabs = () => {
   
     console.log(data);
   
-    axios.delete(`https://cool-chat.club/api/tabs/delete-room-in-tab/${currentTabId}`, {
+    axios.delete(`${apiBaseUrl}/api/tabs/delete-room-in-tab/${currentTabId}`, {
       headers: {
         Authorization: `Bearer ${authToken}`,
         'Content-Type': 'application/json',
