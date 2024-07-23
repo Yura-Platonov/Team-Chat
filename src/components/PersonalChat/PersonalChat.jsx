@@ -57,7 +57,7 @@ const PersonalChat = () => {
     if (!partnerId) return;
     console.log(partnerId);
 
-    const socket = new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${token}`);
+    const socket = new WebSocket(`wss://sayorama.eu/private/${partnerId}?token=${token}`);
     socketRef.current = socket;
 
     socket.onopen = () => {

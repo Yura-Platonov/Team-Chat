@@ -90,119 +90,13 @@ const Chat = () => {
     let partnerId = selectedUser.receiver_id; 
     localStorage.setItem('currentPartnerId', partnerId);
 
-    const socket = new WebSocket(`wss://cool-chat.club/private/${partnerId}?token=${token}`);
+    const socket = new WebSocket(`wss://sayorama.eu/private/${partnerId}?token=${token}`);
     socket.onopen = () => {
       console.log('WebSocket connection opened');
       navigate(`/Personalchat/${userName}`);
     };
   };
   const socketRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (!token) {
-  //     axios.get(`https://cool-chat.club/api/messages/${roomName}?limit=50&skip=0`)
-  //       .then(response => {
-  //         const formattedMessages = response.data.map(messageData => {
-  //           const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar,id, id_return, message, fileUrl, edited, } = messageData;
-  //           const formattedDate = formatTime(created_at);
-
-  //           return {
-  //             sender,
-  //             avatar,
-  //             message,
-  //             formattedDate,
-  //             receiver_id,
-  //             id, 
-  //             id_return,
-  //             fileUrl,
-  //             edited,
-  //           };
-  //         });
-
-  //         setMessages(prevMessages => [...prevMessages, ...formattedMessages]);
-  //       })
-  //       .catch(error => {
-  //         console.error('Error fetching messages:', error);
-  //       });
-  //   } else {
-  //     const socket = new WebSocket(`wss://cool-chat.club/ws/${roomName}?token=${token}`);
-  //     socketRef.current = socket;
-
-  //     socket.onopen = () => {
-  //       console.log('Connected to the server via WebSocket');
-  //     };
-
-      
-  //     let isAnimating = false;
-
-  //     socket.onmessage = (event) => {
-        
-  //       try {
-          
-  //         const messageData = JSON.parse(event.data);
-  //         console.log("Received message:", messageData);
-          
-  //         if (messageData.type && !isAnimating) {
-            
-  //           console.log("1234:", messageData.type);
-  //           isAnimating = true;
-
-  //           setShowSVG(true);
-            
-  //           setTimeout(() => {
-  //               setShowSVG(false);
-  //               isAnimating = false;
-  //           }, 3000);
-  //         }
-
-  //         if (messageData.type === 'active_users') {
-  //           setUserList(messageData.data);
-  //         }
-  //        else if (messageData.id) {
-  //           const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
-  //           const formattedDate = formatTime(created_at);
-
-  //           const newMessage = {
-  //             sender,
-  //             avatar,
-  //             message,
-  //             id,
-  //             id_return,
-  //             vote,
-  //             formattedDate,
-  //             receiver_id,
-  //             fileUrl,
-  //             edited,
-  //           };
-
-  //           setMessages(prevMessages => {
-  //             const existingMessageIndex = prevMessages.findIndex(msg => msg.id === newMessage.id);
-
-  //             if (existingMessageIndex !== -1) {
-  //               const updatedMessages = [...prevMessages];
-  //               updatedMessages[existingMessageIndex] = newMessage;
-  //               return updatedMessages;
-  //             }
-
-  //             return [...prevMessages, newMessage];
-  //           });
-  //         }
-  //       } catch (error) {
-  //         console.error('Error parsing JSON:', error);
-  //       }
-  //     };
-
-  //     socket.onerror = (error) => {
-  //       console.error('WebSocket Error:', error);
-  //     };
- 
-  //     return () => {
-  //       if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-  //         socketRef.current.close();
-  //       }
-  //     };
-  //   }
-  // }, [roomName, token]);
 
   useEffect(() => {
     let isAnimating = false;
@@ -233,7 +127,7 @@ const Chat = () => {
           console.error('Error fetching messages:', error);
         });
     } else {
-      const socket = new WebSocket(`wss://cool-chat.club/ws/${roomId}?token=${token}`);
+      const socket = new WebSocket(`wss://sayorama.eu/ws/${roomId}?token=${token}`);
       socketRef.current = socket;
 
       socket.onopen = () => {
@@ -473,8 +367,6 @@ const Chat = () => {
 
       console.log(file);
 
-      // const response = await axios.post('https://cool-chat.club/api/upload_google/uploadfile/', formData);
-      // const response = await axios.post('https://cool-chat.club/api/upload/upload-to-supabase/?bucket_name=image_chat', formData);
       const response = await axios.post(`${apiBaseUrl}/api/upload-to-backblaze/chat?bucket_name=chatall`, formData);
 
       if (response && response.data) {
