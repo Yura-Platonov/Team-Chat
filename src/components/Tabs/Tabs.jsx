@@ -15,6 +15,7 @@ import { ReactComponent as RenameTabSvg } from '../Images/renameTab.svg';
 import { ReactComponent as TabCanselButtonSvg } from '../Images/tabCanselButton.svg';
 import { ReactComponent as TabConfirmButtonSvg } from '../Images/tabConfirmButton.svg';
 
+
 import useLoginModal from '../Hooks/useLoginModal';
 import LoginModal from 'components/Modal/LoginModal';
 import VerificationEmailModal from 'components/Modal/VerificationEmailModal';
