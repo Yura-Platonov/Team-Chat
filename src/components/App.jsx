@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import Header from './Header/Header';
 import Main from './Main/Main';
 import Chat from './Chat/Chat';
+import SocketNotification from './SocketNotification/SocketNotification';
 import PersonalChatPage from '../pages/PersonalChatPage/PersonalChatPage';
 import PersonalChat from '../components/PersonalChat/PersonalChat';
 import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
@@ -21,7 +22,7 @@ export const App = () => {
     <div className="app">
       <AuthProvider value={{ authToken, setAuthToken }}>
         <Header />
-        {/* <Socet /> */}
+        <SocketNotification />
         <Routes >
             <Route path="/" exact element={<Main/>} />  
             <Route path="/PersonalChatPage" element={<PersonalChatPage/>} />
