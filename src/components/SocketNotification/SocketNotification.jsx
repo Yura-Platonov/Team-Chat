@@ -45,6 +45,7 @@ const SocketNotification = () => {
 
   return (
     // <div style={{ display: 'none' }}>
+    
     <div >
       {messages.map((message) => (
         <div>{message}</div>
