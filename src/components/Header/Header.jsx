@@ -10,6 +10,8 @@ import { useAuth } from '../LoginForm/AuthContext';
 import LogoutModal from '../Modal/LogoutModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
+import { ReactComponent as NotificationHeaderSVG } from '../Images/NotificationHeader.svg';
+import { ReactComponent as MessagesHeaderSVG } from '../Images/MessagesHeader.svg';
 
 function IconSun() {
   return (
@@ -145,8 +147,18 @@ const Header = () => {
         <div className={css.mobLogo}>
         <MobileMenu/>
         <Logo darkTheme={darkTheme}/>
+        <div className={css.notificationContainer}>
+        <NotificationHeaderSVG className={css.notificationSvg}/>
+        <div className={css.hoverContainer}>
+        {/* Здесь можно разместить содержимое вашего контейнера */}
+        <p>Уведомления</p>
+        <p>Уведомления</p>
+        <p>Уведомления</p>
+      </div>
+    </div>
         </div>
-      <nav>
+
+      {/* <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
           <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link} onClick={handlePersonalChatClick}>Personal chat</Link></li>
@@ -154,8 +166,10 @@ const Header = () => {
           <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
-      </nav>
+      </nav> */}
       <div className={css.userInfo}>
+        <MessagesHeaderSVG className={css.messagesSvg}/>
+
       <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
           src={user ? user_avatar : defaultAvatar}
@@ -196,6 +210,7 @@ const Header = () => {
           />     
       </div>
       </div>
+      
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />

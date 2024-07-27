@@ -25,6 +25,38 @@ header {
     
 }
 
+.notificationSvg{
+    margin-left: 40px;
+    cursor: pointer;
+}
+
+.notificationContainer {
+    position: relative;
+  }
+  
+  .notificationSvg:hover + .hoverContainer,
+  .hoverContainer:hover {
+    display: block;
+  }
+  
+  .hoverContainer {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    width: 500px;
+    height: 600px;
+    padding: 20px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #CBEAFF 0%, #FFFFFF 100%);
+    box-shadow: 4px 4px 8px 4px #024A7A66;
+    z-index: 2;
+  }
+
+.messagesSvg{
+    cursor: pointer;
+}
+
 .nav_list {
     display: flex;
     justify-content: space-between;
@@ -96,7 +128,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 50px;
 
     @media screen and (min-width:1024px){
         align-items: baseline;
