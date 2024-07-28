@@ -7,11 +7,14 @@ import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import useLoginModal from '../Hooks/useLoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
+import { useMessages } from '../SocketNotification/MessageContext';
 import LogoutModal from '../Modal/LogoutModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
 import { ReactComponent as NotificationHeaderSVG } from '../Images/NotificationHeader.svg';
 import { ReactComponent as MessagesHeaderSVG } from '../Images/MessagesHeader.svg';
+import SocketNotification from '../SocketNotification/SocketNotification';
+
 
 function IconSun() {
   return (
@@ -104,6 +107,8 @@ const Header = () => {
   const user_avatar = localStorage.getItem('avatar');
   const defaultAvatar = UserAvatar;
   const navigate = useNavigate();
+  const { messages } = useMessages();
+
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
@@ -168,7 +173,12 @@ const Header = () => {
         </ul>
       </nav> */}
       <div className={css.userInfo}>
-        <MessagesHeaderSVG className={css.messagesSvg}/>
+      <div className={css.messageContainer}>
+          <MessagesHeaderSVG className={css.messagesSvg} />
+          {messages.length > 0 && (
+            <div className={css.notificationBadge}>{messages.length}</div>
+          )}
+        </div>
 
       <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
@@ -214,7 +224,8 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-    </header>
+          {/* <SocketNotification /> */}
+      </header>
     
   );
 };

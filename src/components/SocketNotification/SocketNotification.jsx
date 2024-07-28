@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
+import { useMessages } from './MessageContext';
+
 
 const SocketNotification = () => {
-  const [messages, setMessages] = useState([]);
+  const { messages, setMessages } = useMessages();
   const token = localStorage.getItem('access_token');
 
   const socketUrl = `wss://sayorama.eu/notification?token=${token}`;
@@ -15,9 +17,17 @@ const SocketNotification = () => {
     };
 
     socket.onmessage = (event) => {
-        socket.send('1');
-      console.log('Message from server: ', event.data);
-      setMessages((prevMessages) => [...prevMessages, event.data]);
+      socket.send('1');
+      try {
+        const data = JSON.parse(event.data); 
+        console.log('Message from server: ', data);
+        
+        if (data.new_message) {
+          setMessages((prevMessages) => [...prevMessages, ...data.new_message]);
+        }
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
     };
 
     socket.onerror = (error) => {
@@ -46,9 +56,16 @@ const SocketNotification = () => {
   return (
     // <div style={{ display: 'none' }}>
     
-    <div >
-      {messages.map((message) => (
-        <div>{message}</div>
+    // <div >
+    //  {messages.map((message, index) => (
+    //     <div key={index}>{message}</div>
+    //   ))}
+    // </div>
+    <div>
+      {messages.map((message, index) => (
+        <div key={index}>
+          {message.message} 
+        </div>
       ))}
     </div>
   );

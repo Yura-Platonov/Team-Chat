@@ -57,6 +57,25 @@ header {
     cursor: pointer;
 }
 
+.messageContainer {
+    position: relative;
+  }
+
+.notificationBadge{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
 .nav_list {
     display: flex;
     justify-content: space-between;

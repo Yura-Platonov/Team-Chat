@@ -10,6 +10,8 @@ import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
 import RoolsOfTheChat from '../pages/RoolsOfTheChat/RoolsOfTheChat';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
+import { MessageProvider } from './SocketNotification/MessageContext';
+
 import Footer from './Footer/Footer';
 import Modal from 'react-modal';
 
@@ -21,6 +23,7 @@ export const App = () => {
   return (
     <div className="app">
       <AuthProvider value={{ authToken, setAuthToken }}>
+      <MessageProvider>
         <Header />
         <SocketNotification />
         <Routes >
@@ -33,6 +36,7 @@ export const App = () => {
 
           </Routes>
         <Footer />
+        </MessageProvider>
       </AuthProvider>
     </div>
   );
