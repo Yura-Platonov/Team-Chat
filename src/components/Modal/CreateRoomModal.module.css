@@ -54,7 +54,7 @@
     }
 
   }
-  .text1 {
+  .titleDescription {
     display: block;
     font-size: 16px;
     font-weight: 400;
@@ -69,6 +69,16 @@
 
     }
   }
+
+  .inputDescription{
+    display: flex;
+    width: 350px;
+    height: 250px;
+    border: none;
+    border-radius: 20px;
+    background: linear-gradient(90deg, rgba(0, 138, 229, 0.3) 0%, rgba(160, 203, 231, 0.1) 100%);
+
+    }
   
   
   .roomImgContainer {
@@ -128,21 +138,14 @@
   }
   
   .button {
+    font-size: 24px;
+   
     width: 200px;
     height: 60px;
-    padding: 0;
-    margin: 0;
-    margin-top: 25px;
-    cursor: pointer;
-    box-sizing: border-box;
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 124%;
     border: none;
-    border-radius: 14px;
-    background: #024A7A;
-    color: #F5FBFF;
-    transition: background-color 0.3s;
+    border-radius: 14px ;
+    background: linear-gradient(90deg, rgba(0, 138, 229, 0.45) 0%, rgba(0, 138, 229, 0.25) 50%, rgba(0, 138, 229, 0.45) 100%);
+   
     @media screen and (min-width: 768px) and (max-width: 1023px){
       width: 300px;
       height: 70px;
@@ -151,26 +154,25 @@
     } 
     @media screen and (min-width: 1024px) {
       width: 300px;
-      height: 75px;
+      height: 65px;
       margin-top: 35px;
       font-size: 30px;
       border-radius: 20px;
 
       }
     @media screen and (min-width:1440px){
-      width: 300px;
-      height: 80px;
+      width: 400px;
+      height: 70px;
       margin-top: 40px;
       font-size: 32px;
 
+    } 
+
+    &:hover{
+    color: #fff;
+    background: linear-gradient(270deg, #20A6FE 0%, #004D94 90%);
+    cursor: pointer;
     }
-  }
-  
-  .button:hover {
-    color: #0F1E28;
-    background-color: #F5FBFF;
-    border: 2px solid #024A7A;
-    box-shadow: 2px 2px 8px 0px rgba(2, 74, 122, 0.30);
   }
   
   .center {
@@ -191,9 +193,11 @@
     font-weight: 400;
     line-height: 130%;
     box-sizing: border-box;
+    border: none;
     border-radius: 20px;
-    border: 2px solid #024A7A;
-    background: #F5FBFF;
+    background: linear-gradient(90deg, rgba(0, 138, 229, 0.3) 0%, rgba(160, 203, 231, 0.1) 100%);
+
+
 
     @media screen and (min-width: 768px) and (max-width: 1023px){
      
@@ -205,6 +209,15 @@
 
     }
   }
+
+.secretRoomLabel{
+font-size: 20px;
+color: #0F1E28;
+display: inline-flex;
+gap: 10px;
+cursor: pointer;
+
+}
   
   .fileInput{
   display: none;
@@ -227,4 +240,8 @@ font-weight: 500;
 line-height: 1.2;
 color: #024A7A;
 
+  }
+
+  .flexContainer{
+  display: flex;
   }
