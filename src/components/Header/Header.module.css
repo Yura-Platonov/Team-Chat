@@ -30,6 +30,13 @@ header {
     cursor: pointer;
 }
 
+.notificationTitle{
+    font-size: 30px;
+    font-weight: 700;
+    color: #2D5F81;
+
+}
+
 .notificationContainer {
     position: relative;
   }
@@ -46,7 +53,7 @@ header {
     left: 40px;
     width: 500px;
     height: 600px;
-    padding: 20px;
+    padding: 30px;
     border-radius: 20px;
     background: linear-gradient(180deg, #CBEAFF 0%, #FFFFFF 100%);
     box-shadow: 4px 4px 8px 4px #024A7A66;

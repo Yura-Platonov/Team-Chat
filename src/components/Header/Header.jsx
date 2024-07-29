@@ -156,6 +156,7 @@ const Header = () => {
         <NotificationHeaderSVG className={css.notificationSvg}/>
         <div className={css.hoverContainer}>
         {/* Здесь можно разместить содержимое вашего контейнера */}
+        <h2  className={css.notificationTitle}>Notification</h2>
         <p>Уведомления</p>
         <p>Уведомления</p>
         <p>Уведомления</p>
@@ -174,7 +175,7 @@ const Header = () => {
       </nav> */}
       <div className={css.userInfo}>
       <div className={css.messageContainer}>
-          <MessagesHeaderSVG className={css.messagesSvg} />
+          <MessagesHeaderSVG className={css.messagesSvg} onClick={handlePersonalChatClick}/>
           {messages.length > 0 && (
             <div className={css.notificationBadge}>{messages.length}</div>
           )}

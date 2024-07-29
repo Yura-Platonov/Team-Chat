@@ -23,7 +23,7 @@ const SocketNotification = () => {
         console.log('Message from server: ', data);
         
         if (data.new_message) {
-          setMessages((prevMessages) => [...prevMessages, ...data.new_message]);
+          setMessages(data.new_message); 
         }
       } catch (error) {
         console.error('Error parsing JSON:', error);
@@ -61,7 +61,7 @@ const SocketNotification = () => {
     //     <div key={index}>{message}</div>
     //   ))}
     // </div>
-    <div>
+    <div  style={{ display: 'none' }}>
       {messages.map((message, index) => (
         <div key={index}>
           {message.message} 
