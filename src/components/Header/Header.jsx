@@ -102,8 +102,37 @@ const Header = () => {
   const user_avatar = localStorage.getItem('avatar');
   const defaultAvatar = UserAvatar;
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState({ users: [], rooms: [] });
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      const fetchData = async () => {
+        const response = await fetch(`https://sayorama.eu/api/search/${searchQuery}`, {
+          headers: {
+            'accept': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setSearchResults(data);
+      };
+
+      fetchData();
+    } else {
+      setSearchResults({ users: [], rooms: [] });
+    }
+  }, [searchQuery]);
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setSearchResults({ users: [], rooms: [] });
+  };
 
   useEffect(() => {
     if (darkTheme) {
@@ -146,7 +175,7 @@ const Header = () => {
         <MobileMenu/>
         <Logo darkTheme={darkTheme}/>
         </div>
-      <nav>
+      {/* <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
           <li className={css.nav_item}><Link to="/PersonalChatPage" className={css.nav_link} onClick={handlePersonalChatClick}>Personal chat</Link></li>
@@ -154,7 +183,42 @@ const Header = () => {
           <li className={css.nav_item}><Link to="/RoolsOfTheChat" className={css.nav_link}>Rules of the chat</Link></li>
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
-      </nav>
+      </nav> */}
+      <div className={css.searchContainer}>
+        <input
+          type="text"
+          className={css.searchInput}
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search users or rooms..."
+        />
+        {searchQuery && (
+          <button className={css.clearButton} onClick={clearSearch}>
+            &times;
+          </button>
+        )}
+        {searchQuery && (
+          <div className={css.searchResults}>
+            <div className={css.resultSection}>
+              <h3>Users</h3>
+              {searchResults.users.map((user) => (
+                <div key={user.id} className={css.resultItem}>
+                  <img src={user.avatar} alt={user.user_name} className={css.resultAvatar} />
+                  <span>{user.user_name}</span>
+                </div>
+              ))}
+            </div>
+            <div className={css.resultSection}>
+              <h3>Rooms</h3>
+              {searchResults.rooms.map((room) => (
+                <div key={room.id} className={css.resultItem}>
+                  <span>{room.name}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       <div className={css.userInfo}>
       <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
