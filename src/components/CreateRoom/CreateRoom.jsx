@@ -63,10 +63,10 @@ function CreateRoom({ onRoomCreated }) {
       return;
     }
 
-    if (!roomImage && !selectedOption) {
-      alert('Please select an image for the room.');
-      return;
-    }
+    // if (!roomImage && !selectedOption) {
+    //   alert('Please select an image for the room.');
+    //   return;
+    // }
 
     const headers = {
       Authorization: `Bearer ${authToken}`,

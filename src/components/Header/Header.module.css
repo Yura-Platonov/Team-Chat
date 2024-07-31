@@ -25,6 +25,64 @@ header {
     
 }
 
+.notificationSvg{
+    margin-left: 40px;
+    cursor: pointer;
+}
+
+.notificationTitle{
+    font-size: 30px;
+    font-weight: 700;
+    color: #2D5F81;
+
+}
+
+.notificationContainer {
+    position: relative;
+  }
+  
+  .notificationSvg:hover + .hoverContainer,
+  .hoverContainer:hover {
+    display: block;
+  }
+  
+  .hoverContainer {
+    display: none;
+    position: absolute;
+    top: 50px;
+    left: 40px;
+    width: 500px;
+    height: 600px;
+    padding: 30px;
+    border-radius: 20px;
+    background: linear-gradient(180deg, #CBEAFF 0%, #FFFFFF 100%);
+    box-shadow: 4px 4px 8px 4px #024A7A66;
+    z-index: 2;
+  }
+
+.messagesSvg{
+    cursor: pointer;
+}
+
+.messageContainer {
+    position: relative;
+  }
+
+.notificationBadge{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
 .nav_list {
     display: flex;
     justify-content: space-between;
@@ -96,7 +154,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 50px;
 
     @media screen and (min-width:1024px){
         align-items: baseline;
