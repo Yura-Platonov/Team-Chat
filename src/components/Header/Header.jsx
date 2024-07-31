@@ -155,7 +155,6 @@ const Header = () => {
         <div className={css.notificationContainer}>
         <NotificationHeaderSVG className={css.notificationSvg}/>
         <div className={css.hoverContainer}>
-        {/* Здесь можно разместить содержимое вашего контейнера */}
         <h2  className={css.notificationTitle}>Notification</h2>
         <p>Уведомления</p>
         <p>Уведомления</p>
