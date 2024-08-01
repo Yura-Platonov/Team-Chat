@@ -220,6 +220,15 @@ const Header = () => {
     setCurrentSocket(newSocket); 
   };
   
+  const handleChatClick = (roomId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+    navigate(`/chat/${roomId}`);
+    window.location.reload(); 
+
+  };
   
 
   return (
@@ -281,7 +290,10 @@ const Header = () => {
       <div className={css.resultSection}>
         <h3>Rooms</h3>
         {searchResults.rooms.slice(0, 4).map((room) => (
-          <div key={room.id} className={css.resultItem}>
+          <div key={room.id} 
+          className={css.resultItem}
+          onClick={() => handleChatClick(room.id)}
+          >
             <img src={room.image_room} alt={room.name_room} className={css.resultAvatar} />
             <span>{room.name_room}</span>
           </div>
