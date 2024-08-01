@@ -3,12 +3,15 @@ import { Route, Routes } from 'react-router-dom';
 import Header from './Header/Header';
 import Main from './Main/Main';
 import Chat from './Chat/Chat';
+import SocketNotification from './SocketNotification/SocketNotification';
 import PersonalChatPage from '../pages/PersonalChatPage/PersonalChatPage';
 import PersonalChat from '../components/PersonalChat/PersonalChat';
 import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
 import RoolsOfTheChat from '../pages/RoolsOfTheChat/RoolsOfTheChat';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
+import { MessageProvider } from './SocketNotification/MessageContext';
+
 import Footer from './Footer/Footer';
 import Modal from 'react-modal';
 
@@ -20,8 +23,9 @@ export const App = () => {
   return (
     <div className="app">
       <AuthProvider value={{ authToken, setAuthToken }}>
+      <MessageProvider>
         <Header />
-        {/* <Socet /> */}
+        <SocketNotification />
         <Routes >
             <Route path="/" exact element={<Main/>} />  
             <Route path="/PersonalChatPage" element={<PersonalChatPage/>} />
@@ -32,6 +36,7 @@ export const App = () => {
 
           </Routes>
         <Footer />
+        </MessageProvider>
       </AuthProvider>
     </div>
   );

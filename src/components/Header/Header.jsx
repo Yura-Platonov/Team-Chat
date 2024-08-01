@@ -7,9 +7,14 @@ import UserAvatar from '../Images/defaultAvatar.svg'
 import LoginModal from '../Modal/LoginModal';
 import useLoginModal from '../Hooks/useLoginModal';
 import { useAuth } from '../LoginForm/AuthContext';
+import { useMessages } from '../SocketNotification/MessageContext';
 import LogoutModal from '../Modal/LogoutModal';
 import VerificationEmailModal from '../Modal/VerificationEmailModal';
 import { ReactComponent as MobileMenuSVG } from './mobileMenu.svg';
+import { ReactComponent as NotificationHeaderSVG } from '../Images/NotificationHeader.svg';
+import { ReactComponent as MessagesHeaderSVG } from '../Images/MessagesHeader.svg';
+import SocketNotification from '../SocketNotification/SocketNotification';
+
 
 function IconSun() {
   return (
@@ -104,6 +109,8 @@ const Header = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState({ users: [], rooms: [] });
+  const { messages } = useMessages();
+
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
@@ -174,6 +181,15 @@ const Header = () => {
         <div className={css.mobLogo}>
         <MobileMenu/>
         <Logo darkTheme={darkTheme}/>
+        <div className={css.notificationContainer}>
+        <NotificationHeaderSVG className={css.notificationSvg}/>
+        <div className={css.hoverContainer}>
+        <h2  className={css.notificationTitle}>Notification</h2>
+        <p>Уведомления</p>
+        <p>Уведомления</p>
+        <p>Уведомления</p>
+      </div>
+    </div>
         </div>
       {/* <nav>
         <ul className={css.nav_list}>
@@ -220,6 +236,13 @@ const Header = () => {
         )}
       </div>
       <div className={css.userInfo}>
+      <div className={css.messageContainer}>
+          <MessagesHeaderSVG className={css.messagesSvg} onClick={handlePersonalChatClick}/>
+          {messages.length > 0 && (
+            <div className={css.notificationBadge}>{messages.length}</div>
+          )}
+        </div>
+
       <div className={css.avatarCircle}  onClick={user ? openLogoutModal : openLoginModal}>
         <img
           src={user ? user_avatar : defaultAvatar}
@@ -260,10 +283,12 @@ const Header = () => {
           />     
       </div>
       </div>
+      
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-    </header>
+          {/* <SocketNotification /> */}
+      </header>
     
   );
 };
