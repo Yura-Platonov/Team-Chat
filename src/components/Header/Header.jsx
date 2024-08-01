@@ -114,9 +114,18 @@ const Header = () => {
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
+  // const handleSearchChange = (e) => {
+  //   setSearchQuery(e.target.value);
+  // };
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
+    const forbiddenChars = /[/.,?%#@&]/g;
+    let inputValue = e.target.value;
+  
+    inputValue = inputValue.replace(forbiddenChars, '');
+  
+    setSearchQuery(inputValue);
   };
+  
 
   useEffect(() => {
     if (searchQuery.trim() !== '') {
@@ -140,6 +149,8 @@ const Header = () => {
     setSearchQuery('');
     setSearchResults({ users: [], rooms: [] });
   };
+
+  
 
   useEffect(() => {
     if (darkTheme) {
@@ -213,7 +224,7 @@ const Header = () => {
             &times;
           </button>
         )}
-{searchQuery && (
+{/* {searchQuery && (
   <div className={css.searchResults}>
     {searchResults.users.length > 0 && (
       <div className={css.resultSection}>
@@ -237,6 +248,33 @@ const Header = () => {
         ))}
       </div>
     )}
+  </div>
+)} */}
+{searchQuery && (
+  <div className={css.searchResults}>
+    {searchResults.users.length > 0 && (
+      <div className={css.resultSection}>
+        <h3>Users</h3>
+        {searchResults.users.slice(0, 4).map((user) => (
+          <div key={user.id} className={css.resultItem}>
+            <img src={user.avatar} alt={user.user_name} className={css.resultAvatar} />
+            <span>{user.user_name}</span>
+          </div>
+        ))}
+      </div>
+    )}
+    {searchResults.rooms.length > 0 && (
+      <div className={css.resultSection}>
+        <h3>Rooms</h3>
+        {searchResults.rooms.slice(0, 4).map((room) => (
+          <div key={room.id} className={css.resultItem}>
+            <img src={room.image_room} alt={room.name_room} className={css.resultAvatar} />
+            <span>{room.name_room}</span>
+          </div>
+        ))}
+      </div>
+    )}
+    
   </div>
 )}
 
