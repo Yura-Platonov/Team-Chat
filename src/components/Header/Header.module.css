@@ -273,6 +273,7 @@ header {
     align-items: center;
     padding: 5px;
     border-bottom: 1px solid #eee;
+    cursor: pointer;
   }
   
   .resultItem:last-child {
