@@ -231,11 +231,15 @@ header {
   }
   
   .searchInput {
-    width: 300px;
+    width: 220px;
     padding: 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    border-radius: 10px;
+    border: 2px solid transparent; 
+    background: linear-gradient(#fff, #fff) padding-box, 
+                linear-gradient(90deg, #03218D 10%, #00A0E5 100%) border-box;
+    background-clip: padding-box, border-box;
   }
+  
   
   .clearButton {
     position: absolute;

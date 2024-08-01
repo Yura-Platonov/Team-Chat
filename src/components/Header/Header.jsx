@@ -213,27 +213,33 @@ const Header = () => {
             &times;
           </button>
         )}
-        {searchQuery && (
-          <div className={css.searchResults}>
-            <div className={css.resultSection}>
-              <h3>Users</h3>
-              {searchResults.users.map((user) => (
-                <div key={user.id} className={css.resultItem}>
-                  <img src={user.avatar} alt={user.user_name} className={css.resultAvatar} />
-                  <span>{user.user_name}</span>
-                </div>
-              ))}
-            </div>
-            <div className={css.resultSection}>
-              <h3>Rooms</h3>
-              {searchResults.rooms.map((room) => (
-                <div key={room.id} className={css.resultItem}>
-                  <span>{room.name}</span>
-                </div>
-              ))}
-            </div>
+{searchQuery && (
+  <div className={css.searchResults}>
+    {searchResults.users.length > 0 && (
+      <div className={css.resultSection}>
+        <h3>Users</h3>
+        {searchResults.users.map((user) => (
+          <div key={user.id} className={css.resultItem}>
+            <img src={user.avatar} alt={user.user_name} className={css.resultAvatar} />
+            <span>{user.user_name}</span>
           </div>
-        )}
+        ))}
+      </div>
+    )}
+    {searchResults.rooms.length > 0 && (
+      <div className={css.resultSection}>
+        <h3>Rooms</h3>
+        {searchResults.rooms.map((room) => (
+          <div key={room.id} className={css.resultItem}>
+            <img src={room.image_room} alt={room.name_room} className={css.resultAvatar} />
+            <span>{room.name_room}</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+)}
+
       </div>
       <div className={css.userInfo}>
       <div className={css.messageContainer}>
@@ -287,7 +293,7 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-          {/* <SocketNotification /> */}
+          <SocketNotification />
       </header>
     
   );
