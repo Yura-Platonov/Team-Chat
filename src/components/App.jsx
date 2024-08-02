@@ -8,6 +8,7 @@ import PersonalChatPage from '../pages/PersonalChatPage/PersonalChatPage';
 import PersonalChat from '../components/PersonalChat/PersonalChat';
 import PrivacyPolicy from '../pages/PrivacyPolicy/PrivacyPolicy';
 import RoolsOfTheChat from '../pages/RoolsOfTheChat/RoolsOfTheChat';
+import SearchPage from '../pages/SearchPage/SearchPage';
 import 'index.css';
 import { AuthProvider } from 'components/LoginForm/AuthContext';
 import { MessageProvider } from './SocketNotification/MessageContext';
@@ -33,6 +34,7 @@ export const App = () => {
             <Route path="/RoolsOfTheChat" element={<RoolsOfTheChat/>} />
             <Route path="/chat/:roomId" element={<Chat/>}/>
             <Route path="/PersonalChat/:recipient_name" element={<PersonalChat/>}/>
+            <Route path="/search" element={<SearchPage/>} />
 
           </Routes>
         <Footer />

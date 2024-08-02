@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Switch from 'react-switch';
 import css from './Header.module.css';
@@ -112,6 +112,8 @@ const Header = () => {
   const { messages } = useMessages();
   const token = localStorage.getItem('access_token');
   const [currentSocket, setCurrentSocket] = useState(null);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const searchRef = useRef(null);
 
 
 
@@ -125,6 +127,25 @@ const Header = () => {
     inputValue = inputValue.replace(forbiddenChars, '');
   
     setSearchQuery(inputValue);
+    if (inputValue) {
+      setIsDropdownVisible(true);
+    } else {
+      setIsDropdownVisible(false);
+    }
+  };
+
+  // const handleBlur = (e) => {
+  //   if (!searchRef.current.contains(e.relatedTarget)) {
+  //     setIsDropdownVisible(false);
+  //   }
+  // };
+
+  const handleBlur = (e) => {
+    if (!searchRef.current.contains(e.relatedTarget)) {
+      setTimeout(() => {
+        setIsDropdownVisible(false);
+      }, 150);  
+    }
   };
   
 
@@ -207,6 +228,7 @@ const Header = () => {
       console.log('WebSocket connection opened');
       navigate(`/Personalchat/${user.user_name}`);
       window.location.reload(); 
+      setIsDropdownVisible(false);
     };
   
     newSocket.onerror = (error) => {
@@ -227,7 +249,12 @@ const Header = () => {
     }
     navigate(`/chat/${roomId}`);
     window.location.reload(); 
+    setIsDropdownVisible(false);
+  };
 
+  const handleViewAllClick = () => {
+    console.log(123);
+    navigate(`/search?query=${encodeURIComponent(searchQuery)}`);  
   };
   
 
@@ -262,13 +289,16 @@ const Header = () => {
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search users or rooms..."
+          onFocus={() => setIsDropdownVisible(true)}
+          onBlur={handleBlur}
+          ref={searchRef}
         />
         {searchQuery && (
           <button className={css.clearButton} onClick={clearSearch}>
             &times;
           </button>
         )}
-{searchQuery && (
+{isDropdownVisible && searchQuery && (
   <div className={css.searchResults}>
     {searchResults.users.length > 0 && (
   <div className={css.resultSection}>
@@ -300,7 +330,7 @@ const Header = () => {
         ))}
       </div>
     )}
-    
+    <button className={css.results} onClick={handleViewAllClick}>View all results</button>
   </div>
 )}
 

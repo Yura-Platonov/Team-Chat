@@ -1,0 +1,22 @@
+.searchPageContainer {
+    padding: 20px;
+  }
+  
+  .resultSection {
+    margin-bottom: 20px;
+  }
+  
+  .resultItem {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  
+  .resultAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  

@@ -290,3 +290,16 @@ header {
     border-radius: 50%;
     margin-right: 10px;
   }
+
+  .results{
+display: block;
+color: #2D5F81;
+padding: 15px;
+margin-left: auto;
+margin-right: auto;
+border: none;
+background: none;
+cursor: pointer;
+text-decoration: underline;
+
+}
