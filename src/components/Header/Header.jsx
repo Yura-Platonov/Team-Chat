@@ -242,6 +242,7 @@ const Header = () => {
     setCurrentSocket(newSocket); 
   };
   
+  
   const handleChatClick = (roomId) => {
     if (!token) {
       openLoginModal();
