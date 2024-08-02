@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Switch from 'react-switch';
 import css from './Header.module.css';
@@ -107,10 +107,72 @@ const Header = () => {
   const user_avatar = localStorage.getItem('avatar');
   const defaultAvatar = UserAvatar;
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState({ users: [], rooms: [] });
   const { messages } = useMessages();
+  const token = localStorage.getItem('access_token');
+  const [currentSocket, setCurrentSocket] = useState(null);
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const searchRef = useRef(null);
+
+
 
 
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
+
+  const handleSearchChange = (e) => {
+    const forbiddenChars = /[/.,?%#@&]/g;
+    let inputValue = e.target.value;
+  
+    inputValue = inputValue.replace(forbiddenChars, '');
+  
+    setSearchQuery(inputValue);
+    if (inputValue) {
+      setIsDropdownVisible(true);
+    } else {
+      setIsDropdownVisible(false);
+    }
+  };
+
+  // const handleBlur = (e) => {
+  //   if (!searchRef.current.contains(e.relatedTarget)) {
+  //     setIsDropdownVisible(false);
+  //   }
+  // };
+
+  const handleBlur = (e) => {
+    if (!searchRef.current.contains(e.relatedTarget)) {
+      setTimeout(() => {
+        setIsDropdownVisible(false);
+      }, 150);  
+    }
+  };
+  
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      const fetchData = async () => {
+        const response = await fetch(`https://sayorama.eu/api/search/${searchQuery}`, {
+          headers: {
+            'accept': 'application/json',
+          },
+        });
+        const data = await response.json();
+        setSearchResults(data);
+      };
+
+      fetchData();
+    } else {
+      setSearchResults({ users: [], rooms: [] });
+    }
+  }, [searchQuery]);
+
+  const clearSearch = () => {
+    setSearchQuery('');
+    setSearchResults({ users: [], rooms: [] });
+  };
+
+  
 
   useEffect(() => {
     if (darkTheme) {
@@ -147,6 +209,55 @@ const Header = () => {
     }
   };
 
+  const handleUserClick = (user) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+  
+    const partnerId = user.id;
+    localStorage.setItem('currentPartnerId', partnerId);
+  
+    if (currentSocket) {
+      currentSocket.close();
+    }
+  
+    const newSocket = new WebSocket(`wss://sayorama.eu/private/${partnerId}?token=${token}`);
+    
+    newSocket.onopen = () => {
+      console.log('WebSocket connection opened');
+      navigate(`/Personalchat/${user.user_name}`);
+      window.location.reload(); 
+      setIsDropdownVisible(false);
+    };
+  
+    newSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  
+    newSocket.onclose = (event) => {
+      console.log('WebSocket connection closed:', event);
+    };
+  
+    setCurrentSocket(newSocket); 
+  };
+  
+  const handleChatClick = (roomId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+    navigate(`/chat/${roomId}`);
+    window.location.reload(); 
+    setIsDropdownVisible(false);
+  };
+
+  const handleViewAllClick = () => {
+    console.log(123);
+    navigate(`/search?query=${encodeURIComponent(searchQuery)}`);  
+  };
+  
+
   return (
     <header className={css.sticky_header}>
         <div className={css.mobLogo}>
@@ -162,7 +273,6 @@ const Header = () => {
       </div>
     </div>
         </div>
-
       {/* <nav>
         <ul className={css.nav_list}>
           <li className={css.nav_item}><Link to="/" className={css.nav_link}>Chat rooms</Link></li>
@@ -172,6 +282,59 @@ const Header = () => {
           <li className={css.nav_item}><Link to="/PrivacyPolicy" className={css.nav_link}>Privacy Policy</Link></li>
         </ul>
       </nav> */}
+      <div className={css.searchContainer}>
+        <input
+          type="text"
+          className={css.searchInput}
+          value={searchQuery}
+          onChange={handleSearchChange}
+          placeholder="Search users or rooms..."
+          onFocus={() => setIsDropdownVisible(true)}
+          onBlur={handleBlur}
+          ref={searchRef}
+        />
+        {searchQuery && (
+          <button className={css.clearButton} onClick={clearSearch}>
+            &times;
+          </button>
+        )}
+{isDropdownVisible && searchQuery && (
+  <div className={css.searchResults}>
+    {searchResults.users.length > 0 && (
+  <div className={css.resultSection}>
+    <h3>Users</h3>
+    {searchResults.users.slice(0, 4).map((user) => (
+      <div 
+        key={user.id} 
+        className={css.resultItem}
+        onClick={() => handleUserClick(user)}
+      >
+        <img src={user.avatar} alt={user.user_name} className={css.resultAvatar} />
+        <span>{user.user_name}</span>
+      </div>
+    ))}
+  </div>
+)}
+
+    {searchResults.rooms.length > 0 && (
+      <div className={css.resultSection}>
+        <h3>Rooms</h3>
+        {searchResults.rooms.slice(0, 4).map((room) => (
+          <div key={room.id} 
+          className={css.resultItem}
+          onClick={() => handleChatClick(room.id)}
+          >
+            <img src={room.image_room} alt={room.name_room} className={css.resultAvatar} />
+            <span>{room.name_room}</span>
+          </div>
+        ))}
+      </div>
+    )}
+    <button className={css.results} onClick={handleViewAllClick}>View all results</button>
+  </div>
+)}
+
+      </div>
       <div className={css.userInfo}>
       <div className={css.messageContainer}>
           <MessagesHeaderSVG className={css.messagesSvg} onClick={handlePersonalChatClick}/>
@@ -224,7 +387,7 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onClose={closeLoginModal} onRegistrationSuccess={handleRegistrationSuccess}/>
       <LogoutModal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}/>
       <VerificationEmailModal isOpen={showVerificationModal} onClose={() => setShowVerificationModal(false)} />
-          {/* <SocketNotification /> */}
+          <SocketNotification />
       </header>
     
   );
