@@ -8,6 +8,15 @@ const SearchPage = ({ searchResults, handleChatClick, handleUserClick }) => {
   return (
     <div className={css.searchPageContainer}>
       <h2>Search Results</h2>
+      <ul>Users
+        <li></li>
+      </ul>
+
+      <ul>Rooms
+      <li></li>
+
+      </ul>
+      
 
       {/* {searchResults.users.length > 0 && (
         <div className={css.resultSection}>
