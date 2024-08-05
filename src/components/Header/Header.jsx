@@ -114,6 +114,8 @@ const Header = () => {
   const [currentSocket, setCurrentSocket] = useState(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const searchRef = useRef(null);
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
 
 
 
@@ -152,7 +154,7 @@ const Header = () => {
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       const fetchData = async () => {
-        const response = await fetch(`https://sayorama.eu/api/search/${searchQuery}`, {
+        const response = await fetch(`${apiBaseUrl}/api/search/${searchQuery}`, {
           headers: {
             'accept': 'application/json',
           },
