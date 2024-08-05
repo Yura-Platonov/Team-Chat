@@ -114,6 +114,8 @@ const Header = () => {
   const [currentSocket, setCurrentSocket] = useState(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
   const searchRef = useRef(null);
+  const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
+
 
 
 
@@ -152,7 +154,7 @@ const Header = () => {
   useEffect(() => {
     if (searchQuery.trim() !== '') {
       const fetchData = async () => {
-        const response = await fetch(`https://sayorama.eu/api/search/${searchQuery}`, {
+        const response = await fetch(`${apiBaseUrl}/api/search/${searchQuery}`, {
           headers: {
             'accept': 'application/json',
           },
@@ -258,6 +260,22 @@ const Header = () => {
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);  
   };
   
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if (!searchQuery.trim()) {
+        // Если строка пустая, отменяем действие по умолчанию
+        event.preventDefault();
+        return;
+      }
+      if (location.pathname !== '/search') {
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setIsDropdownVisible(false);
+      } else { 
+        return
+         }
+  };
+};
+
 
   return (
     <header className={css.sticky_header}>
@@ -290,6 +308,7 @@ const Header = () => {
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search users or rooms..."
+          onKeyDown={handleKeyDown}
           onFocus={() => setIsDropdownVisible(true)}
           onBlur={handleBlur}
           ref={searchRef}
