@@ -260,6 +260,16 @@ const Header = () => {
     navigate(`/search?query=${encodeURIComponent(searchQuery)}`);  
   };
   
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      if (location.pathname !== '/search') {
+        navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+      } else { 
+        return
+         }
+  };
+};
+
 
   return (
     <header className={css.sticky_header}>
@@ -292,6 +302,7 @@ const Header = () => {
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search users or rooms..."
+          onKeyDown={handleKeyDown}
           onFocus={() => setIsDropdownVisible(true)}
           onBlur={handleBlur}
           ref={searchRef}

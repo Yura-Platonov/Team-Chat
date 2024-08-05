@@ -59,4 +59,9 @@
     margin-left: auto;
     width: 35px;
     height: 25px;
+    fill: #134563;
+  }
+
+  .itemSvg:hover{
+    fill: #20A6FE;
   }

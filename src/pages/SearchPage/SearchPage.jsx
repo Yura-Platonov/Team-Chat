@@ -5,11 +5,13 @@ import { ReactComponent as MessagesHeaderSVG } from '../../components/Images/Mes
 
 
 
-const SearchPage = ({  handleChatClick, handleUserClick }) => {
+const SearchPage = () => {
   const [searchResults, setSearchResults] = useState({ users: [], rooms: [] });
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
   const navigate = useNavigate();
   const location = useLocation();
+  const token = localStorage.getItem('access_token');
+
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -27,6 +29,50 @@ const SearchPage = ({  handleChatClick, handleUserClick }) => {
 
     fetchResults();
   }, [location.search]);
+
+  const handleUserClick = (user) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+  
+    const partnerId = user.id;
+    localStorage.setItem('currentPartnerId', partnerId);
+  
+    if (currentSocket) {
+      currentSocket.close();
+    }
+  
+    const newSocket = new WebSocket(`wss://sayorama.eu/private/${partnerId}?token=${token}`);
+    
+    newSocket.onopen = () => {
+      console.log('WebSocket connection opened');
+      navigate(`/Personalchat/${user.user_name}`);
+      window.location.reload(); 
+      setIsDropdownVisible(false);
+    };
+  
+    newSocket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+  
+    newSocket.onclose = (event) => {
+      console.log('WebSocket connection closed:', event);
+    };
+  
+    setCurrentSocket(newSocket); 
+  };
+  
+  
+  const handleChatClick = (roomId) => {
+    if (!token) {
+      openLoginModal();
+      return;
+    }
+    navigate(`/chat/${roomId}`);
+    window.location.reload(); 
+    setIsDropdownVisible(false);
+  };
 
 
   return (

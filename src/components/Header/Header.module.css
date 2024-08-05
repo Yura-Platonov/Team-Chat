@@ -62,7 +62,12 @@ header {
 
 .messagesSvg{
     cursor: pointer;
+    fill: #134563;
 }
+
+.messagesSvg:hover{
+    fill: #20A6FE;
+  }
 
 .messageContainer {
     position: relative;
