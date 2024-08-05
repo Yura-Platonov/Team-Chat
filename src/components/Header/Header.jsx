@@ -262,6 +262,11 @@ const Header = () => {
   
   const handleKeyDown = (event) => {
     if (event.key === 'Enter') {
+      if (!searchQuery.trim()) {
+        // Если строка пустая, отменяем действие по умолчанию
+        event.preventDefault();
+        return;
+      }
       if (location.pathname !== '/search') {
         navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
         setIsDropdownVisible(false);
