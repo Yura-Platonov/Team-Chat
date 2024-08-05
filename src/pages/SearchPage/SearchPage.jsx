@@ -11,6 +11,12 @@ const SearchPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const token = localStorage.getItem('access_token');
+  const [currentSocket, setCurrentSocket] = useState(null);
+  const [ setIsDropdownVisible] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
 
   useEffect(() => {
@@ -35,8 +41,9 @@ const SearchPage = () => {
       openLoginModal();
       return;
     }
+    console.log(user);
   
-    const partnerId = user.id;
+    const partnerId = user;
     localStorage.setItem('currentPartnerId', partnerId);
   
     if (currentSocket) {

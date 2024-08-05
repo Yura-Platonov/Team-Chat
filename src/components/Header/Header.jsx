@@ -264,6 +264,7 @@ const Header = () => {
     if (event.key === 'Enter') {
       if (location.pathname !== '/search') {
         navigate(`/search?query=${encodeURIComponent(searchQuery)}`);
+        setIsDropdownVisible(false);
       } else { 
         return
          }
