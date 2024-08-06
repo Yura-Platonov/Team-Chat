@@ -49,6 +49,7 @@ const Chat = () => {
   const [showSVG, setShowSVG] = useState(false);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
+  const [showGallery, setShowGallery] = useState(false);
 
   let userName = selectedUser ? selectedUser.user_name : '';
 
@@ -605,6 +606,14 @@ const Chat = () => {
     setEditingMessageId(null);
     setEditedMessage(''); 
   };
+
+  const toggleGallery = () => {
+    setShowGallery(!showGallery);
+  };
+
+  const imageMessages = messages.filter((msg) => {
+    return msg.fileUrl && msg.fileUrl.match(/\.(jpeg|jpg|gif|png|webp)$/);
+  });
   
   const getFileType = (fileUrl) => {
     const extension = getFileExtension(fileUrl).toLowerCase();
@@ -695,17 +704,30 @@ const Chat = () => {
       <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
-          {/* <h3 className={css.members_title}>Chat members</h3> */}
-          <ul className={css.userList}>
-            {userList.map((userData) => (
-              <li key={userData.user_name} className={css.userItem}>
-                {/* <div className={css.user_avatarBorder}> */}
+        <button onClick={() => setShowGallery(!showGallery)}>
+            {showGallery ? 'Hide Gallery' : 'Show Gallery'}
+          </button>
+
+          {showGallery ? (
+            <div className={css.gallery}>
+              {imageMessages.length > 0 ? (
+                imageMessages.map((msg, index) => (
+                  <img key={index} src={msg.fileUrl} alt="Chat Image" className={css.galleryImage} />
+                ))
+              ) : (
+                <p>No images in this chat.</p>
+              )}
+            </div>
+          ) : (
+            <ul className={css.userList}>
+              {userList.map((userData) => (
+                <li key={userData.user_name} className={css.userItem}>
                   <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
-                {/* </div> */}
-                <span className={css.user_name}>{userData.user_name}</span>
-              </li>
-            ))}
-          </ul>
+                  <span className={css.user_name}>{userData.user_name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className={css.chat_container}>
           <div className={css.chat_area} ref={messageContainerRef}>

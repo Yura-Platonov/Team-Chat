@@ -1061,3 +1061,9 @@ margin-top: 30px;
     animation: wave-animation 10s linear infinite;
   }
   
+.galleryImage{
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    margin: 10px;
+}
