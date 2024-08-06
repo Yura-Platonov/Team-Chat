@@ -709,15 +709,26 @@ const Chat = () => {
           </button>
 
           {showGallery ? (
-            <div className={css.gallery}>
+            <>
+              <h3 className={css.galleryTitle}>Media</h3>
+              <ul className={css.gallery}>
               {imageMessages.length > 0 ? (
                 imageMessages.map((msg, index) => (
-                  <img key={index} src={msg.fileUrl} alt="Chat Image" className={css.galleryImage} />
+                  <li key={index} className={css.galleryItem}>
+                    <img src={msg.fileUrl} alt="Chat Image" 
+                    className={css.galleryImage} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(msg.fileUrl);
+                    }}/>
+                  </li>
                 ))
               ) : (
-                <p>No images in this chat.</p>
+                <li>No images in this chat.</li>
               )}
-            </div>
+            </ul>
+            </>
           ) : (
             <ul className={css.userList}>
               {userList.map((userData) => (

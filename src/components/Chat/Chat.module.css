@@ -1061,6 +1061,18 @@ margin-top: 30px;
     animation: wave-animation 10s linear infinite;
   }
   
+.gallery{
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+
+.galleryTitle{
+   text-align: center;
+    font-size: 32px;
+    font-weight: 500;
+}
+
 .galleryImage{
     width: 140px;
     height: 140px;
