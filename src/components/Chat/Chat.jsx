@@ -18,6 +18,7 @@ import { ReactComponent as EditSvg } from 'components/Images/Edit.svg';
 import { ReactComponent as DeleteSvg } from 'components/Images/Delete.svg';
 import { ReactComponent as ReplySvg } from 'components/Images/Reply.svg';
 import { ReactComponent as ButtonSendMessage } from 'components/Images/ButtonSendMessage.svg';
+import { ReactComponent as ButtonCloseGallery } from 'components/Images/closeGalleryButton.svg';
 import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
@@ -49,6 +50,7 @@ const Chat = () => {
   const [showSVG, setShowSVG] = useState(false);
   const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
   const { isLoginModalOpen, openLoginModal, closeLoginModal, handleRegistrationSuccess, showVerificationModal, setShowVerificationModal } = useLoginModal();
+  const [showGallery, setShowGallery] = useState(false);
 
   let userName = selectedUser ? selectedUser.user_name : '';
 
@@ -153,7 +155,7 @@ const Chat = () => {
                 isAnimating = false;
             }, 3000);
           }
-         else if (messageData.id) {
+         else if (messageData.id || messageData.id===0) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
@@ -199,19 +201,6 @@ const Chat = () => {
       };
     }
   }, [roomId, token]);
-  
-
-  // useEffect(() => {
-  //   if (messageContainerRef.current) {
-  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-  //   }
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   if (shouldScrollToBottom && messageContainerRef.current) {
-  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-  //   }
-  // }, [shouldScrollToBottom, messages]);
 
   useEffect(() => {
     if (shouldScrollToBottom && messageContainerRef.current) {
@@ -248,15 +237,10 @@ const Chat = () => {
 
       console.log(messageObject);
 
-      // if (imageUrl) {
-      //   messageObject.fileUrl = imageUrl;
-      // }
-
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
       setShouldScrollToBottom(true);
       setMessage('');
-      // setSelectedFilesCount(0);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
@@ -605,6 +589,10 @@ const Chat = () => {
     setEditingMessageId(null);
     setEditedMessage(''); 
   };
+
+  const imageMessages = messages.filter((msg) => {
+    return msg.fileUrl && msg.fileUrl.match(/\.(jpeg|jpg|gif|png|webp)$/);
+  });
   
   const getFileType = (fileUrl) => {
     const extension = getFileExtension(fileUrl).toLowerCase();
@@ -695,19 +683,50 @@ const Chat = () => {
       <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
-          {/* <h3 className={css.members_title}>Chat members</h3> */}
-          <ul className={css.userList}>
-            {userList.map((userData) => (
-              <li key={userData.user_name} className={css.userItem}>
-                {/* <div className={css.user_avatarBorder}> */}
+          {showGallery ? (
+            <>
+              <h3 className={css.galleryTitle}>Media</h3>
+              <button onClick={()=>{setShowGallery(false)}} className={css.closeGalleryButton}>
+                <ButtonCloseGallery/>
+              </button>
+              <ul className={css.gallery}>
+              {imageMessages.length > 0 ? (
+                imageMessages.map((msg, index) => (
+                  <li key={index} className={css.galleryItem}>
+                    <img src={msg.fileUrl} alt="Chat Image" 
+                    className={css.galleryImage} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsImageModalOpen(true);
+                      setSelectedImageUrl(msg.fileUrl);
+                    }}/>
+                  </li>
+                ))
+              ) : (
+                <li>No images in this chat.</li>
+              )}
+            </ul>
+            </>
+          ) : (
+            <ul className={css.userList}>
+              {userList.map((userData) => (
+                <li key={userData.user_name} className={css.userItem}>
                   <img src={userData.avatar} alt={`${userData.user_name}'s Avatar`} className={css.user_avatar} />
-                {/* </div> */}
-                <span className={css.user_name}>{userData.user_name}</span>
-              </li>
-            ))}
-          </ul>
+                  <span className={css.user_name}>{userData.user_name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className={css.chat_container}>
+          <ul className={css.navMenuList}>
+            <li className={css.navMenuItem}>
+              <button onClick={() => setShowGallery(!showGallery)} className={css.navMenuButton}>
+                <LikeSVG className={css.navMenuIcon}/>
+              </button>
+            </li>
+          </ul>
+        
           <div className={css.chat_area} ref={messageContainerRef}>
             { messages.length === 0 && (
               <div className={css.no_messages}>
