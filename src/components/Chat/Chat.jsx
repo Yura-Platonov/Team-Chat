@@ -155,7 +155,7 @@ const Chat = () => {
                 isAnimating = false;
             }, 3000);
           }
-         else if (messageData.id) {
+         else if (messageData.id || messageData.id===0) {
             const { user_name: sender = 'Unknown Sender', receiver_id, created_at, avatar, message, id, id_return, vote, fileUrl,edited, } = messageData;
             const formattedDate = formatTime(created_at);
 
@@ -201,19 +201,6 @@ const Chat = () => {
       };
     }
   }, [roomId, token]);
-  
-
-  // useEffect(() => {
-  //   if (messageContainerRef.current) {
-  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-  //   }
-  // }, [messages]);
-
-  // useEffect(() => {
-  //   if (shouldScrollToBottom && messageContainerRef.current) {
-  //     messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
-  //   }
-  // }, [shouldScrollToBottom, messages]);
 
   useEffect(() => {
     if (shouldScrollToBottom && messageContainerRef.current) {
@@ -250,15 +237,10 @@ const Chat = () => {
 
       console.log(messageObject);
 
-      // if (imageUrl) {
-      //   messageObject.fileUrl = imageUrl;
-      // }
-
       const messageString = JSON.stringify(messageObject);
       socketRef.current.send(messageString);
       setShouldScrollToBottom(true);
       setMessage('');
-      // setSelectedFilesCount(0);
     } else {
       console.error('WebSocket is not open. Message not sent.');
     }
