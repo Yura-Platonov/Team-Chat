@@ -18,6 +18,7 @@ import { ReactComponent as EditSvg } from 'components/Images/Edit.svg';
 import { ReactComponent as DeleteSvg } from 'components/Images/Delete.svg';
 import { ReactComponent as ReplySvg } from 'components/Images/Reply.svg';
 import { ReactComponent as ButtonSendMessage } from 'components/Images/ButtonSendMessage.svg';
+import { ReactComponent as ButtonCloseGallery } from 'components/Images/closeGalleryButton.svg';
 import ImageModal from 'components/Modal/ImageModal';
 
 const Chat = () => {
@@ -703,7 +704,9 @@ const Chat = () => {
           {showGallery ? (
             <>
               <h3 className={css.galleryTitle}>Media</h3>
-              <button onClick={()=>{setShowGallery(false)}} className={css.closeGalleryButton}>2222</button>
+              <button onClick={()=>{setShowGallery(false)}} className={css.closeGalleryButton}>
+                <ButtonCloseGallery/>
+              </button>
               <ul className={css.gallery}>
               {imageMessages.length > 0 ? (
                 imageMessages.map((msg, index) => (
