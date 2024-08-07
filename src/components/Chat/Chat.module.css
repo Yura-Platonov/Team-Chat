@@ -1079,3 +1079,47 @@ margin-top: 30px;
     object-fit: cover;
     margin: 10px;
 }
+
+.navMenuList{
+position: absolute;
+top:0px;
+right: -120px;
+width: 70px;
+height: auto;
+padding: 10px;
+border-radius: 10px;
+background: linear-gradient(180deg, #008AE5 -7.41%, rgba(160, 203, 231, 0.5) 81.21%, rgba(2, 135, 223, 0) 144.48%);
+/* width: 120px;
+height: 200px; */
+
+}
+
+.navMenuItem{
+    text-align: center;
+}
+
+.navMenuItem:not(:last-child){
+    margin-bottom: 10px;
+}
+ 
+
+.navMenuButton{
+   background: none;
+   border: none;
+   cursor: pointer;
+    }
+
+.navMenuIcon{
+width: 32px;
+height: 32px;
+fill: #000;
+&:hover{
+fill: #007bff;
+}
+}
+
+.closeGalleryButton{
+width: 50px;
+height: 50px;
+background: #000;
+}

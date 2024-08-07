@@ -607,10 +607,6 @@ const Chat = () => {
     setEditedMessage(''); 
   };
 
-  const toggleGallery = () => {
-    setShowGallery(!showGallery);
-  };
-
   const imageMessages = messages.filter((msg) => {
     return msg.fileUrl && msg.fileUrl.match(/\.(jpeg|jpg|gif|png|webp)$/);
   });
@@ -704,13 +700,10 @@ const Chat = () => {
       <h2 className={css.title}>{roomName}</h2>
       <div className={css.main_container}>
         <div className={css.members_container}>
-        <button onClick={() => setShowGallery(!showGallery)}>
-            {showGallery ? 'Hide Gallery' : 'Show Gallery'}
-          </button>
-
           {showGallery ? (
             <>
               <h3 className={css.galleryTitle}>Media</h3>
+              <button onClick={()=>{setShowGallery(false)}} className={css.closeGalleryButton}>2222</button>
               <ul className={css.gallery}>
               {imageMessages.length > 0 ? (
                 imageMessages.map((msg, index) => (
@@ -741,6 +734,14 @@ const Chat = () => {
           )}
         </div>
         <div className={css.chat_container}>
+          <ul className={css.navMenuList}>
+            <li className={css.navMenuItem}>
+              <button onClick={() => setShowGallery(!showGallery)} className={css.navMenuButton}>
+                <LikeSVG className={css.navMenuIcon}/>
+              </button>
+            </li>
+          </ul>
+        
           <div className={css.chat_area} ref={messageContainerRef}>
             { messages.length === 0 && (
               <div className={css.no_messages}>
