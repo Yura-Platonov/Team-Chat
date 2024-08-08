@@ -116,10 +116,6 @@ const Header = () => {
   const searchRef = useRef(null);
   const apiBaseUrl = process.env.REACT_APP_API_BASE_URL;
 
-
-
-
-
   const { isLoginModalOpen, openLoginModal, closeLoginModal,handleRegistrationSuccess,showVerificationModal, setShowVerificationModal} = useLoginModal();
 
   const handleSearchChange = (e) => {
