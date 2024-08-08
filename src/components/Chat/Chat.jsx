@@ -18,6 +18,7 @@ import { ReactComponent as EditSvg } from 'components/Images/Edit.svg';
 import { ReactComponent as DeleteSvg } from 'components/Images/Delete.svg';
 import { ReactComponent as ReplySvg } from 'components/Images/Reply.svg';
 import { ReactComponent as ButtonSendMessage } from 'components/Images/ButtonSendMessage.svg';
+import { ReactComponent as ButtonGallery } from 'components/Images/galleryButton.svg';
 import { ReactComponent as ButtonCloseGallery } from 'components/Images/closeGalleryButton.svg';
 import ImageModal from 'components/Modal/ImageModal';
 
@@ -722,7 +723,7 @@ const Chat = () => {
           <ul className={css.navMenuList}>
             <li className={css.navMenuItem}>
               <button onClick={() => setShowGallery(!showGallery)} className={css.navMenuButton}>
-                <LikeSVG className={css.navMenuIcon}/>
+                <ButtonGallery className={css.navMenuIcon}/>
               </button>
             </li>
           </ul>
